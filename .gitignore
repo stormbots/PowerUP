@@ -1,0 +1,16 @@
+# Automatic generated files
+/bin
+/build
+/dist
+/dist/*
+*.jar
+*.class
+
+# System specific config files
+# These just cause headaches
+sysProps.xml
+/.classpath
+*/.classpath
+
+# Random config files
+.directory
