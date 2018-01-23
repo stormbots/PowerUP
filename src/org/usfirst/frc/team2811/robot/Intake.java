@@ -1,65 +1,84 @@
 package org.usfirst.frc.team2811.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 
-public class Intake { 
-	TalonSRX motor1 = new TalonSRX(8);
-	TalonSRX motor2 = new TalonSRX(9);
-	Compressor compressor = new Compressor(0);
-	DoubleSolenoid squeezeSolenoid = new DoubleSolenoid(1,2);
-	DoubleSolenoid tiltSolenoid = new DoubleSolenoid(3,4);
+public class Intake {
+	//motors
+	WPI_TalonSRX motor1 = new WPI_TalonSRX(12); //8
+	WPI_TalonSRX motor2 = new WPI_TalonSRX(13); //9
+	//pneumatics
+	Solenoid squeezeSolenoid = new Solenoid(1);
+	Solenoid tiltSolenoid = new Solenoid(2); 
 	
-	enum Mode {INPUT,OUTPUT,STOP,SQUEEZE,TILT}
-	Mode mode = Mode.STOP;
-	
-	// this code works as long as kOff is the middleground between kForward and kReverse
 	public Intake() {
+		//sets the motors to work together and starts the pnuematics off
 		motor2.follow(motor1);
 		motor2.setInverted(true);
-		compressor.setClosedLoopControl(true);
-		squeezeSolenoid.set(DoubleSolenoid.Value.kOff);
-		tiltSolenoid.set(DoubleSolenoid.Value.kOff);
+		squeezeSolenoid.set(false);
+		tiltSolenoid.set(false);
 	}
 	
-	void intake() {
+	void input() {
+		//motors move to take in cube
 		motor1.set(ControlMode.PercentOutput, 0.50);
 	}
+	
 	void output() {
+		//motors move to spew cube outward 
 		motor1.set(ControlMode.PercentOutput, -0.50);
-		squeezeSolenoid.set(DoubleSolenoid.Value.kReverse);
-	}
-	void stop() {
-		motor1.set(ControlMode.PercentOutput, 0);
-		squeezeSolenoid.set(DoubleSolenoid.Value.kOff);
-		tiltSolenoid.set(DoubleSolenoid.Value.kOff);
-	}
-	void squeeze() {
-		squeezeSolenoid.set(DoubleSolenoid.Value.kForward);
-	}
-	void tilt() {
-		tiltSolenoid.set(DoubleSolenoid.Value.kForward);
-	}
-	void update(){
-		if (mode==Mode.INPUT) {
-			intake();
-		}
-		else if (mode==Mode.OUTPUT) {
-			output();
-		}
-		else if(mode==Mode.SQUEEZE) {
-			squeeze();
-		}
-		else if(mode==Mode.TILT) {
-			tilt();
-		}
-		else {
-			mode=Mode.STOP;
-		}		
 	}
 	
+	void stop() {
+		motor1.set(ControlMode.PercentOutput, 0);
+		squeezeSolenoid.set(false);
+		tiltSolenoid.set(false);
+	}
+	
+	void squeeze() {
+		squeezeSolenoid.set(true);
+	}
+	
+	void letgo() {
+		squeezeSolenoid.set(false);
+	}
+	
+	void tilt() { 
+		tiltSolenoid.set(true);
+	}
+	
+	void untilt() {
+		tiltSolenoid.set(true);
+	}
+	
+	void update(Joystick stick){
+		//update area for use in main robot code
+		if (stick.getRawButton(1)) {
+			input();
+		}
+		else if (stick.getRawButton(2)) {
+			output();
+		}
+		else if(stick.getRawButton(3)) {
+			squeeze();
+		}
+		else if(stick.getRawButton(4)) {
+			letgo();
+		}
+		else if(stick.getRawButton(5)) {
+			tilt();
+		}
+		else if(stick.getRawButton(6)) {
+			untilt();
+		}
+		else if(stick.getRawButton(7)) {
+			//debug for input/output
+			motor1.set(stick.getY());
+		}
+		else {
+			stop();
+		}	
+	}
 }
