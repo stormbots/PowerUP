@@ -1,19 +1,48 @@
 package org.usfirst.frc.team2811.robot;
 
 
-// 345 polynomial is a specific curve as a function of time that has very smooth acceleration and velocity
-// the acceleration and jerk are 0 at the end points with no abrupt changes in the motion
-
-
+/**
+ * 345 polynomial is a specific curve as a function of time that has very smooth acceleration and velocity
+ *the acceleration and jerk are 0 at the end points with no abrupt changes in the motion
+ *
+ */
 public class Motion345 {
 		
-		double maxvel=0.0;// in counts per second
-		double traveltime=0.0;// in seconds
-		double movcnt=0.0; // counts of move  Can be positive or negative
-		double tolerancemv=10.0; // Tolerance of how close to the target position the actual position needs to be to call it done
+	    /** max velocity, in counts per second */
+		double maxvel=0.0;
 		
+		/** travel time to target, in seconds */
+		double traveltime=0.0; 
 		
+		/** Counts of the move to make. Can be positive or negative */
+		double movcnt=0.0; 
+		
+		/**Tolerance of how close to the target position the actual position needs to be to call it done */
+		double tolerancemv=10.0; 
+		
+		/**
+		 * Create motion profile with set parameters. 
+		 * Can be changed with [setMove]
+		 * @param vel Maximum Velocity in counts per second
+		 * @param travel_time_move Total move time, in seconds
+		 * @param move_count  size of the move in counts. Can be positive or negative
+		 * @param move_tolerance Minimum distance to target to be considered "done"
+		 */
 		Motion345(double vel,double travel_time_move, double move_count, double move_tolerance){
+			maxvel=vel;
+			traveltime=travel_time_move;
+			movcnt=move_count;
+			tolerancemv=move_tolerance;
+		}
+		
+		/**
+		 * Set move parameters
+		 * @param vel Maximum Velocity in counts per second
+		 * @param travel_time_move Total move time, in seconds
+		 * @param move_count  size of the move in counts. Can be positive or negative
+		 * @param move_tolerance Minimum distance to target to be considered "done"
+		 */
+		public void setMove(double vel,double travel_time_move, double move_count, double move_tolerance){
 			maxvel=vel;
 			traveltime=travel_time_move;
 			movcnt=move_count;
@@ -21,26 +50,28 @@ public class Motion345 {
 			
 		}
 		
-		// set move parameters
-		public void setMove(double vel,double travel_time_move, double move_count, double move_tolerance){
-			maxvel=vel; // counts per second
-			traveltime=travel_time_move; // time in seconds
-			movcnt=move_count; // size of the move in counts and it is signed for positive and negative 
-			tolerancemv=move_tolerance;
-			
-		}
-		
-		// given the time , the actual position and the gain factor K return a velocity to drive the motor
-		// this works with position error to generate a velocity based on the square root of the position error
-		// The ideal position is derived from the 345 polynomial motion profile scaled by the size of the move in counts
-		// and the time for the move with a know max velocity in counts per second
+		/**
+		 * given the time , the actual position and the gain factor K return a velocity to drive the motor
+		 * this works with position error to generate a velocity based on the square root of the position error
+		 * The ideal position is derived from the 345 polynomial motion profile scaled by the size of the move in counts
+		 * and the time for the move with a know max velocity in counts per second
+
+		 * @param t current time
+		 * @param pactual current position, as measured by sensor
+		 * @param k gain constant (identical to FB function)
+		 * @return
+		 */
 		public double getVelPosFb(double t, double pactual,double k) {
 			double pideal=getPos(t);
 			return FB(pactual,pideal,k);
 		}
 		
-		// based on the time of the move and the counts of the move return the velocity in counts per second
-		// assumes max velocity in counts per second is at motor speed =1.0 
+		/**
+		 * based on the time of the move and the counts of the move return the velocity in counts per second
+		 * assumes max velocity in counts per second is at motor speed =1.0
+		 * @param t current time
+		 * @return output velocity in counts per second.
+		 */
 		public double getVel(double t) {
 			double v=0.0;
 			v=(movcnt/traveltime)*V345(t)/maxvel; // produces a value -1 to 1 based on move count and time for move
@@ -71,9 +102,13 @@ public class Motion345 {
 			return (30*t2)-(60*t3)+(30*t2*t2);
 		}
 		
-		// used to provide closed loop control to adjust velocity if position error occurs
-		// ptarget is the target position, pactual is actual position and k is the gain constant for corrected velocity
-		
+		/**
+		 * used to provide closed loop control to adjust velocity if position error occurs
+		 * @param ptarget is the target position
+		 * @param pactual is current position, as measured by a sensor 
+		 * @param k gain constant for corrected velocity
+		 * @return
+		 */
 		public double FB(double ptarget, double pactual, double k) {
 			double vo=0.0;
 			if(ptarget>pactual) {
@@ -87,7 +122,12 @@ public class Motion345 {
 			return vo;
 		}
 		
-		// check if the move is done by comparing difference of position target to position actual and tolerance
+		/**
+		 * check if the move is done by comparing difference of position target to position actual and tolerance
+		 * @param pt target position
+		 * @param pa current position, as measured by a sensor
+		 * @return
+		 */
 		public boolean ckdone(double pt, double pa) {
 			boolean done=false;
 			

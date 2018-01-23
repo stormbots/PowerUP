@@ -2,11 +2,13 @@ package org.usfirst.frc.team2811.robot;
 
 import edu.wpi.first.wpilibj.Utility;
 
-//the purpose of this class is to provide an accurate way to implement many timers on a scanning based system
-//the timer class has a static set of variables that represent the time since last scan in milliseconds
-//these are used to accumulate time for each active timer instance in the system without have many asynchronous interrupts
-//These timers can be stopped, started and reset by the code
 
+/**
+ * the purpose of this class is to provide an accurate way to implement many timers on a scanning based system
+ * the timer class has a static set of variables that represent the time since last scan in milliseconds
+ * these are used to accumulate time for each active timer instance in the system without have many asynchronous interrupts
+ * These timers can be stopped, started and reset by the code
+ */
 public class CXTIMER {
 	
 	
@@ -23,15 +25,18 @@ public class CXTIMER {
 	}
 	
 	
-	// time ticks are keep in milliseconds.  This update will keep track of fractional milliseconds and added them as 
-	// needed to keep the timer accurate
-	// this is called only once per scan of the code and affects the static time variables used to accumulate time for each instance
-	// The system clocks can be microseconds or nanoseconds the truncation of time to milliseconds can create a long term lost of time
-	// by keeping the truncated number of raw ticks as a remainder and adding in whole millisecond ticks as needed will insure
-	// long term accuracy
-	// Most timers built this way would not care about this small loss of time but if this is used to build long term timers over days 
-	// and weeks the time loss can become significant
-	
+	/**
+	 * Updates all timers, keeping track of time in milliseconds. Will also track fractional milliseconds, and add them as 
+	 * needed for long term accuracy.  
+	 * 
+	 * This function should be called once per control loop, and will update all timer instances. 
+	 * 
+	 * The system clocks can be microseconds or nanoseconds the truncation of time to milliseconds can create a long 
+	 * term lost of time by keeping the truncated number of raw ticks as a remainder and adding in whole millisecond 
+	 * ticks as needed will insure long term accuracy Most timers built this way would not care about this 
+	 * small loss of time but if this is used to build long term timers over days and weeks the time loss can 
+	 * become significant
+	 */
 	public void Update() {
 		long sf=1000; // take it from microseconds to milliseconds
 		long maxsf=0x7fffffff; // mask off any sign bit because of actual unsigned count
@@ -66,23 +71,37 @@ public class CXTIMER {
 	}
 	
 	
-	
+	/**
+	 * @return accumulated time in milliseconds counts
+	 */
 	public long getTime() {
-		return mycurtime; // returns accumulated time in milliseconds counts
+		return mycurtime; // returns 
 	}
+
+	/**
+	 * @return the number of millisecond ticks since last update
+	 */
 	public long getTicks() {
-		return mytimeticks; // returns the number of millisecond ticks since last update
+		return mytimeticks;
 	}
 	
+	/**
+	 * @return time in seconds
+	 */
 	public double getTimeSec() {
-		
-		return (double)mycurtime/1000.0; // scale the time to fractional seconds
-		
+		return (double)mycurtime/1000.0; 
 	}
 	
-	// if active add the time ticks since last check and check if time limit exceeded 
+	//  
 	// the boolean variable allows the timer to be paused and reset
 	
+	/**
+	 * Check to see if a running timer has exceeded a time limit
+	 * 
+	 * @param tmon if true, reset timer
+	 * @param tmlimit 
+	 * @return true if timer running time is less than tmlimit
+	 */
 	public boolean ckTime(boolean tmon, long tmlimit) {
 		boolean tmexp=false;  // set up to return no running or not expired
 		
@@ -98,13 +117,13 @@ public class CXTIMER {
 			}
 		}
 		return tmexp;
-			
 	}
 	
+	/**
+	 * Resets the timer to zero
+	 */
 	public void reset() {
-		mycurtime=0;
-		
-		
+		mycurtime=0;	
 	}
 
 }
