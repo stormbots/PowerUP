@@ -22,8 +22,9 @@ import org.usfirst.frc.team2811.robot.ElevatorOutput.Mode;
  */
 public class Robot extends IterativeRobot {
 	
-	Joystick eStick = new Joystick(1);
+	Joystick joystick = new Joystick(1);
 	ElevatorOutput elevator = new ElevatorOutput();
+	Intake intake = new Intake();
 	
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
@@ -84,26 +85,28 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		if(eStick.getRawButton(4)) {
+		if(joystick.getRawButton(4)) {
 			elevator.changeMode(Mode.MANUAL);
 		}
-		if(eStick.getRawButton(3)) {
+		if(joystick.getRawButton(3)) {
 			elevator.changeMode(Mode.BUTTON);
 		}
-		if(eStick.getRawButton(10)) {
+		if(joystick.getRawButton(10)) {
 			elevator.reset();
 		}
-		if(eStick.getRawButton(8)) {
-			elevator.moveJoystick(eStick.getY());
+		if(joystick.getRawButton(8)) {
+			elevator.moveJoystick(joystick.getY());
 		}
-		if(eStick.getRawButton(1)) { 
+		if(joystick.getRawButton(1)) { 
 			elevator.moveToPos(10000);
 		}
-		if(eStick.getRawButton(2)) {
+		if(joystick.getRawButton(2)) {
 			elevator.moveToPos(20000);
 		}
 		elevator.update();
 		
+		intake.update(joystick);
+
 	}
 
 	/**
