@@ -10,6 +10,8 @@ package org.usfirst.frc.team2811.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Joystick;
+import org.usfirst.frc.team2811.robot.ElevatorOutput.Mode;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -19,6 +21,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends IterativeRobot {
+	
+	Joystick eStick = new Joystick(1);
+	ElevatorOutput elevator = new ElevatorOutput();
+	
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
 	private String m_autoSelected;
@@ -69,12 +75,35 @@ public class Robot extends IterativeRobot {
 				break;
 		}
 	}
+	public void teleopInit() {
+		
+	}
 
 	/**
 	 * This function is called periodically during operator control.
 	 */
 	@Override
 	public void teleopPeriodic() {
+		if(eStick.getRawButton(4)) {
+			elevator.changeMode(Mode.MANUAL);
+		}
+		if(eStick.getRawButton(3)) {
+			elevator.changeMode(Mode.BUTTON);
+		}
+		if(eStick.getRawButton(10)) {
+			elevator.reset();
+		}
+		if(eStick.getRawButton(8)) {
+			elevator.moveJoystick(eStick.getY());
+		}
+		if(eStick.getRawButton(1)) { 
+			elevator.moveToPos(10000);
+		}
+		if(eStick.getRawButton(2)) {
+			elevator.moveToPos(20000);
+		}
+		elevator.update();
+		
 	}
 
 	/**

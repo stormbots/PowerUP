@@ -6,13 +6,25 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * Class using WPI_TalonSRX to move Elevator w/ joystick and by setting a position.
+ * Inputs: eMotor address
+ * Outputs: eVelocity, elevatorPos 
+ */
+
 public class ElevatorOutput {
 	
 	 WPI_TalonSRX eMotor = new WPI_TalonSRX(12);
 	 double eVelocity = 0;
 	 double elevatorPos = 0;
+	 double floorPos = 0.0;
+	 double portalPos = 10000;
+	 double switchPos = 20000;
+	 double scaleLowPos = 25000;
+	 double scaleHighPos = 30000;
+	 
 	
-	private double feedBack (double V, double P, double K){ //Used
+	private double feedBack (double V, double P, double K){ 
 		double S= 1;
 		if(V<P) S = -1;
 		double Vx = S*K*Math.sqrt(Math.abs(V-P));
@@ -21,27 +33,30 @@ public class ElevatorOutput {
 		return Vx;	
 	}
 	
-	public enum Mode{ //Just to switch in code (no buttons).
+	public enum Mode{ 
 		MANUAL, BUTTON,
 	}
 	
-	public Mode mode = Mode.MANUAL; //Switch between Manual and Button mode here.
+	public Mode mode = Mode.MANUAL; 
 	
+	public void changeMode (Mode newMode) {
+		mode = newMode;
+	}
 		
-	public void update(){
+	public void update(){ //Runs at the end of each loop through teleop.
 		if(mode == Mode.MANUAL) {
-			if(eMotor.getSelectedSensorPosition(0) >= 45000 && eVelocity > 0) { //Keeps elevator from going too high.
-				eVelocity = 0; //If elevator too high, set velocity to zero.
+			/*if(eMotor.getSelectedSensorPosition(0) >= 45000 && eVelocity > 0) { //Keeps elevator from going too high.
+				eVelocity = 0; 
 			}
-			if(eMotor.getSelectedSensorPosition(0) <= 0 && eVelocity < 0) { //Keeps elevator from going too low; is this necessary/does this cause problems?
-				eVelocity = 0; //If elevator too low, set velocity to zero.
-			}
+			if(eMotor.getSelectedSensorPosition(0) <= 0 && eVelocity < 0) { //Keeps elevator from going too low.
+				eVelocity = 0; 
+			}*/
 			eMotor.set(ControlMode.PercentOutput, eVelocity); //If elevator is within the set positions, use the joystick for velocity.
-			//eMotor.setSelectedSensorPosition(5000, 0, 20);
+		
 		}
 		
 		else if(mode == Mode.BUTTON) {
-			eMotor.set(ControlMode.PercentOutput, feedBack(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.0019)); 
+			eMotor.set(ControlMode.PercentOutput, feedBack(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.02)); 
 			
 			//Takes an inputed position and adjusts the velocity to get there.
 			//Last value needs to be tested and adjusted.
@@ -49,20 +64,28 @@ public class ElevatorOutput {
 		SmartDashboard.putNumber("Position", eMotor.getSelectedSensorPosition(0));
 	}
 	
-	public double moveJoystick (double stickValue) { //Sets velocity of motor anywhere from 1 to -1 based on position of joystick.
+	public double moveJoystick (double stickValue) { 
 		eVelocity = stickValue;
 		return eVelocity;
 	}
 	
 	public void reset() {
-		eMotor.setSelectedSensorPosition(0, 0, 20);
-		//eMotor.getSensorCollection().setQuadraturePosition(5000, 10); //This sets position to zero. Is this favorable over limit switches?
+		eMotor.setSelectedSensorPosition(0, 0, 20); //First argument is desired position, second is the type of loop? (0 or 1), third is the timeout.
+		
 	}
 	
-	public double moveToPos (double inputPosition) { //Allows a position to be set in the main code
+	public double moveToPos (double inputPosition) { 
 		elevatorPos = inputPosition;
 		return elevatorPos;
 	}
 	
-
+	public boolean auto(int modeAuto) {
+		if(modeAuto+100 >=  eMotor.getSelectedSensorPosition(0) || modeAuto-100 <= eMotor.getSelectedSensorPosition(0)) {
+			return true;
+		}
+		else {
+			eMotor.set(ControlMode.PercentOutput, feedBack(modeAuto, eMotor.getSelectedSensorPosition(0), 0.02));
+			return false;
+		}	
+	}
 }
