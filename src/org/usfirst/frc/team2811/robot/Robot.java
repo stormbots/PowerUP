@@ -26,6 +26,7 @@ public class Robot extends IterativeRobot {
 	ElevatorOutput elevator = new ElevatorOutput();
 	Intake intake = new Intake();
 	Chassis drive = new Chassis();
+	Climber climber = new Climber();
 	
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
@@ -108,6 +109,7 @@ public class Robot extends IterativeRobot {
 		
 		intake.update(joystick);
 		drive.update(joystick);
+		climber.update(joystick);
 
 	}
 
