@@ -25,6 +25,7 @@ public class Robot extends IterativeRobot {
 	Joystick joystick = new Joystick(1);
 	ElevatorOutput elevator = new ElevatorOutput();
 	Intake intake = new Intake();
+	Chassis drive = new Chassis();
 	
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
@@ -106,6 +107,7 @@ public class Robot extends IterativeRobot {
 		elevator.update();
 		
 		intake.update(joystick);
+		drive.update(joystick);
 
 	}
 
