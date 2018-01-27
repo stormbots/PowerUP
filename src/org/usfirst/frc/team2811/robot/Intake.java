@@ -1,4 +1,4 @@
-//DOCUMENTATION NOT UP TO DATE DUE TO LAST MINUTE CHANGES TO CODE
+
 package org.usfirst.frc.team2811.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /** INTAKE CLASS
- * SUMMARY- There are methods for each action and those are built into the update method, 
- * which is called into the Robot.java. The 7 main actions are input, output, stop, squeeze, letgo, 
- * tilt, and untilt. The constructor at the beginning intiates some code needed for the code to properly run.
+ * SUMMARY- The update method is set in the main code, and sets all the actions to each button 
+ * which is called into the Robot.java. The 5 main actions are input, output, stop, squeeze, and 
+ * tilt (5 buttons). The constructor at the beginning intiates some code needed for the code to properly run.
  *  
  * INPUTS-Two Cantalons (12 and 13 for testing, 8 and 9 for competitions).
  * 		  Two Solenoids (1 and 2 for testing, unknown ID for competitions).
@@ -24,39 +24,24 @@ public class Intake {
 	WPI_TalonSRX motor2 = new WPI_TalonSRX(13); 
 	Solenoid squeezeSolenoid = new Solenoid(1);
 	Solenoid tiltSolenoid = new Solenoid(2);
-	DigitalInput redEye = new DigitalInput(1);
-	Boolean intakeRun = false;
+	DigitalInput redEye = new DigitalInput(4);
 	Boolean squeezeRun = false;
 	Boolean tiltRun = false;
+	Boolean deployCube=false;
 	
 	/**INTAKE CONSTRUCTOR
 	 * Constructor used to set some code up that drives the motors opposite directions
-	 * and turns Pneumatics off for safety reasons.
+	 * and turns Pneumatics off for saftey reasons.
 	 */
 	public Intake() {
-		motor2.follow(motor1);
+		//motor2.follow(motor1);
 		motor2.setInverted(true);
 		squeezeSolenoid.set(false);
 		tiltSolenoid.set(false);
 	}
 	
-	/**INPUT METHOD
-	 * Sets motor speeds for grabbing Powercubes.
-	 * Infared stops Powercube.
-	 */
-	void input() {
-		motor1.set(ControlMode.PercentOutput, 0.50);
-	}
-	
-	/**OUTPUT METHOD
-	 * Sets motor speeds for spouting Powercubes out.
-	 */
-	void output() { 
-		motor1.set(ControlMode.PercentOutput, -0.50);
-	}
-	
 	/**STOP METHOD
-	 * Sets motors and solenoids to stop "working".
+	 * Sets all parts (motor and solenoids) to "stop" or 0 (or false)
 	 */
 	void stop() {
 		motor1.set(ControlMode.PercentOutput, 0);
@@ -64,71 +49,76 @@ public class Intake {
 		tiltSolenoid.set(false);
 	}
 	
-	/**SQUEEZE METHOD
-	 * Sets solenoid to "squeeze" the Powercube.
-	 */
-	void squeeze() {
-		squeezeSolenoid.set(true);
+	public void AutoInit(Boolean deploy) {
+		deployCube=deploy;
+		
 	}
 	
-	/**LETGO METHOD
-	 *Sets solenoid to let go of the Powercube.
-	 */
-	void letgo() {
-		squeezeSolenoid.set(false);
+	public void Auto(int step, double time) {
+		if (step==4&&deployCube) {
+			motor1.set(ControlMode.PercentOutput, -0.50);
+		}
+		if (step==5) {
+			motor1.set(ControlMode.PercentOutput, 0);
+		}
 	}
 	
-	/**TILT METHOD
-	 * Sets solenoid to tilt base of Intake upwards.
-	 */
-	void tilt() { 
-		tiltSolenoid.set(true);
-	}
-	
-	/**UNTILT METHOD
-	 *Sets solenoid to tilt base of Intake downwards.
-	 */
-	void untilt() {
-		tiltSolenoid.set(true);
+	public void Init() {
+		
 	}
 	
 	/**UPDATE METHOD
 	 *Sets each "action" to a specified button that can be pulled into 
-	 *the Robot.java as Intake.update(); for teleop control. There is and extra action
-	 *for manual debugging of motors.
+	 *the Robot.java as Intake.update(); for teleop control. Squeeze and 
+	 *Tilt are toggle buttons while the intake and output need to be held
+	 *down.
 	 * @param stick
 	 */
 	void update(Joystick stick){
 		//get cube
-		if (stick.getRawButton(1)&&!redEye.get()) {
-			input();
+		if (stick.getRawButton(1)&&redEye.get()) {
+			motor1.set(ControlMode.PercentOutput, 0.50);
+			motor2.set(ControlMode.PercentOutput, 0.50);
 		}
 		//put cube
 		else if (stick.getRawButton(2)) {
-			output();
+			motor1.set(ControlMode.PercentOutput, -0.50);
+			motor2.set(ControlMode.PercentOutput, -0.50);
 		}
 		else {
-			stop();
+			motor1.set(ControlMode.PercentOutput, 0);
+			motor2.set(ControlMode.PercentOutput, 0);
 		}
-		//squeeze
+		
+		
+		//squeeze toggle 
 		if(stick.getRawButton(3)) {
-			squeezeRun=true;
+			squeezeRun=!squeezeRun;
 		}
-		//letgo
-		if(stick.getRawButton(4)) {
-			squeezeRun=false;
+		if(squeezeRun) {
+			squeezeSolenoid.set(true);
 		}
-		//tilt 
+		else {
+			squeezeSolenoid.set(false);
+		}
+		
+		
+		//tilt toggle
 		if(stick.getRawButton(5)) {
-			tiltRun=true;
+			tiltRun = !tiltRun;
 		}
-		//untilt
-		if(stick.getRawButton(6)) {
-			untilt();
+		if(tiltRun) {
+			tiltSolenoid.set(true);
 		}
+		else {
+			tiltSolenoid.set(false);
+		}
+		
+		
 		//debug Y-axis control
 		if(stick.getRawButton(7)) {
 			motor1.set(stick.getY());
+			motor2.set(stick.getY());
 		}
 		//stop
 		if (stick.getRawButton(8)) {
