@@ -62,7 +62,7 @@ public class Motion345 {
 		 * @return
 		 */
 		public double getVelPosFb(double t, double pactual,double k) {
-			double pideal=getPos(t);
+			double pideal=getPos(t/traveltime);			
 			return FB(pactual,pideal,k);
 		}
 		
@@ -74,6 +74,7 @@ public class Motion345 {
 		 */
 		public double getVel(double t) {
 			double v=0.0;
+			if(t>1.0)t=1.0;
 			v=(movcnt/traveltime)*V345(t)/maxvel; // produces a value -1 to 1 based on move count and time for move
 			if(v>1.0)v=1.0;
 			if(v<-1.0)v=-1.0;
@@ -82,6 +83,7 @@ public class Motion345 {
 		
 		// based on how far to move return the position in counts
 		public double getPos(double t) {
+			if(t>1.0)t=1.0;
 			double p=0.0;
 			p=movcnt*P345(t);
 			return p;
@@ -89,6 +91,7 @@ public class Motion345 {
 		
 		// calculated the position from 0-1 over time 0-1 for the motion
 		public double P345(double t) {
+			if(t>1.0)t=1.0;
 			double t2=t*t;
 			double t3=t2*t;
 			return (10*t3)-(15*t2*t2)+(6*t2*t3);
@@ -97,6 +100,7 @@ public class Motion345 {
 		// calculated the relative velocity for the smooth motion
 		// ranges from 1-1.875 over the motion
 		public double V345(double t) {
+			if(t>1.0)t=1.0;
 			double t2=t*t;
 			double t3=t2*t;
 			return (30*t2)-(60*t3)+(30*t2*t2);
