@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
-import org.usfirst.frc.team2811.robot.ElevatorOutput.Mode;
+import org.usfirst.frc.team2811.robot.Elevator.Mode;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,7 +23,7 @@ import org.usfirst.frc.team2811.robot.ElevatorOutput.Mode;
 public class Robot extends IterativeRobot {
 	
 	Joystick joystick = new Joystick(1);
-	ElevatorOutput elevator = new ElevatorOutput();
+	Elevator elevator = new Elevator();
 	Intake intake = new Intake();
 	Chassis drive = new Chassis();
 	Climber climber = new Climber();
