@@ -1,22 +1,24 @@
 package org.usfirst.frc.team2811.robot;
 
+
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Class using WPI_TalonSRX to move Elevator w/ joystick and by setting a position.
- * Inputs: eMotor address
+ * Inputs: Joystick y-axis, sensor position
  * Outputs: eVelocity, elevatorPos 
  */
 
-public class Elevator {
+public class Elevator extends RobotModule {
 	
 	 WPI_TalonSRX eMotor = new WPI_TalonSRX(12);
-	 double eVelocity = 0;
-	 double elevatorPos = 0;
+	 double eVelocity = 0.0;
+	 double elevatorPos = 0.0;
 	 double floorPos = 0.0;
 	 double portalPos = 10000;
 	 double switchPos = 20000;
@@ -37,20 +39,40 @@ public class Elevator {
 		MANUAL, BUTTON,
 	}
 	
+	public enum AutoPosition{
+		FLOOR, PORTAL, SWITCH, LSCALE, MSCALE, HSCALE,
+	}
+	
+	public AutoPosition autoPos = AutoPosition.FLOOR;
+	
 	public Mode mode = Mode.MANUAL; 
 	
 	public void changeMode (Mode newMode) {
 		mode = newMode;
 	}
 		
-	public void update(){ //Runs at the end of each loop through teleop.
+	public void update(Joystick stick){ //Runs at the end of each loop through teleop.
+		
+		if(eMotor.getSelectedSensorPosition(0) >= 45000 && eVelocity > 0) { //Keeps elevator from going too high.
+			eVelocity = 0; 
+		}
+		else if(eMotor.getSelectedSensorPosition(0) <= 0 && eVelocity < 0) { //Keeps elevator from going too low.
+			eVelocity = 0; 
+		}
+		else {
+			eVelocity = stick.getY();
+		}
+		eMotor.set(ControlMode.PercentOutput, eVelocity);
+		
+		
+		/*
 		if(mode == Mode.MANUAL) {
-			/*if(eMotor.getSelectedSensorPosition(0) >= 45000 && eVelocity > 0) { //Keeps elevator from going too high.
+			if(eMotor.getSelectedSensorPosition(0) >= 45000 && eVelocity > 0) { //Keeps elevator from going too high.
 				eVelocity = 0; 
 			}
 			if(eMotor.getSelectedSensorPosition(0) <= 0 && eVelocity < 0) { //Keeps elevator from going too low.
 				eVelocity = 0; 
-			}*/
+			}
 			eMotor.set(ControlMode.PercentOutput, eVelocity); //If elevator is within the set positions, use the joystick for velocity.
 		
 		}
@@ -60,7 +82,9 @@ public class Elevator {
 			
 			//Takes an inputed position and adjusts the velocity to get there.
 			//Last value needs to be tested and adjusted.
-		}
+		}*/
+		
+		
 		SmartDashboard.putNumber("Position", eMotor.getSelectedSensorPosition(0));
 	}
 	
@@ -79,13 +103,29 @@ public class Elevator {
 		return elevatorPos;
 	}
 	
-	public boolean auto(int modeAuto) {
-		if(modeAuto+100 >=  eMotor.getSelectedSensorPosition(0) || modeAuto-100 <= eMotor.getSelectedSensorPosition(0)) {
+	public boolean auto(int stepAuto, int timeAuto) {
+		if(stepAuto >= 4) {
+			
+		}
+		if(stepAuto+100 >=  eMotor.getSelectedSensorPosition(0) || stepAuto-100 <= eMotor.getSelectedSensorPosition(0)) {
 			return true;
 		}
 		else {
-			eMotor.set(ControlMode.PercentOutput, feedBack(modeAuto, eMotor.getSelectedSensorPosition(0), 0.02));
+			eMotor.set(ControlMode.PercentOutput, feedBack(stepAuto, eMotor.getSelectedSensorPosition(0), 0.02));
 			return false;
 		}	
+	}
+	
+	public void init( ) {
+		
+	}
+	
+	public void autoInit(AutoPosition goTo) {
+		if(goTo == AutoPosition.SWITCH) {
+			
+		}
+		if(goTo == AutoPosition.MSCALE) {
+			
+		}
 	}
 }
