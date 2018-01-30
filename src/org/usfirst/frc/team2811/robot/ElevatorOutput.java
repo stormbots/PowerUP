@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Outputs: eVelocity, elevatorPos 
  */
 
-public class ElevatorOutput {
+public class ElevatorOutput extends RobotModule {
 	
 	 WPI_TalonSRX eMotor = new WPI_TalonSRX(12);
 	 double eVelocity = 0;
