@@ -64,4 +64,9 @@ public class RobotModule {
 	void auto() {
 		
 	}
+
+	public void resetEnc() {
+		// TODO Auto-generated method stub
+		
+	}
 }

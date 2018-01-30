@@ -78,7 +78,7 @@ public class Robot extends IterativeRobot {
 		}
 	}
 	public void teleopInit() {
-		
+		drive.resetEnc();
 	}
 
 	/**
