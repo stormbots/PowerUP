@@ -23,6 +23,7 @@ import org.usfirst.frc.team2811.robot.ElevatorOutput.Mode;
 public class Robot extends IterativeRobot {
 	
 	Joystick joystick = new Joystick(1);
+	Lighting lighting = new Lighting();
 	ElevatorOutput elevator = new ElevatorOutput();
 	Intake intake = new Intake();
 	Chassis drive = new Chassis();
@@ -107,6 +108,7 @@ public class Robot extends IterativeRobot {
 		}
 		elevator.update();
 		
+		lighting.update(joystick);
 		intake.update(joystick);
 		drive.update(joystick);
 		climber.update(joystick);

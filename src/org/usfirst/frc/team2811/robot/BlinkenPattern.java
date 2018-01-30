@@ -11,7 +11,7 @@ package org.usfirst.frc.team2811.robot;
  * @author stormbots
  * @see manual {@linktourl https://www.revrobotics.com/content/docs/REV-11-1105-UM.pdf}
  */
-public enum BlinkenPatterns {	
+public enum BlinkenPattern {	
 	FIXED_RAINBOW_RAINBOW_PALETTE      (1005,-0.99),  //  PATTERN  1
 	FIXED_RAINBOW_PARTY_PALETTE        (1015,-0.97),  //  PATTERN  2
 	FIXED_RAINBOW_OCEAN_PALETTE        (1025,-0.95),  //  PATTERN  3
@@ -117,7 +117,7 @@ public enum BlinkenPatterns {
 	private int us;
 	private double pwm;
 	
-	BlinkenPatterns(int us, double pwm){
+	BlinkenPattern(int us, double pwm){
 		this.us = us;
 		this.pwm = pwm;
 	}
