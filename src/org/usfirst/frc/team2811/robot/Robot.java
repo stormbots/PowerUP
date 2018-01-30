@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
-import org.usfirst.frc.team2811.robot.ElevatorOutput.Mode;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,10 +23,10 @@ public class Robot extends IterativeRobot {
 	
 	Joystick joystick = new Joystick(1);
 	Lighting lighting = new Lighting();
-	ElevatorOutput elevator = new ElevatorOutput();
-	Intake intake = new Intake();
-	Chassis drive = new Chassis();
-	Climber climber = new Climber();
+	RobotModule elevator = new ElevatorOutput();
+	RobotModule intake = new Intake();
+	RobotModule drive = new Chassis();
+	RobotModule climber = new Climber();
 	
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
@@ -88,27 +87,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		if(joystick.getRawButton(4)) {
-			elevator.changeMode(Mode.MANUAL);
-		}
-		if(joystick.getRawButton(3)) {
-			elevator.changeMode(Mode.BUTTON);
-		}
-		if(joystick.getRawButton(10)) {
-			elevator.reset();
-		}
-		if(joystick.getRawButton(8)) {
-			elevator.moveJoystick(joystick.getY());
-		}
-		if(joystick.getRawButton(1)) { 
-			elevator.moveToPos(10000);
-		}
-		if(joystick.getRawButton(2)) {
-			elevator.moveToPos(20000);
-		}
-		elevator.update();
-		
 		lighting.update(joystick);
+		elevator.update(joystick);
 		intake.update(joystick);
 		drive.update(joystick);
 		climber.update(joystick);
