@@ -27,7 +27,8 @@ public class Intake {
 	DigitalInput redEye = new DigitalInput(4);
 	Boolean squeezeRun = false;
 	Boolean tiltRun = false;
-	Boolean deployCube=false;
+	Boolean deployCube = false;
+	
 	
 	/**INTAKE CONSTRUCTOR
 	 * Constructor used to set some code up that drives the motors opposite directions
@@ -35,39 +36,58 @@ public class Intake {
 	 */
 	public Intake() {
 		//motor2.follow(motor1);
-		motor2.setInverted(true);
+		//motor2.setInverted(true);
+		//motor1.follow(motor2);
+		//motor1.setInverted(true);
 		squeezeSolenoid.set(false);
 		tiltSolenoid.set(false);
 	}
+	
 	
 	/**STOP METHOD
 	 * Sets all parts (motor and solenoids) to "stop" or 0 (or false)
 	 */
 	void stop() {
 		motor1.set(ControlMode.PercentOutput, 0);
+		motor2.set(ControlMode.PercentOutput, 0);
 		squeezeSolenoid.set(false);
 		tiltSolenoid.set(false);
 	}
 	
-	public void AutoInit(Boolean deploy) {
+	/**AUTO INIT METHOD
+	 *Sets deployCube to deploy so that we can either set deploy =true/false
+	 *in case we aren't using Auto code later on.
+	 * @param deploy
+	 */
+	public void autoInit(Boolean deploy) {
 		deployCube=deploy;
 		
 	}
-	
-	public void Auto(int step, double time) {
-		if (step==4&&deployCube) {
+	/**AUTO
+	 *adds steps 4 and 5 of autonomous, the dropping the cube off in the 
+	 *scale steps.
+	 * @param step
+	 * @param time
+	 */
+	public void auto(int step, double time) {
+		if (step==4 && deployCube) {
 			motor1.set(ControlMode.PercentOutput, -0.50);
+			motor2.set(ControlMode.PercentOutput, 0.50);
 		}
 		if (step==5) {
 			motor1.set(ControlMode.PercentOutput, 0);
+			motor2.set(ControlMode.PercentOutput, 0);
 		}
 	}
 	
-	public void Init() {
+	/**TELEOP INIT
+	 *Nothing currently.
+	 */
+	public void init() {
 		
 	}
 	
-	/**UPDATE METHOD
+	/**UPDATE (TELEOP PERIODIC) METHOD
 	 *Sets each "action" to a specified button that can be pulled into 
 	 *the Robot.java as Intake.update(); for teleop control. Squeeze and 
 	 *Tilt are toggle buttons while the intake and output need to be held
@@ -76,24 +96,23 @@ public class Intake {
 	 */
 	void update(Joystick stick){
 		//get cube
-		if (stick.getRawButton(1)&&redEye.get()) {
+		if (stick.getRawButton(1) && redEye.get()) {
 			motor1.set(ControlMode.PercentOutput, 0.50);
-			motor2.set(ControlMode.PercentOutput, 0.50);
+			motor2.set(ControlMode.PercentOutput, -0.50);
 		}
 		//put cube
 		else if (stick.getRawButton(2)) {
 			motor1.set(ControlMode.PercentOutput, -0.50);
-			motor2.set(ControlMode.PercentOutput, -0.50);
+			motor2.set(ControlMode.PercentOutput, 0.50);
 		}
 		else {
 			motor1.set(ControlMode.PercentOutput, 0);
 			motor2.set(ControlMode.PercentOutput, 0);
 		}
-		
-		
+				
 		//squeeze toggle 
-		if(stick.getRawButton(3)) {
-			squeezeRun=!squeezeRun;
+		if(stick.getRawButtonPressed(3)) {
+			squeezeRun = ! squeezeRun;
 		}
 		if(squeezeRun) {
 			squeezeSolenoid.set(true);
@@ -104,7 +123,7 @@ public class Intake {
 		
 		
 		//tilt toggle
-		if(stick.getRawButton(5)) {
+		if(stick.getRawButtonPressed(4)) {
 			tiltRun = !tiltRun;
 		}
 		if(tiltRun) {
@@ -121,7 +140,7 @@ public class Intake {
 			motor2.set(stick.getY());
 		}
 		//stop
-		if (stick.getRawButton(8)) {
+		if (stick.getRawButtonPressed(8)) {
 			stop();
 		}
 	}
