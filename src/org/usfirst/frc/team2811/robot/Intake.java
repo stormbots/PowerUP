@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.Solenoid;
  * OUTPUTS-Taking in Powercubes and holding it (squeeze), outputing the Powercubes, and tilting the base up and down.
  * @author StormBots
  */
-public class Intake {
+public class Intake extends RobotModule {
 	WPI_TalonSRX motor1 = new WPI_TalonSRX(12); 
 	WPI_TalonSRX motor2 = new WPI_TalonSRX(13); 
 	Solenoid squeezeSolenoid = new Solenoid(1);

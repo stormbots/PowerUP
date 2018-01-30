@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.Talon;
  * 
  */
 
-public class Chassis {
+public class Chassis extends RobotModule {
 	WPI_TalonSRX leadL = new WPI_TalonSRX(12);//2
 	Talon frontL = new Talon(1);
 	Talon rearL = new Talon(2);
