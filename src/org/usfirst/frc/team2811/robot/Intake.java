@@ -1,6 +1,9 @@
 //DOCUMENTATION NOT UP TO DATE DUE TO LAST MINUTE CHANGES TO CODE
 package org.usfirst.frc.team2811.robot;
 
+import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
+import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -98,7 +101,7 @@ public class Intake extends RobotModule {
 	 *for manual debugging of motors.
 	 * @param stick
 	 */
-	void update(Joystick stick){
+	void update(Joystick driver1,Joystick driver2, Joystick stick) {
 		//get cube
 		if (stick.getRawButton(1)&&!redEye.get()) {
 			input();
@@ -135,4 +138,12 @@ public class Intake extends RobotModule {
 			stop();
 		}
 	}
+	
+	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation,int delay, boolean deliverCube) {
+
+	}
+	void auto(int step, double time) {
+		
+	}
+
 }
