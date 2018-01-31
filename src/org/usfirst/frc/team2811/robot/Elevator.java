@@ -2,6 +2,9 @@ package org.usfirst.frc.team2811.robot;
 
 
 
+import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
+import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Joystick;
@@ -103,29 +106,23 @@ public class Elevator extends RobotModule {
 		return elevatorPos;
 	}
 	
-	public boolean auto(int stepAuto, int timeAuto) {
+	void auto(int stepAuto, double time) {
 		if(stepAuto >= 4) {
 			
 		}
 		if(stepAuto+100 >=  eMotor.getSelectedSensorPosition(0) || stepAuto-100 <= eMotor.getSelectedSensorPosition(0)) {
-			return true;
+			return;
 		}
 		else {
 			eMotor.set(ControlMode.PercentOutput, feedBack(stepAuto, eMotor.getSelectedSensorPosition(0), 0.02));
-			return false;
+			return ;
 		}	
 	}
 	
-	public void init( ) {
+	public void init( ){
 		
 	}
 	
-	public void autoInit(AutoPosition goTo) {
-		if(goTo == AutoPosition.SWITCH) {
-			
-		}
-		if(goTo == AutoPosition.MSCALE) {
-			
-		}
+	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation,int delay, boolean deliverCube) {
 	}
 }

@@ -1,6 +1,10 @@
 package org.usfirst.frc.team2811.robot;
 
 import com.ctre.phoenix.motorcontrol.can.*;
+
+import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
+import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
+
 import com.ctre.phoenix.motorcontrol.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Joystick;
@@ -73,7 +77,7 @@ public class Chassis extends RobotModule {
 	 *   Then binds the slaves to the leads
 	 * @param stick
 	 */
-	public void update(Joystick stick) {
+	void update(Joystick stick,Joystick driver2, Joystick functions) {
 		//updates the lead talons, then updates the slave talons
 		driver.arcadeDrive(stick.getY(), stick.getX());
 		bind();
@@ -222,4 +226,12 @@ public class Chassis extends RobotModule {
 		}
 	}
 		*/
+	
+	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation,int delay, boolean deliverCube) {
+	}
+
+	void auto(int step, double time) {
+		
+	}
+
 }
