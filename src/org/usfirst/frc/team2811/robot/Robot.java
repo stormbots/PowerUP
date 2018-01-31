@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -24,7 +25,7 @@ public class Robot extends IterativeRobot {
 	Joystick stickDrive1 = new Joystick(1);
 	Joystick stickDrive2 = new Joystick(2);
 	Joystick stickFunctions = new Joystick(3);
-	RobotModule elevator = new ElevatorOutput();
+	RobotModule elevator = new Elevator();
 	RobotModule intake = new Intake();
 	RobotModule drive = new Chassis();
 	RobotModule climber = new Climber();
