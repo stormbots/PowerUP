@@ -21,7 +21,9 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class Robot extends IterativeRobot {
 	
-	Joystick joystick = new Joystick(1);
+	Joystick stickDrive1 = new Joystick(1);
+	Joystick stickDrive2 = new Joystick(2);
+	Joystick stickFunctions = new Joystick(3);
 	RobotModule elevator = new ElevatorOutput();
 	RobotModule intake = new Intake();
 	RobotModule drive = new Chassis();
@@ -32,6 +34,18 @@ public class Robot extends IterativeRobot {
 	private String m_autoSelected;
 	private SendableChooser<String> m_chooser = new SendableChooser<>();
 
+	public static enum RobotLocation{LEFT,RIGHT,CENTER};
+	public static enum TargetLocation{SWITCH,SCALE,MOVE_ONLY};
+	public static enum TeamColor{RED,BLUE};
+
+	RobotLocation robotLocation =  RobotLocation.CENTER;
+	TargetLocation targetLocation =  TargetLocation.SWITCH;
+	
+	static String fieldData = "XXX";
+	
+	static double delayTime = 0;
+	static boolean deliverCube = true;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -56,6 +70,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		
+		//TODO: Parse the field string into the appropriate values for use in auto commands
+		// robotLocation = RobotLocation.CENTER
+		// targetLocation = TargetLocation.SWITCH
+		
 		m_autoSelected = m_chooser.getSelected();
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
@@ -86,10 +105,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		elevator.update(joystick);
-		intake.update(joystick);
-		drive.update(joystick);
-		climber.update(joystick);
+		elevator.update(stickDrive1,stickDrive2,stickFunctions);
+		intake.update(stickDrive1,stickDrive2,stickFunctions);
+		drive.update(stickDrive1,stickDrive2,stickFunctions);
+		climber.update(stickDrive1,stickDrive2,stickFunctions);
 
 	}
 

@@ -37,7 +37,7 @@ public class Climber extends RobotModule {
 		return vx;
 	}
 	
-	public void update(Joystick stick) {
+	void update(Joystick driver1,Joystick driver2, Joystick stick) {
 		mtr1.set(stick.getY());
 		mtr2.set(stick.getY());
 		//? SmartDashboard.putNumber("velocity", TarVel);
