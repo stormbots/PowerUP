@@ -34,14 +34,17 @@ public class Robot extends IterativeRobot {
 	private String m_autoSelected;
 	private SendableChooser<String> m_chooser = new SendableChooser<>();
 
-	public enum RobotLocation{LEFT,RIGHT,CENTER};
-	public enum TargetLocation{SWITCH,SCALE,MOVE_ONLY};
+	public static enum RobotLocation{LEFT,RIGHT,CENTER};
+	public static enum TargetLocation{SWITCH,SCALE,MOVE_ONLY};
+	public static enum TeamColor{RED,BLUE};
 
-	
 	RobotLocation robotLocation =  RobotLocation.CENTER;
 	TargetLocation targetLocation =  TargetLocation.SWITCH;
-	double delayTime = 0;
-	boolean deliverCube = true;
+	
+	static String fieldData = "XXX";
+	
+	static double delayTime = 0;
+	static boolean deliverCube = true;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -67,6 +70,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		
+		//TODO: Parse the field string into the appropriate values for use in auto commands
+		// robotLocation = RobotLocation.CENTER
+		// targetLocation = TargetLocation.SWITCH
+		
 		m_autoSelected = m_chooser.getSelected();
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
