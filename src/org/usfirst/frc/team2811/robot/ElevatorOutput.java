@@ -1,8 +1,12 @@
 package org.usfirst.frc.team2811.robot;
 
+import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
+import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -43,7 +47,7 @@ public class ElevatorOutput extends RobotModule {
 		mode = newMode;
 	}
 		
-	public void update(){ //Runs at the end of each loop through teleop.
+	void update(Joystick driver1,Joystick driver2, Joystick functions1) {
 		if(mode == Mode.MANUAL) {
 			/*if(eMotor.getSelectedSensorPosition(0) >= 45000 && eVelocity > 0) { //Keeps elevator from going too high.
 				eVelocity = 0; 
@@ -79,13 +83,17 @@ public class ElevatorOutput extends RobotModule {
 		return elevatorPos;
 	}
 	
-	public boolean auto(int modeAuto) {
+	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation,int delay, boolean deliverCube) {
+
+	}
+	
+	void auto(int modeAuto, double time) {
 		if(modeAuto+100 >=  eMotor.getSelectedSensorPosition(0) || modeAuto-100 <= eMotor.getSelectedSensorPosition(0)) {
-			return true;
+			return;
 		}
 		else {
 			eMotor.set(ControlMode.PercentOutput, feedBack(modeAuto, eMotor.getSelectedSensorPosition(0), 0.02));
-			return false;
+			return;
 		}	
 	}
 }

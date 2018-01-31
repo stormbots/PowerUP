@@ -1,5 +1,8 @@
 package org.usfirst.frc.team2811.robot;
 
+import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
+import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
+
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
@@ -47,21 +50,21 @@ public class RobotModule {
 	 * Run every cycle during teleopPeriodic
 	 * @param joystick 
 	 */
-	void update(Joystick joystick) {
+	void update(Joystick driver1,Joystick driver2, Joystick functions1) {
 		
 	};
 	
 	/**
 	 * Run during teleopInit
 	 */
-	void autoInit() {
+	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation,int delay, boolean deliverCube) {
 		
 	}
 	
 	/**
 	 * Run every cycle during auto
 	 */
-	void auto() {
+	void auto(int step, double time) {
 		
 	}
 
