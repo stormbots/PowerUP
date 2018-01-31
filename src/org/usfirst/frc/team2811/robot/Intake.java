@@ -62,10 +62,11 @@ public class Intake extends RobotModule {
 	 *in case we aren't using Auto code later on.
 	 * @param deploy
 	 */
-	public void autoInit(Boolean deploy) {
-		deployCube=deploy;
+	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation,int delay, boolean deliverCube) {
+		deployCube=deliverCube;
 		
 	}
+	
 	/**AUTO
 	 *adds steps 4 and 5 of autonomous, the dropping the cube off in the 
 	 *scale steps.
@@ -147,12 +148,4 @@ public class Intake extends RobotModule {
 			stop();
 		}
 	}
-	
-	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation,int delay, boolean deliverCube) {
-
-	}
-	void auto(int step, double time) {
-		
-	}
-
 }
