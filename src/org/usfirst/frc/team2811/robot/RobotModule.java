@@ -35,7 +35,9 @@ import edu.wpi.first.wpilibj.Joystick;
 public class RobotModule {
 
 	//These are standard methods used by all modules
-	
+	public void robotInit() {
+	}
+
 	/**
 	 * Run during during teleopInit
 	 */

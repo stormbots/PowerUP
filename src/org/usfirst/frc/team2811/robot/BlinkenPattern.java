@@ -102,17 +102,17 @@ public enum BlinkenPattern {
 	SOLID_DARK_GREEN                   (1875,0.75),   //  PATTERN  88
 	SOLID_GREEN                        (1885,0.77),   //  PATTERN  89
 	SOLID_BLUE_GREEN                   (1895,0.79),   //  PATTERN  90
-	SOLID_AQUA                         (1905,0.81),   //  PATTERN  91
+	SOLID_BLUE                         (1905,0.81),   //  PATTERN  91
 	SOLID_SKY_BLUE                     (1915,0.83),   //  PATTERN  92
 	SOLID_DARK_BLUE                    (1925,0.85),   //  PATTERN  93
-	SOLID_BLUE                         (1935,0.87),   //  PATTERN  94
+	SOLID_AQUA                         (1935,0.87),   //  PATTERN  94
 	SOLID_BLUE_VIOLET                  (1945,0.89),   //  PATTERN  95
 	SOLID_VIOLET                       (1955,0.91),   //  PATTERN  96
 	SOLID_WHITE                        (1965,0.93),   //  PATTERN  97
 	SOLID_GRAY                         (1975,0.95),   //  PATTERN  98
 	SOLID_DARK_GRAY                    (1985,0.97),   //  PATTERN  99
 	SOLID_BLACK                        (1995,0.99);   //  PATTERN  100
-
+	
 
 	private int us;
 	private double pwm;

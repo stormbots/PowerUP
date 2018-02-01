@@ -23,10 +23,10 @@ public class Robot extends IterativeRobot {
 	
 	Joystick joystick = new Joystick(1);
 	Lighting lighting = new Lighting();
-	RobotModule elevator = new ElevatorOutput();
-	RobotModule intake = new Intake();
-	RobotModule drive = new Chassis();
-	RobotModule climber = new Climber();
+	RobotModule elevator = new RobotModule();
+	RobotModule intake = new RobotModule();
+	RobotModule drive = new RobotModule();
+	RobotModule climber = new RobotModule();
 	
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
@@ -42,6 +42,8 @@ public class Robot extends IterativeRobot {
 		m_chooser.addDefault("Default Auto", kDefaultAuto);
 		m_chooser.addObject("My Auto", kCustomAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
+		
+		lighting.robotInit();
 	}
 
 	/**
