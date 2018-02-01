@@ -26,7 +26,7 @@ public class Intake extends RobotModule {
 	WPI_TalonSRX motor1 = new WPI_TalonSRX(12); 
 	WPI_TalonSRX motor2 = new WPI_TalonSRX(13); 
 	Solenoid squeezeSolenoid = new Solenoid(1);
-	Solenoid tiltSolenoid = new Solenoid(2);
+	//Solenoid tiltSolenoid = new Solenoid(2);
 	DigitalInput redEye = new DigitalInput(4);
 	Boolean squeezeRun = false;
 	Boolean tiltRun = false;
@@ -43,7 +43,7 @@ public class Intake extends RobotModule {
 		//motor1.follow(motor2);
 		//motor1.setInverted(true);
 		squeezeSolenoid.set(false);
-		tiltSolenoid.set(false);
+		//tiltSolenoid.set(false);
 	}
 	
 	
@@ -54,7 +54,7 @@ public class Intake extends RobotModule {
 		motor1.set(ControlMode.PercentOutput, 0);
 		motor2.set(ControlMode.PercentOutput, 0);
 		squeezeSolenoid.set(false);
-		tiltSolenoid.set(false);
+		//tiltSolenoid.set(false);
 	}
 	
 	/**AUTO INIT METHOD
@@ -64,7 +64,6 @@ public class Intake extends RobotModule {
 	 */
 	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation,int delay, boolean deliverCube) {
 		deployCube=deliverCube;
-		
 	}
 	
 	/**AUTO
@@ -116,7 +115,7 @@ public class Intake extends RobotModule {
 				
 		//squeeze toggle 
 		if(stick.getRawButtonPressed(3)) {
-			squeezeRun = ! squeezeRun;
+			squeezeRun = !squeezeRun;
 		}
 		if(squeezeRun) {
 			squeezeSolenoid.set(true);
@@ -127,15 +126,15 @@ public class Intake extends RobotModule {
 		
 		
 		//tilt toggle
-		if(stick.getRawButtonPressed(4)) {
-			tiltRun = !tiltRun;
-		}
-		if(tiltRun) {
-			tiltSolenoid.set(true);
-		}
-		else {
-			tiltSolenoid.set(false);
-		}
+		//if(stick.getRawButtonPressed(4)) {
+		//	tiltRun = !tiltRun;
+		//}
+		//if(tiltRun) {
+		//	tiltSolenoid.set(true);
+		//}
+		//else {
+		//	tiltSolenoid.set(false);
+		//}
 		
 		
 		//debug Y-axis control
