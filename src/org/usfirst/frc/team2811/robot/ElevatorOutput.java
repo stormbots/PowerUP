@@ -26,8 +26,9 @@ public class ElevatorOutput extends RobotModule {
 	 double switchPos = 20000;
 	 double scaleLowPos = 25000;
 	 double scaleHighPos = 30000;
-	 
+	 double autoPosition = 0.0;
 	
+	 
 	private double feedBack (double V, double P, double K){ 
 		double S= 1;
 		if(V<P) S = -1;
@@ -38,32 +39,42 @@ public class ElevatorOutput extends RobotModule {
 	}
 	
 	public enum Mode{ 
-		MANUAL, BUTTON,
+		MANUALMOTOR, MANUALPOSITION, BUTTON,
 	}
 	
-	public Mode mode = Mode.MANUAL; 
+	public Mode mode = Mode.MANUALMOTOR; 
 	
 	public void changeMode (Mode newMode) {
 		mode = newMode;
 	}
 		
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) {
-		if(mode == Mode.MANUAL) {
-			/*if(eMotor.getSelectedSensorPosition(0) >= 45000 && eVelocity > 0) { //Keeps elevator from going too high.
+		if(mode == Mode.MANUALMOTOR) {
+			
+			if(eMotor.getSelectedSensorPosition(0) >= 45000 && eVelocity > 0) { //Keeps elevator from going too high.
 				eVelocity = 0; 
 			}
 			if(eMotor.getSelectedSensorPosition(0) <= 0 && eVelocity < 0) { //Keeps elevator from going too low.
 				eVelocity = 0; 
-			}*/
+			}
 			eMotor.set(ControlMode.PercentOutput, eVelocity); //If elevator is within the set positions, use the joystick for velocity.
 		
 		}
 		
 		else if(mode == Mode.BUTTON) {
+			
 			eMotor.set(ControlMode.PercentOutput, feedBack(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.02)); 
 			
 			//Takes an inputed position and adjusts the velocity to get there.
 			//Last value needs to be tested and adjusted.
+			
+		}
+		
+		else if(mode == Mode.MANUALPOSITION) {
+			
+			elevatorPos = ( (functions1.getY()-(-1)) / (1-(-1)) * (45000-0) + 0 );
+			eMotor.set(ControlMode.PercentOutput, feedBack(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.02));
+			
 		}
 		SmartDashboard.putNumber("Position", eMotor.getSelectedSensorPosition(0));
 	}
@@ -84,16 +95,23 @@ public class ElevatorOutput extends RobotModule {
 	}
 	
 	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation,int delay, boolean deliverCube) {
-
+		if(targetLocation == TargetLocation.SWITCH) {
+			autoPosition = switchPos;
+		}
+		if(targetLocation == TargetLocation.SCALE) {
+			autoPosition = scaleHighPos;
+		}
+		if(targetLocation == TargetLocation.MOVE_ONLY) {
+			autoPosition = switchPos;
+		}
+		elevatorPos = switchPos;
 	}
 	
-	void auto(int modeAuto, double time) {
-		if(modeAuto+100 >=  eMotor.getSelectedSensorPosition(0) || modeAuto-100 <= eMotor.getSelectedSensorPosition(0)) {
-			return;
+	void auto(int stepAuto, double time) {
+		
+		if(time > 3 && stepAuto == 3) {
+			elevatorPos = autoPosition;
 		}
-		else {
-			eMotor.set(ControlMode.PercentOutput, feedBack(modeAuto, eMotor.getSelectedSensorPosition(0), 0.02));
-			return;
-		}	
+		eMotor.set(ControlMode.PercentOutput, feedBack(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.02));
 	}
 }
