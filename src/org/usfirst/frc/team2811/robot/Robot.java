@@ -25,24 +25,26 @@ public class Robot extends IterativeRobot {
 	Joystick stickDrive1 = new Joystick(1);
 	Joystick stickDrive2 = new Joystick(2);
 	Joystick stickFunctions = new Joystick(3);
-	RobotModule elevator = new Elevator();
-	RobotModule intake = new Intake();
+	RobotModule elevator = new RobotModule();
+	RobotModule intake = new RobotModule();
 	RobotModule drive = new Chassis();
-	RobotModule climber = new Climber();
+	RobotModule climber = new RobotModule();
 	
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
 	private String m_autoSelected;
 	private SendableChooser<String> m_chooser = new SendableChooser<>();
 
-	public static enum RobotLocation{LEFT,RIGHT,CENTER};
-	public static enum TargetLocation{SWITCH,SCALE,MOVE_ONLY};
-	public static enum TeamColor{RED,BLUE};
+	public static enum RobotLocation{LEFT, RIGHT,CENTER};
+	public static enum TargetLocation{SWITCH, SCALE,MOVE_ONLY};
+	public static enum SwitchConfig{UNKNOWN, LEFT, RIGHT};
+	public static enum ScaleConfig{UNKNOWN, LEFT, RIGHT};
+	public static enum TeamColor{RED, BLUE};
 
-	RobotLocation robotLocation =  RobotLocation.CENTER;
-	TargetLocation targetLocation =  TargetLocation.SWITCH;
+	public static SwitchConfig switchConfig = SwitchConfig.UNKNOWN;
+	public static ScaleConfig scaleConfig = ScaleConfig.UNKNOWN;
 	
-	static String fieldData = "XXX";
+	static String fieldData = "";
 	
 	static double delayTime = 0;
 	static boolean deliverCube = true;
@@ -71,11 +73,29 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		
 		//TODO: Parse the field string into the appropriate values for use in auto commands
 		// robotLocation = RobotLocation.CENTER
 		// targetLocation = TargetLocation.SWITCH
+				
+		//get field data
 		
+		if(fieldData.length()>0){
+			if(fieldData.charAt(0)=='L') {
+				switchConfig = SwitchConfig.LEFT;
+			}
+			else {
+				switchConfig = SwitchConfig.RIGHT;
+			}
+			
+			if(fieldData.charAt(1)=='L') {
+				scaleConfig = ScaleConfig.LEFT;
+			}
+			else {
+				scaleConfig = ScaleConfig.RIGHT;
+			}
+		}
+		else {}
+				
 		m_autoSelected = m_chooser.getSelected();
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);

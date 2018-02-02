@@ -58,7 +58,17 @@ public class RobotModule {
 	 * Run during teleopInit
 	 */
 	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation,int delay, boolean deliverCube) {
-		
+		if(robotLocation == RobotLocation.LEFT) {
+			
+		}
+		if(robotLocation == RobotLocation.CENTER) {
+			if(targetLocation == ) {
+				
+			}
+		}
+		if(robotLocation == RobotLocation.RIGHT) {
+			
+		}
 	}
 	
 	/**
@@ -66,5 +76,9 @@ public class RobotModule {
 	 */
 	void auto(int step, double time) {
 		
+	}
+
+	//used by chassis class, added here to avoid breakage
+	public void resetEnc() {
 	}
 }
