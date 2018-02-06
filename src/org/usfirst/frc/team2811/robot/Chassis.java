@@ -3,6 +3,8 @@ package org.usfirst.frc.team2811.robot;
 import com.ctre.phoenix.motorcontrol.can.*;
 
 import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
+import org.usfirst.frc.team2811.robot.Robot.ScaleConfig;
+import org.usfirst.frc.team2811.robot.Robot.SwitchConfig;
 import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
 
 import com.ctre.phoenix.motorcontrol.*;
@@ -10,8 +12,6 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 
 /* Inputs:
  *   Joystick Y & X axis
@@ -33,21 +33,28 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Chassis extends RobotModule {
 	WPI_TalonSRX leadL = new WPI_TalonSRX(12);//2
-	Talon frontL = new Talon(0);
-	Talon rearL = new Talon(1);
+	Talon frontL = new Talon(1);
+	Talon rearL = new Talon(2);
 	//WPI_TalonSRX frontL = new WPI_TalonSRX(3);
 	//WPI_TalonSRX rearL = new WPI_TalonSRX(4);
 	WPI_TalonSRX leadR = new WPI_TalonSRX(13);//5
-	Talon frontR = new Talon(2);
-	Talon rearR = new Talon(3);
+	Talon frontR = new Talon(3);
+	Talon rearR = new Talon(4);
 	//WPI_TalonSRX frontR = new WPI_TalonSRX(6);
 	//WPI_TalonSRX rearR = new WPI_TalonSRX(7);
 	DifferentialDrive driver = new DifferentialDrive(leadL, leadR);
 	//Solenoid highGear = new Solenoid(3);
-	private int step = 0;
-	CXTIMER clock = new CXTIMER();
-	Motion345 leadMleft = new Motion345(2900, 5, 17300, 200);
-	Motion345 leadMright = new Motion345(2900, 5, -17300, 200);
+	
+	Motion345 left345 = new Motion345(10000, 3, 0, 200);
+	Motion345 right345 = new Motion345(10000, 3, 0, 200);
+	
+	public double left1 = 0;
+	public double left2 = 0;
+	public double left3 = 0;
+	public double right1 = 0;
+	public double right2 = 0;
+	public double right3 = 0;
+
 	/**
 	 * the constructor: 
 	 *initializes the slave talons
@@ -80,35 +87,16 @@ public class Chassis extends RobotModule {
 	 *   Then binds the slaves to the leads
 	 * @param stick
 	 */
-	void update(Joystick stick,Joystick driver2, Joystick functions) {
+	void update(Joystick stickR, Joystick stickL, Joystick functions) {
 		//updates the lead talons, then updates the slave talons
-		double targetLeft = 0.0;
-		double targetRight = 0.0;
-		double targetLeftVel = 0.0;
-		double targetRightVel = 0.0;
-		clock.Update();
-		if(stick.getRawButton(10)) {
-			clock.ckTime(true, 5000);
-			targetRight = leadMright.getPos(clock.getTimeSec());
-			targetLeft = leadMleft.getPos(clock.getTimeSec());
-			targetRightVel = FB(leadR.getSelectedSensorPosition(0), targetRight, 0.01);
-			targetLeftVel = FB(leadL.getSelectedSensorPosition(0), targetLeft, 0.01);
-			leadL.set(ControlMode.PercentOutput, targetLeftVel);
-			leadR.set(ControlMode.PercentOutput, targetRightVel);
+		if(stickL.getRawButton(2)) {
+			driver.tankDrive(stickL.getY(), stickR.getY());
 		}
 		else {
-			driver.arcadeDrive(-stick.getY(), -stick.getX());
-			clock.reset();
+			driver.arcadeDrive(stickR.getY(), stickR.getX());
 		}
+
 		bind();
-		SmartDashboard.putNumber("Right Pos", leadR.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("Left Pos", leadL.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("Right Vel", leadR.getMotorOutputPercent());
-		SmartDashboard.putNumber("Left Vel", leadL.getMotorOutputPercent());
-		SmartDashboard.putNumber("Target Left Velocity", targetLeftVel);
-		SmartDashboard.putNumber("Target Right Velocity", targetRightVel);
-		SmartDashboard.putNumber("Target Right Position" , targetRight);
-		SmartDashboard.putNumber("Target Left Position", targetLeft);
 	}
 	/*
 	public void shift() {
@@ -120,29 +108,6 @@ public class Chassis extends RobotModule {
 	
 	// ---- Autonomous Stuff ----
 	
-	/**
-	 * finds a velocity:
-	 *   basic square root function
-	 * 
-	 * @param posActual
-	 * @param posTarget
-	 * @param K
-	 * @return
-	 */
-	private double FB(double posActual, double posTarget, double K) {
-		double S = 1;
-		if(posActual > posTarget) {
-			S = -1;
-		}
-		double VX = S*K*Math.sqrt(Math.abs(posActual-posTarget));
-		if(VX > 1) {
-			VX = 1;
-		}
-		if(VX < -1) {
-			VX = -1;
-		}
-		return VX;
-	}
 	
 	/**
 	 * re-initializes the lead talonSRX encoders
@@ -150,8 +115,128 @@ public class Chassis extends RobotModule {
 	public void resetEnc() {
 		leadL.setSelectedSensorPosition(0, 0, 20);
 		leadR.setSelectedSensorPosition(0, 0, 20);
-		clock.Update();
 	}
+	
+	void autoInit(
+			RobotLocation robotLocation, 
+			TargetLocation targetLocation, 
+			SwitchConfig switchConfig, 
+			ScaleConfig scaleConfig) {
+		//save RobotLocation and TargetLocation to class fields, as we'll need in auto
+		
+		
+		if(robotLocation == RobotLocation.LEFT) {
+			if(targetLocation == TargetLocation.SCALE) {
+				if(scaleConfig == scaleConfig.LEFT) {
+					left1 = 1133415.0982;
+					right1 = 1110241.5762;
+					left2 = 0;
+					right2 = 0;
+					left3 = 0;
+					right3 = 0;
+				}
+				else {
+					left1 = 0;
+					right1 = 0;
+					left2 = 0;
+					right2 = 0;
+					left3 = 0;
+					right3 = 0;
+				}
+			}
+			if(targetLocation == TargetLocation.SWITCH) {
+				if(switchConfig == switchConfig.LEFT) {
+					left1 = 603770.7021;
+					right1 = 537792.7431;
+					left2 = 0;
+					right2 = 0;
+					left3 = 0;
+					right3 = 0;
+				}
+				else {
+					left1 = 0;
+					right1 = 0;
+					left2 = 0;
+					right2 = 0;
+					left3 = 0;
+					right3 = 0;
+				}
+			}
+			if(targetLocation == TargetLocation.MOVE_ONLY) {
+				left1 = 444000.0000;
+				right1 = 444000.0000;
+				left2 = 0;
+				right2 = 0;
+				left3 = 0;
+				right3 = 0;
+			}
+		}
+		if(robotLocation == RobotLocation.CENTER) {
+			if(switchConfig == switchConfig.LEFT) {
+				left1 = 412648.195;
+				right1 = 958971.1575;
+				left2 = 958971.1575																																																														;
+				right2 = 412648.195;
+				left3 = 299700.0000;
+				right3 = 299700.0000;
+			}
+			else {
+				left1 = 210683.0573;
+				right1 = 74102.3167;
+				left2 = 74102.3167;
+				right2 = 210683.0573;
+				left3 = 299700.0000;
+				right3 = 299700.0000;
+			}
+		}
+		if(robotLocation == RobotLocation.RIGHT) {
+			if(targetLocation == TargetLocation.SCALE) {
+				if(scaleConfig == scaleConfig.LEFT) {
+					left1 = 0;
+					right1 = 0;
+					left2 = 0;
+					right2 = 0;
+					left3 = 0;
+					right3 = 0;
+				}
+				else {
+					left1 = 1110241.5762;
+					right1 = 1133415.0982;
+					left2 = 0;
+					right2 = 0;
+					left3 = 0;
+					right3 = 0;
+				}
+			}
+			if(targetLocation == TargetLocation.SWITCH) {
+				if(switchConfig == switchConfig.LEFT) {
+					left1 = 0;
+					right1 = 0;
+					left2 = 0;
+					right2 = 0;
+					left3 = 0;
+					right3 = 0;
+				}
+				else {
+					left1 = 537792.7431;
+					right1 = 603770.7021;
+					left2 = 0;
+					right2 = 0;
+					left3 = 0;
+					right3 = 0;
+				}
+			}
+			if(targetLocation == TargetLocation.MOVE_ONLY) {
+				left1 = 444000.0000;
+				right1 = 444000.0000;
+				left2 = 0;
+				right2 = 0;
+				left3 = 0;
+				right3 = 0;
+			}
+		}
+	}
+
 	
 	/**
 	 * auto forward:
@@ -159,108 +244,97 @@ public class Chassis extends RobotModule {
 	 * 
 	 * @param pos
 	 */
-	public void moveAuto(int posL, int posR) {
-		double targL = FB(leadL.getSelectedSensorPosition(0), posL, 0.08);
-		double targR = FB(leadR.getSelectedSensorPosition(0), posR, 0.08);	
-		leadL.set(ControlMode.PercentOutput, targL);
-		leadR.set(ControlMode.PercentOutput, targR);
-	}
-	/* DONT BOTHER WITH THIS STUFF (shoud be in autonomous periodic)
-	public void theSwitch() {
+	void auto(int step, double time) {
 		switch(step) {
-		
+			
 			case 0:
-				if(clock.ckTime(true, 2500)) {
-					step++;
+				if(time >= 0) {
 					resetEnc();
-					moveAuto(1000, 1000);
+					driver.tankDrive(left1, right1);
 					//set up and start Case 1
-				}
-				else {
-					moveAuto(2000, 2000);
-					//keep at Case 0
-				}
-				break;
-				
+					}
+					else {
+						driver.tankDrive(0, 0);
+						//keep at Case 0
+					}
+					break;
+					
 			case 1:
-				if(clock.ckTime(true, 2500)) {
-					step++;
+				if(time >= 3) {
 					resetEnc();
-					moveAuto(2000, 2000);
+					left345.setMove(10000, 3, left2, 200);
+					right345.setMove(10000, 3, right2, 200);
+					driver.tankDrive(left345.getVel(time), right345.getVel(time));
 					//set up and start Case 2
 				}
 				else {
-					moveAuto(1000, 1000);
+					left345.setMove(10000, 3, left1, 200);
+					right345.setMove(10000, 3, right1, 200);
+					driver.tankDrive(left345.getVel(time), right345.getVel(time));
 					//keep at Case 1
 				}
 				break;
 				
 			case 2:
-				if(clock.ckTime(true, 2500)) {
-					step++;
+				if(time >= 3) {
 					resetEnc();
-					moveAuto(1000, 1000);
+					left345.setMove(10000, 3, left3, 200);
+					right345.setMove(10000, 3, right3, 200);
+					driver.tankDrive(left345.getVel(time), right345.getVel(time));
 					//set up and start Case 3
 				}
 				else {
-					moveAuto(2000, 2000);
+					left345.setMove(10000, 3, left2, 200);
+					right345.setMove(10000, 3, right2, 200);
+					driver.tankDrive(left345.getVel(time), right345.getVel(time));
 					//keep at Case 2
 				}
 				break;
 				
 			case 3:
-				if(clock.ckTime(true, 2500)) {
-					step++;
+				if(time >= 3) {
 					resetEnc();
-					moveAuto(2000, 2000);
+					driver.tankDrive(0, 0);
 					//set up and start Case 4
 				}
 				else {
-					moveAuto(1000, 1000);
+					left345.setMove(10000, 3, left3, 200);
+					right345.setMove(10000, 3, right3, 200);
+					driver.tankDrive(left345.getVel(time), right345.getVel(time));
 					//keep at Case 3
 				}
 				break;
 				
 			case 4:
-				if(clock.ckTime(true, 2500)) {
-					step++;
+				if(time >= 3) {
 					resetEnc();
-					moveAuto(1000, 1000);
+					driver.tankDrive(0, 0);
 					//set up and start Case 5
 				}
 				else {
-					moveAuto(2000, 2000);
+					driver.tankDrive(0, 0);
 					//keep at Case 4
 				}
 				break;
 				
 			case 5:
-				if(clock.ckTime(true, 2500)) {
-					step++;
+				if(time >= 3) {
 					resetEnc();
-					moveAuto(2000, 2000);
+					driver.tankDrive(0, 0);
 					//set up and start Default
 				}
 				else {
-					moveAuto(1000, 1000);
+					driver.tankDrive(0, 0);
 					//keep at Case 5
 				}
 				break;
 				
 			default:
-				moveAuto(0, 0);
+				driver.tankDrive(0, 0);
 				//keep at default
 				break;
-				
 		}
 	}
-		*/
 	
-	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation,int delay, boolean deliverCube) {
-	}
-
-	void auto(int step, double time) {
-		
-	}
 
 }
