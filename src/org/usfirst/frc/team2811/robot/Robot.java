@@ -106,13 +106,11 @@ public class Robot extends IterativeRobot {
 		}
 		else {}
 
-		/*  THIS IS WHERE THE ROBOT CODE SENDS THE DATA TO THE MODULES
+		/*  THIS IS WHERE THE ROBOT CODE SENDS THE DATA TO THE MODULES */
 		elevator.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		intake.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		climber.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
-		*/
-		
 		drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		
 		m_autoSelected = m_chooser.getSelected();
