@@ -1,30 +1,23 @@
 package org.usfirst.frc.team2811.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Talon;
-//!!import com.ctre.phoenix.motorcontrol.can.*;
-//!!import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 
 public class Climber extends RobotModule {
 	
-	//stick.getRawButton(5) (robot)
-	//find positions
-	
-	Talon mtr1 = new Talon(1);
-	Talon mtr2 = new Talon(2);
-	//double TarPos;
-	double TarVel;
-	
-	public void setVelocity(double velocity) {
-		TarVel = velocity;
-	}
+	WPI_TalonSRX mtr1 = new WPI_TalonSRX(12);
 		
 	void update(Joystick driver1,Joystick driver2, Joystick stick) {
-		mtr1.set(stick.getY());
-		mtr2.set(stick.getY());
-		//? SmartDashboard.putNumber("velocity", TarVel);
-		//SmartDashboard.putNumber("position", TarPos);
+		if(stick.getRawButton(3)) {
+		mtr1.set(ControlMode.PercentOutput, stick.getY());
+		}
+		else {
+			mtr1.set(ControlMode.PercentOutput, 0);
+		}
+		SmartDashboard.putNumber("ClimberCurrent", mtr1.getOutputCurrent());
 		
 	}
 }
