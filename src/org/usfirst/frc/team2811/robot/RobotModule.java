@@ -1,6 +1,8 @@
 package org.usfirst.frc.team2811.robot;
 
 import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
+import org.usfirst.frc.team2811.robot.Robot.ScaleConfig;
+import org.usfirst.frc.team2811.robot.Robot.SwitchConfig;
 import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -57,12 +59,16 @@ public class RobotModule {
 	/**
 	 * Run during teleopInit
 	 */
-	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation,int delay, boolean deliverCube) {
+	void autoInit(
+			RobotLocation robotLocation, 
+			TargetLocation targetLocation, 
+			SwitchConfig switchConfig, 
+			ScaleConfig scaleConfig) {
 		if(robotLocation == RobotLocation.LEFT) {
 			
 		}
 		if(robotLocation == RobotLocation.CENTER) {
-			if(targetLocation == ) {
+			if(targetLocation == targetLocation.SCALE) {
 				
 			}
 		}

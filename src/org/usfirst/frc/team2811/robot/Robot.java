@@ -7,6 +7,11 @@
 
 package org.usfirst.frc.team2811.robot;
 
+import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
+import org.usfirst.frc.team2811.robot.Robot.ScaleConfig;
+import org.usfirst.frc.team2811.robot.Robot.SwitchConfig;
+import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,7 +32,7 @@ public class Robot extends IterativeRobot {
 	Joystick stickFunctions = new Joystick(3);
 	RobotModule elevator = new RobotModule();
 	RobotModule intake = new RobotModule();
-	RobotModule drive = new Chassis();
+	Chassis drive = new Chassis();
 	RobotModule climber = new RobotModule();
 	
 	private static final String kDefaultAuto = "Default";
@@ -36,11 +41,16 @@ public class Robot extends IterativeRobot {
 	private SendableChooser<String> m_chooser = new SendableChooser<>();
 
 	public static enum RobotLocation{LEFT, RIGHT,CENTER};
-	public static enum TargetLocation{SWITCH, SCALE,MOVE_ONLY};
+	public static enum TargetLocation{SWITCH, SCALE, MOVE_ONLY};
 	public static enum SwitchConfig{UNKNOWN, LEFT, RIGHT};
 	public static enum ScaleConfig{UNKNOWN, LEFT, RIGHT};
 	public static enum TeamColor{RED, BLUE};
-
+	
+	public CXTIMER timer = new CXTIMER();
+	public int step = 0;
+	
+	RobotLocation robotLocation = RobotLocation.CENTER; 
+	TargetLocation targetLocation = TargetLocation.SWITCH;
 	public static SwitchConfig switchConfig = SwitchConfig.UNKNOWN;
 	public static ScaleConfig scaleConfig = ScaleConfig.UNKNOWN;
 	
@@ -95,7 +105,16 @@ public class Robot extends IterativeRobot {
 			}
 		}
 		else {}
-				
+
+		/*  THIS IS WHERE THE ROBOT CODE SENDS THE DATA TO THE MODULES
+		elevator.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
+		intake.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
+		drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
+		climber.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
+		*/
+		
+		drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
+		
 		m_autoSelected = m_chooser.getSelected();
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
@@ -107,15 +126,126 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		switch (m_autoSelected) {
-			case kCustomAuto:
-				// Put custom auto code here
-				break;
-			case kDefaultAuto:
-			default:
-				// Put default auto code here
-				break;
+		switch(step) {
+		
+		case 0:
+			if(timer.ckTime(true, 3)) {
+				step++;
+				elevator.auto(step, timer.getTimeSec());
+				intake.auto(step, timer.getTimeSec());
+				drive.auto(step, timer.getTimeSec());
+				climber.auto(step, timer.getTimeSec());
+				//set up and start Case 1
+				}
+			else {
+				
+				elevator.auto(step, timer.getTimeSec());
+				intake.auto(step, timer.getTimeSec());
+				drive.auto(step, timer.getTimeSec());
+				climber.auto(step, timer.getTimeSec());
+				//keep at Case 0
+			}
+			break;
+				
+		case 1:
+			if(timer.ckTime(true, 3)) {
+				step++;
+				elevator.auto(step, timer.getTimeSec());
+				intake.auto(step, timer.getTimeSec());
+				drive.auto(step, timer.getTimeSec());
+				climber.auto(step, timer.getTimeSec());
+				//set up and start Case 2
+			}
+			else {
+				elevator.auto(step, timer.getTimeSec());
+				intake.auto(step, timer.getTimeSec());
+				drive.auto(step, timer.getTimeSec());
+				climber.auto(step, timer.getTimeSec());
+				//keep at Case 1
+			}
+			break;
+			
+		case 2:
+			if(timer.ckTime(true, 3)) {
+				step++;
+				elevator.auto(step, timer.getTimeSec());
+				intake.auto(step, timer.getTimeSec());
+				drive.auto(step, timer.getTimeSec());
+				climber.auto(step, timer.getTimeSec());
+				//set up and start Case 3
+			}
+			else {
+				elevator.auto(step, timer.getTimeSec());
+				intake.auto(step, timer.getTimeSec());
+				drive.auto(step, timer.getTimeSec());
+				climber.auto(step, timer.getTimeSec());
+				//keep at Case 2
+			}
+			break;
+			
+		case 3:
+			if(timer.ckTime(true, 3)) {
+				step++;
+				elevator.auto(step, timer.getTimeSec());
+				intake.auto(step, timer.getTimeSec());
+				drive.auto(step, timer.getTimeSec());
+				climber.auto(step, timer.getTimeSec());
+				//set up and start Case 4
+			}
+			else {
+				elevator.auto(step, timer.getTimeSec());
+				intake.auto(step, timer.getTimeSec());
+				drive.auto(step, timer.getTimeSec());
+				climber.auto(step, timer.getTimeSec());
+				//keep at Case 3
+			}
+			break;
+			
+		case 4:
+			if(timer.ckTime(true, 3)) {
+				step++;
+				elevator.auto(step, timer.getTimeSec());
+				intake.auto(step, timer.getTimeSec());
+				drive.auto(step, timer.getTimeSec());
+				climber.auto(step, timer.getTimeSec());
+				//set up and start Case 5
+			}
+			else {
+				elevator.auto(step, timer.getTimeSec());
+				intake.auto(step, timer.getTimeSec());
+				drive.auto(step, timer.getTimeSec());
+				climber.auto(step, timer.getTimeSec());
+				//keep at Case 4
+			}
+			break;
+			
+		case 5:
+			if(timer.ckTime(true, 3)) {
+				step++;
+				elevator.auto(step, timer.getTimeSec());
+				intake.auto(step, timer.getTimeSec());
+				drive.auto(step, timer.getTimeSec());
+				climber.auto(step, timer.getTimeSec());
+				//set up and start Default
+			}
+			else {
+				elevator.auto(step, timer.getTimeSec());
+				intake.auto(step, timer.getTimeSec());
+				drive.auto(step, timer.getTimeSec());
+				climber.auto(step, timer.getTimeSec());
+				//keep at Case 5
+			}
+			break;
+			
+		default:
+			elevator.auto(step, timer.getTimeSec());
+			intake.auto(step, timer.getTimeSec());
+			drive.auto(step, timer.getTimeSec());
+			climber.auto(step, timer.getTimeSec());
+			//keep at default
+			break;
 		}
+	
 	}
 	public void teleopInit() {
 		

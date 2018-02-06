@@ -44,16 +44,17 @@ public class Chassis extends RobotModule {
 	//WPI_TalonSRX rearR = new WPI_TalonSRX(7);
 	DifferentialDrive driver = new DifferentialDrive(leadL, leadR);
 	//Solenoid highGear = new Solenoid(3);
-	private int step = 0;
-	CXTIMER clock = new CXTIMER();
-
+	
+	Motion345 left345 = new Motion345(10000, 3, 0, 200);
+	Motion345 right345 = new Motion345(10000, 3, 0, 200);
+	
 	public double left1 = 0;
 	public double left2 = 0;
 	public double left3 = 0;
 	public double right1 = 0;
 	public double right2 = 0;
 	public double right3 = 0;
-	
+
 	/**
 	 * the constructor: 
 	 *initializes the slave talons
@@ -107,29 +108,6 @@ public class Chassis extends RobotModule {
 	
 	// ---- Autonomous Stuff ----
 	
-	/**
-	 * finds a velocity:
-	 *   basic square root function
-	 * 
-	 * @param posActual
-	 * @param posTarget
-	 * @param K
-	 * @return
-	 */
-	private double FB(double posActual, double posTarget, double K) {
-		double S = 1;
-		if(posActual > posTarget) {
-			S = -1;
-		}
-		double VX = S*K*Math.sqrt(Math.abs(posActual-posTarget));
-		if(VX > 1) {
-			VX = 1;
-		}
-		if(VX < -1) {
-			VX = -1;
-		}
-		return VX;
-	}
 	
 	/**
 	 * re-initializes the lead talonSRX encoders
@@ -168,8 +146,8 @@ public class Chassis extends RobotModule {
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
 				if(switchConfig == switchConfig.LEFT) {
-					left1 = 0;
-					right1 = 0;
+					left1 = 603770.7021;
+					right1 = 537792.7431;
 					left2 = 0;
 					right2 = 0;
 					left3 = 0;
@@ -185,8 +163,8 @@ public class Chassis extends RobotModule {
 				}
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
-				left1 = 0;
-				right1 = 0;
+				left1 = 444000.0000;
+				right1 = 444000.0000;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -195,20 +173,20 @@ public class Chassis extends RobotModule {
 		}
 		if(robotLocation == RobotLocation.CENTER) {
 			if(switchConfig == switchConfig.LEFT) {
-				left1 = 0;
-				right1 = 0;
-				left2 = 0;
-				right2 = 0;
-				left3 = 0;
-				right3 = 0;
+				left1 = 412648.195;
+				right1 = 958971.1575;
+				left2 = 958971.1575																																																														;
+				right2 = 412648.195;
+				left3 = 299700.0000;
+				right3 = 299700.0000;
 			}
 			else {
-				left1 = 0;
-				right1 = 0;
-				left2 = 0;
-				right2 = 0;
-				left3 = 0;
-				right3 = 0;
+				left1 = 210683.0573;
+				right1 = 74102.3167;
+				left2 = 74102.3167;
+				right2 = 210683.0573;
+				left3 = 299700.0000;
+				right3 = 299700.0000;
 			}
 		}
 		if(robotLocation == RobotLocation.RIGHT) {
@@ -240,8 +218,8 @@ public class Chassis extends RobotModule {
 					right3 = 0;
 				}
 				else {
-					left1 = 0;
-					right1 = 0;
+					left1 = 537792.7431;
+					right1 = 603770.7021;
 					left2 = 0;
 					right2 = 0;
 					left3 = 0;
@@ -249,15 +227,14 @@ public class Chassis extends RobotModule {
 				}
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
-				left1 = 0;
-				right1 = 0;
+				left1 = 444000.0000;
+				right1 = 444000.0000;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
 			}
 		}
-		
 	}
 
 	
@@ -271,79 +248,83 @@ public class Chassis extends RobotModule {
 		switch(step) {
 			
 			case 0:
-				if(clock.ckTime(true, 2500)) {
-					step++;
+				if(time >= 0) {
 					resetEnc();
-					driver.tankDrive(1000, 1000);
+					driver.tankDrive(left1, right1);
 					//set up and start Case 1
 					}
 					else {
-						driver.tankDrive(2000, 2000);
+						driver.tankDrive(0, 0);
 						//keep at Case 0
 					}
 					break;
 					
 			case 1:
-				if(clock.ckTime(true, 2500)) {
-					step++;
+				if(time >= 3) {
 					resetEnc();
-					driver.tankDrive(2000, 2000);
+					left345.setMove(10000, 3, left2, 200);
+					right345.setMove(10000, 3, right2, 200);
+					driver.tankDrive(left345.getVel(time), right345.getVel(time));
 					//set up and start Case 2
 				}
 				else {
-					driver.tankDrive(1000, 1000);
+					left345.setMove(10000, 3, left1, 200);
+					right345.setMove(10000, 3, right1, 200);
+					driver.tankDrive(left345.getVel(time), right345.getVel(time));
 					//keep at Case 1
 				}
 				break;
 				
 			case 2:
-				if(clock.ckTime(true, 2500)) {
-					step++;
+				if(time >= 3) {
 					resetEnc();
-					driver.tankDrive(1000, 1000);
+					left345.setMove(10000, 3, left3, 200);
+					right345.setMove(10000, 3, right3, 200);
+					driver.tankDrive(left345.getVel(time), right345.getVel(time));
 					//set up and start Case 3
 				}
 				else {
-					driver.tankDrive(2000, 2000);
+					left345.setMove(10000, 3, left2, 200);
+					right345.setMove(10000, 3, right2, 200);
+					driver.tankDrive(left345.getVel(time), right345.getVel(time));
 					//keep at Case 2
 				}
 				break;
 				
 			case 3:
-				if(clock.ckTime(true, 2500)) {
-					step++;
+				if(time >= 3) {
 					resetEnc();
-					driver.tankDrive(2000, 2000);
+					driver.tankDrive(0, 0);
 					//set up and start Case 4
 				}
 				else {
-					driver.tankDrive(1000, 1000);
+					left345.setMove(10000, 3, left3, 200);
+					right345.setMove(10000, 3, right3, 200);
+					driver.tankDrive(left345.getVel(time), right345.getVel(time));
 					//keep at Case 3
 				}
 				break;
 				
 			case 4:
-				if(clock.ckTime(true, 2500)) {
-					step++;
+				if(time >= 3) {
 					resetEnc();
-					driver.tankDrive(1000, 1000);
+					driver.tankDrive(0, 0);
 					//set up and start Case 5
 				}
 				else {
-					driver.tankDrive(2000, 2000);
+					driver.tankDrive(0, 0);
 					//keep at Case 4
 				}
 				break;
 				
 			case 5:
-				if(clock.ckTime(true, 2500)) {
-					step++;
+				if(time >= 3) {
 					resetEnc();
-					driver.tankDrive(2000, 2000);
+					driver.tankDrive(0, 0);
 					//set up and start Default
 				}
 				else {
-					driver.tankDrive(1000, 1000);
+					driver.tankDrive(0, 0);
 					//keep at Case 5
 				}
 				break;
