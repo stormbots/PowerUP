@@ -1,11 +1,17 @@
 package org.usfirst.frc.team2811.robot;
 
 import com.ctre.phoenix.motorcontrol.can.*;
+
+import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
+import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
+
 import com.ctre.phoenix.motorcontrol.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 /* Inputs:
  *   Joystick Y & X axis
@@ -27,20 +33,21 @@ import edu.wpi.first.wpilibj.Talon;
 
 public class Chassis extends RobotModule {
 	WPI_TalonSRX leadL = new WPI_TalonSRX(12);//2
-	Talon frontL = new Talon(1);
-	Talon rearL = new Talon(2);
+	Talon frontL = new Talon(0);
+	Talon rearL = new Talon(1);
 	//WPI_TalonSRX frontL = new WPI_TalonSRX(3);
 	//WPI_TalonSRX rearL = new WPI_TalonSRX(4);
 	WPI_TalonSRX leadR = new WPI_TalonSRX(13);//5
-	Talon frontR = new Talon(3);
-	Talon rearR = new Talon(4);
+	Talon frontR = new Talon(2);
+	Talon rearR = new Talon(3);
 	//WPI_TalonSRX frontR = new WPI_TalonSRX(6);
 	//WPI_TalonSRX rearR = new WPI_TalonSRX(7);
 	DifferentialDrive driver = new DifferentialDrive(leadL, leadR);
 	//Solenoid highGear = new Solenoid(3);
 	private int step = 0;
 	CXTIMER clock = new CXTIMER();
-
+	Motion345 leadMleft = new Motion345(2900, 5, 17300, 200);
+	Motion345 leadMright = new Motion345(2900, 5, -17300, 200);
 	/**
 	 * the constructor: 
 	 *initializes the slave talons
@@ -73,10 +80,35 @@ public class Chassis extends RobotModule {
 	 *   Then binds the slaves to the leads
 	 * @param stick
 	 */
-	public void update(Joystick stick) {
+	void update(Joystick stick,Joystick driver2, Joystick functions) {
 		//updates the lead talons, then updates the slave talons
-		driver.arcadeDrive(stick.getY(), stick.getX());
+		double targetLeft = 0.0;
+		double targetRight = 0.0;
+		double targetLeftVel = 0.0;
+		double targetRightVel = 0.0;
+		clock.Update();
+		if(stick.getRawButton(10)) {
+			clock.ckTime(true, 5000);
+			targetRight = leadMright.getPos(clock.getTimeSec());
+			targetLeft = leadMleft.getPos(clock.getTimeSec());
+			targetRightVel = FB(leadR.getSelectedSensorPosition(0), targetRight, 0.01);
+			targetLeftVel = FB(leadL.getSelectedSensorPosition(0), targetLeft, 0.01);
+			leadL.set(ControlMode.PercentOutput, targetLeftVel);
+			leadR.set(ControlMode.PercentOutput, targetRightVel);
+		}
+		else {
+			driver.arcadeDrive(-stick.getY(), -stick.getX());
+			clock.reset();
+		}
 		bind();
+		SmartDashboard.putNumber("Right Pos", leadR.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Left Pos", leadL.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Right Vel", leadR.getMotorOutputPercent());
+		SmartDashboard.putNumber("Left Vel", leadL.getMotorOutputPercent());
+		SmartDashboard.putNumber("Target Left Velocity", targetLeftVel);
+		SmartDashboard.putNumber("Target Right Velocity", targetRightVel);
+		SmartDashboard.putNumber("Target Right Position" , targetRight);
+		SmartDashboard.putNumber("Target Left Position", targetLeft);
 	}
 	/*
 	public void shift() {
@@ -118,6 +150,7 @@ public class Chassis extends RobotModule {
 	public void resetEnc() {
 		leadL.setSelectedSensorPosition(0, 0, 20);
 		leadR.setSelectedSensorPosition(0, 0, 20);
+		clock.Update();
 	}
 	
 	/**
@@ -222,4 +255,12 @@ public class Chassis extends RobotModule {
 		}
 	}
 		*/
+	
+	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation,int delay, boolean deliverCube) {
+	}
+
+	void auto(int step, double time) {
+		
+	}
+
 }

@@ -50,9 +50,8 @@ public class Lighting {
 		light.set(pattern.pwm());	
 	}
 	
-	public void update(Joystick joystick) {
-//		light.set(joystick.getY());
-		
+	void update(Joystick driver1,Joystick driver2, Joystick functions1) {
+		//		light.set(joystick.getY());
 		
 		pwmvalue=prefs.getDouble("testLightValue", 0);
 		

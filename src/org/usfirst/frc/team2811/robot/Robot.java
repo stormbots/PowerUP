@@ -7,10 +7,12 @@
 
 package org.usfirst.frc.team2811.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,18 +23,43 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class Robot extends IterativeRobot {
 	
-	Joystick joystick = new Joystick(1);
+	Joystick stickDrive1 = new Joystick(1);
+	Joystick stickDrive2 = new Joystick(2);
+	Joystick stickFunctions = new Joystick(3);
+	RobotModule elevator = new Elevator();
+	RobotModule intake = new Intake();
+	RobotModule drive = new Chassis();
+	RobotModule climber = new Climber();
 	Lighting lighting = new Lighting();
-	RobotModule elevator = new RobotModule();
-	RobotModule intake = new RobotModule();
-	RobotModule drive = new RobotModule();
-	RobotModule climber = new RobotModule();
 	
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
 	private String m_autoSelected;
 	private SendableChooser<String> m_chooser = new SendableChooser<>();
+	
+	int astep = 0;
+	CXTIMER autotimer = new CXTIMER();
 
+	public static enum RobotLocation{LEFT,RIGHT,CENTER};
+	public static enum TargetLocation{SWITCH,SCALE,MOVE_ONLY};
+	public static enum TeamColor{RED,BLUE};
+
+	RobotLocation robotLocation =  RobotLocation.CENTER;
+	TargetLocation targetLocation =  TargetLocation.SWITCH;
+	
+	static String fieldData = "XXX";
+	
+	static double delayTime = 0;
+	static boolean deliverCube = true;
+	
+	long step0timer = 4000;
+	long step1timer = 4000;
+	long step2timer = 3000;
+	long step3timer = 3000;
+	long step4timer = 3000;
+	long step5timer = 3000;
+	long step6timer = 3000;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -59,10 +86,29 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		
+		//TODO: Parse the field string into the appropriate values for use in auto commands
+		// robotLocation = RobotLocation.CENTER
+		// targetLocation = TargetLocation.SWITCH
+		astep = 0;
+		
+		String gameData;
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		SmartDashboard.putString("fieldstepup", gameData);
+		
 		m_autoSelected = m_chooser.getSelected();
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
 		System.out.println("Auto selected: " + m_autoSelected);
+		autotimer.Update();
+		autotimer.reset();
+		
+		//Fix this 
+		int delay = 0;
+		elevator.autoInit(robotLocation, targetLocation, delay, deliverCube);
+		drive.autoInit(robotLocation, targetLocation, delay, deliverCube);
+		intake.autoInit(robotLocation, targetLocation, delay, deliverCube);
+		
 	}
 
 	/**
@@ -70,18 +116,74 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		switch (m_autoSelected) {
-			case kCustomAuto:
-				// Put custom auto code here
-				break;
-			case kDefaultAuto:
-			default:
-				// Put default auto code here
-				break;
+		autotimer.Update();
+		switch (astep) {
+		case 0:
+			if(autotimer.ckTime(true, step0timer)) {
+				astep++;
+				autotimer.reset();
+			}
+			drive.auto(astep,autotimer.getTimeSec());
+			break;
+		case 1:
+			if(autotimer.ckTime(true, step1timer)) {
+				astep++;
+				autotimer.reset();
+			}
+			drive.auto(astep,autotimer.getTimeSec());
+			break;
+		case 2:
+			if(autotimer.ckTime(true, step2timer)) {
+				astep++;
+				autotimer.reset();
+			}
+			drive.auto(astep,autotimer.getTimeSec());
+			break;
+		case 3:
+			if(autotimer.ckTime(true, step3timer)) {
+				astep++;
+				autotimer.reset();
+			}
+			drive.auto(astep,autotimer.getTimeSec());
+			elevator.auto(astep, autotimer.getTimeSec());
+			intake.auto(astep, autotimer.getTimeSec());
+			break;
+		case 4:
+			if(autotimer.ckTime(true, step4timer)) {
+				astep++;
+				autotimer.reset();
+			}
+			elevator.auto(astep, autotimer.getTimeSec());
+			intake.auto(astep,autotimer.getTimeSec());
+			break;
+		case 5:
+			if(autotimer.ckTime(true, step5timer)) {
+				astep++;
+				autotimer.reset();
+			}
+			break;
+		case 6:
+			if(autotimer.ckTime(true, step6timer)) {
+				astep++;
+				autotimer.reset();
+			}
+			drive.auto(astep,autotimer.getTimeSec());
+			elevator.auto(astep, autotimer.getTimeSec());
+			intake.auto(astep, autotimer.getTimeSec());
+			break;
+		default:
+			drive.auto(astep,autotimer.getTimeSec());
+			elevator.auto(astep, autotimer.getTimeSec());
+			intake.auto(astep, autotimer.getTimeSec());
+			break;
 		}
+		SmartDashboard.putNumber("Step", astep);
+		
 	}
 	public void teleopInit() {
-		
+		drive.resetEnc();
+		autotimer.Update();
+		autotimer.reset();
 	}
 
 	/**
@@ -89,12 +191,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		lighting.update(joystick);
-		elevator.update(joystick);
-		intake.update(joystick);
-		drive.update(joystick);
-		climber.update(joystick);
 
+		autotimer.Update();
+		elevator.update(stickDrive1,stickDrive2,stickFunctions);
+		intake.update(stickDrive1,stickDrive2,stickFunctions);
+		drive.update(stickDrive1,stickDrive2,stickFunctions);
+		climber.update(stickDrive1,stickDrive2,stickFunctions);
+		lighting.update(stickDrive1,stickDrive2,stickFunctions);
 	}
 
 	/**

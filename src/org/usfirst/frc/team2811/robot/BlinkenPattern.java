@@ -16,8 +16,8 @@ public enum BlinkenPattern {
 	FIXED_RAINBOW_PARTY_PALETTE        (1015,-0.97),  //  PATTERN  2
 	FIXED_RAINBOW_OCEAN_PALETTE        (1025,-0.95),  //  PATTERN  3
 	FIXED_RAINBOW_LAVE_PALETTE         (1035,-0.93),  //  PATTERN  4
-	RED_WHITE_STROBE                   (1045,-0.91),  //  PATTERN  5
-	GREEN_WHITE_STROBE                 (1055,-0.89),  //  PATTERN  6
+	RED_WHITE_STROBE                   (1045,-0.91),  //  PATTERN  5 
+	GREEN_WHITE_STROBE                 (1055,-0.89),  //  PATTERN  6 
 	FIXED_CONFETTI                     (1065,-0.87),  //  PATTERN  7
 	FIXED_SHOT_RED                     (1075,-0.85),  //  PATTERN  8
 	FIXED_SHOT_BLUE                    (1085,-0.83),  //  PATTERN  9
@@ -30,27 +30,27 @@ public enum BlinkenPattern {
 	FIXED_BPM_RAINBOW_PALETTE          (1155,-0.69),  //  PATTERN  16
 	FIXED_BPM_PARTY_PALETTE            (1165,-0.67),  //  PATTERN  17
 	FIXED_BPM_OCEAN_PALETTE            (1175,-0.65),  //  PATTERN  18
-	BLUE_SHAKE                         (1185,-0.63),  //  PATTERN  19
-	GREEN_SHAKE                        (1195,-0.61),  //  PATTERN  20
+	BLUE_SHAKE                         (1185,-0.63),  //  PATTERN  19 
+	GREEN_SHAKE                        (1195,-0.61),  //  PATTERN  20 
 	FIXED_FIRE_MEDIUM                  (1205,-0.59),  //  PATTERN  21
 	FIXED_FIRE_LARGE                   (1215,-0.57),  //  PATTERN  22
 	FIXED_TWINKLES_RAINBOW_PALETTE     (1225,-0.55),  //  PATTERN  23
 	FIXED_TWINKLES_PARTY_PALETTE       (1235,-0.53),  //  PATTERN  24
-	BLUE_SPARKLING                     (1245,-0.51),  //  PATTERN  25
+	BLUE_SPARKLING                     (1245,-0.51),  //  PATTERN  25 -----
 	FIXED_TWINKLES_LAVA_PALETTE        (1255,-0.49),  //  PATTERN  26
 	FIXED_TWINKLES_FOREST_PALETTE      (1265,-0.47),  //  PATTERN  27
 	FIXED_COLOR_WAVES_RAINBOW_PALETTE  (1275,-0.45),  //  PATTERN  28
 	FIXED_COLOR_WAVES_PARTY_PALETTE    (1285,-0.43),  //  PATTERN  29
-	WAVY_BLUE                          (1295,-0.41),  //  PATTERN  30
-	FIXED_COLOR_WAVES_LAVA_PALETTE     (1305,-0.39),  //  PATTERN  31
-	FIXED_COLOR_WAVES_FOREST_PALETTE   (1315,-0.37),  //  PATTERN  32
+	WAVY_BLUE                          (1295,-0.41),  //  PATTERN  30 -----
+	WAVY_RED						   (1305,-0.39),  //  PATTERN  31 -----
+	WAVY_GREEN						   (1315,-0.37),  //  PATTERN  32 -----
 	FIXED_LARSON_SCANNER_RED           (1325,-0.35),  //  PATTERN  33
 	FIXED_LARSON_SCANNER_GRAY          (1335,-0.33),  //  PATTERN  34
-	FIXED_LIGHT_CHASE_RED              (1345,-0.31),  //  PATTERN  35
-	BLUE_PULSE                         (1355,-0.29),  //  PATTERN  36
+	RED_PULSE			               (1345,-0.31),  //  PATTERN  35 -----
+	BLUE_PULSE                         (1355,-0.29),  //  PATTERN  36 -----
 	FIXED_LIGHT_CHASE_GRAY             (1365,-0.27),  //  PATTERN  37
-	FIXED_HEARTBEAT_RED                (1375,-0.25),  //  PATTERN  38
-	FIXED_HEARTBEAT_BLUE               (1385,-0.23),  //  PATTERN  39
+	CODE_RED			               (1375,-0.25),  //  PATTERN  38 -----
+	CODE_BLUE			               (1385,-0.23),  //  PATTERN  39 -----
 	FIXED_HEARTBEAT_WHITE              (1395,-0.21),  //  PATTERN  40
 	FIXED_HEARTBEAT_GRAY               (1405,-0.19),  //  PATTERN  41
 	FIXED_BREATH_RED                   (1415,-0.17),  //  PATTERN  42
@@ -62,7 +62,7 @@ public enum BlinkenPattern {
 	FIXED_STROBE_WHITE                 (1475,-0.05),  //  PATTERN  48
 	C1_END_TO_END_BLEND_TO_BLACK       (1485,-0.03),  //  PATTERN  49
 	C1_LARSON_SCANNER                  (1495,-0.01),  //  PATTERN  50
-	C1_LIGHT_CHASE                     (1505,0.01),   //  PATTERN  51
+	C1_CODE_BLUE_BRIGHTER              (1505,0.01),   //  PATTERN  51 -----
 	C1_HEARTBEAT_SLOW                  (1515,0.03),   //  PATTERN  52
 	C1_HEARTBEAT_MEDIUM                (1525,0.05),   //  PATTERN  53
 	C1_HEARTBEAT_FAST                  (1535,0.07),   //  PATTERN  54
@@ -72,7 +72,7 @@ public enum BlinkenPattern {
 	C1_STROBE                          (1575,0.15),   //  PATTERN  58
 	C2_END_TO_END_BLEND_TO_BLACK       (1585,0.17),   //  PATTERN  59
 	C2_LARSON_SCANNER                  (1595,0.19),   //  PATTERN  60
-	C2_LIGHT_CHASE                     (1605,0.21),   //  PATTERN  61
+	C2_YELLOW_PULSE                    (1605,0.21),   //  PATTERN  61 -----
 	C2_HEARTBEAT_SLOW                  (1615,0.23),   //  PATTERN  62
 	C2_HEARTBEAT_MEDIUM                (1625,0.25),   //  PATTERN  63
 	C2_HEARTBEAT_FAST                  (1635,0.27),   //  PATTERN  64
@@ -88,22 +88,21 @@ public enum BlinkenPattern {
 	C12_END_TO_END_BLEND_C2_TO_C1      (1735,0.47),   //  PATTERN  74   //TODO: Possibly incorrect description ; Documentation is odd here
 	C12_END_TO_END_NO_BLEND            (1745,0.49),   //  PATTERN  75
 	C12_TWINKLES                       (1755,0.51),   //  PATTERN  76
-	C12_COLOR_WAVES                    (1765,0.53),   //  PATTERN  77
-	C12_SINELON                        (1775,0.55),   //  PATTERN  78
+	C12_SOLID_PURPLE                   (1765,0.53),   //  PATTERN  77 -----
+	C12_SOLID_RED                      (1775,0.55),   //  PATTERN  78 -----
 	SOLID_HOT_PINK                     (1785,0.57),   //  PATTERN  79
 	SOLID_DARK_RED                     (1795,0.59),   //  PATTERN  80
 	SOLID_RED                          (1805,0.61),   //  PATTERN  81
 	SOLID_RED_ORANGE                   (1815,0.63),   //  PATTERN  82
 	SOLID_ORANGE                       (1825,0.65),   //  PATTERN  83
 	SOLID_GOLD                         (1835,0.67),   //  PATTERN  84
-	SOLID_YELLOW                       (1845,0.69),   //  PATTERN  85
+	SOLID_GREEN                        (1845,0.69),   //  PATTERN  85 -----
 	SOLID_LAWN_GREEN                   (1855,0.71),   //  PATTERN  86
-	SOLID_LIME                         (1865,0.73),   //  PATTERN  87
+	SOLID_LIGHT_BLUE                   (1865,0.73),   //  PATTERN  87 ----- 
 	SOLID_DARK_GREEN                   (1875,0.75),   //  PATTERN  88
-	SOLID_GREEN                        (1885,0.77),   //  PATTERN  89
 	SOLID_BLUE_GREEN                   (1895,0.79),   //  PATTERN  90
-	SOLID_BLUE                         (1905,0.81),   //  PATTERN  91
-	SOLID_SKY_BLUE                     (1915,0.83),   //  PATTERN  92
+	SOLID_BLUE                         (1905,0.81),   //  PATTERN  91 
+	SOLID_PURPLE                       (1915,0.83),   //  PATTERN  92 -----
 	SOLID_DARK_BLUE                    (1925,0.85),   //  PATTERN  93
 	SOLID_AQUA                         (1935,0.87),   //  PATTERN  94
 	SOLID_BLUE_VIOLET                  (1945,0.89),   //  PATTERN  95
