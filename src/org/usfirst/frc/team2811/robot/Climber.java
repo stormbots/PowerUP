@@ -5,13 +5,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-
 public class Climber extends RobotModule {
 	
 	WPI_TalonSRX mtr1 = new WPI_TalonSRX(12);
 		
 	void update(Joystick driver1,Joystick driver2, Joystick stick) {
-		if(stick.getRawButton(3)) {
+		if(stick.getRawButton(5)) {
 		mtr1.set(ControlMode.PercentOutput, stick.getY());
 		}
 		else {
