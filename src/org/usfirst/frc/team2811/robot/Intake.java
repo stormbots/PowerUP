@@ -26,11 +26,12 @@ public class Intake extends RobotModule {
 	WPI_TalonSRX motor1 = new WPI_TalonSRX(12); 
 	WPI_TalonSRX motor2 = new WPI_TalonSRX(13); 
 	Solenoid squeezeSolenoid = new Solenoid(1);
-	//Solenoid tiltSolenoid = new Solenoid(2);
+	Solenoid tiltSolenoid = new Solenoid(2);
 	DigitalInput redEye = new DigitalInput(4);
 	Boolean squeezeRun = false;
 	Boolean tiltRun = false;
 	Boolean deployCube = false;
+	double velocity = 0.0;
 	
 	
 	/**INTAKE CONSTRUCTOR
@@ -38,23 +39,10 @@ public class Intake extends RobotModule {
 	 * and turns Pneumatics off for saftey reasons.
 	 */
 	public Intake() {
-		//motor2.follow(motor1);
-		//motor2.setInverted(true);
-		//motor1.follow(motor2);
-		//motor1.setInverted(true);
+		motor2.follow(motor1);
+		motor2.setInverted(true);
 		squeezeSolenoid.set(false);
-		//tiltSolenoid.set(false);
-	}
-	
-	
-	/**STOP METHOD
-	 * Sets all parts (motor and solenoids) to "stop" or 0 (or false)
-	 */
-	void stop() {
-		motor1.set(ControlMode.PercentOutput, 0);
-		motor2.set(ControlMode.PercentOutput, 0);
-		squeezeSolenoid.set(false);
-		//tiltSolenoid.set(false);
+		tiltSolenoid.set(false);
 	}
 	
 	/**AUTO INIT METHOD
@@ -62,7 +50,7 @@ public class Intake extends RobotModule {
 	 *in case we aren't using Auto code later on.
 	 * @param deploy
 	 */
-	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation,int delay, boolean deliverCube) {
+	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation, boolean deliverCube) {
 		deployCube=deliverCube;
 	}
 	
@@ -74,13 +62,12 @@ public class Intake extends RobotModule {
 	 */
 	public void auto(int step, double time) {
 		if (step==4 && deployCube) {
-			motor1.set(ControlMode.PercentOutput, -0.50);
-			motor2.set(ControlMode.PercentOutput, 0.50);
+			velocity = -0.5;
 		}
 		if (step==5) {
-			motor1.set(ControlMode.PercentOutput, 0);
-			motor2.set(ControlMode.PercentOutput, 0);
+			velocity = 0.0;
 		}
+		motor1.set(ControlMode.PercentOutput, velocity);
 	}
 	
 	/**TELEOP INIT
@@ -98,19 +85,18 @@ public class Intake extends RobotModule {
 	 * @param stick
 	 */
 	void update(Joystick driver1,Joystick driver2, Joystick stick) {
+		velocity = 0.0;
+		
 		//get cube
 		if (stick.getRawButton(1) && redEye.get()) {
-			motor1.set(ControlMode.PercentOutput, 0.50);
-			motor2.set(ControlMode.PercentOutput, -0.50);
+			velocity = 0.5;
 		}
 		//put cube
 		else if (stick.getRawButton(2)) {
-			motor1.set(ControlMode.PercentOutput, -0.50);
-			motor2.set(ControlMode.PercentOutput, 0.50);
+			velocity = -0.5;
 		}
 		else {
-			motor1.set(ControlMode.PercentOutput, 0);
-			motor2.set(ControlMode.PercentOutput, 0);
+			velocity = 0.0;
 		}
 				
 		//squeeze toggle 
@@ -126,25 +112,22 @@ public class Intake extends RobotModule {
 		
 		
 		//tilt toggle
-		//if(stick.getRawButtonPressed(4)) {
-		//	tiltRun = !tiltRun;
-		//}
-		//if(tiltRun) {
-		//	tiltSolenoid.set(true);
-		//}
-		//else {
-		//	tiltSolenoid.set(false);
-		//}
+		if(stick.getRawButtonPressed(4)) {
+			tiltRun = !tiltRun;
+		}
+		if(tiltRun) {
+			tiltSolenoid.set(true);
+		}
+		else {
+			tiltSolenoid.set(false);
+		}
 		
 		
 		//debug Y-axis control
 		if(stick.getRawButton(7)) {
-			motor1.set(stick.getY());
-			motor2.set(stick.getY());
+			velocity = stick.getY();
 		}
-		//stop
-		if (stick.getRawButtonPressed(8)) {
-			stop();
-		}
+		
+		motor1.set(ControlMode.PercentOutput,velocity);
 	}
 }
