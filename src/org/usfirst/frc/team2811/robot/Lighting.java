@@ -23,8 +23,15 @@ public class Lighting {
 	}
 	
 	public void robotInit() {
-		selection.addDefault(BlinkenPattern.SOLID_BLUE  .toString(), BlinkenPattern.SOLID_BLUE  );
-		selection.addObject(BlinkenPattern.C12_SINELON.toString(), BlinkenPattern.C12_SINELON);
+		selection.addDefault(BlinkenPattern.SOLID_BLUE   .toString(), BlinkenPattern.SOLID_BLUE   );
+//		selection.addObject(BlinkenPattern.C12_SINELON.toString(), BlinkenPattern.C12_SINELON);
+		selection.addObject(BlinkenPattern.RED_WHITE_STROBE.toString(), BlinkenPattern.RED_WHITE_STROBE);
+		selection.addObject(BlinkenPattern.GREEN_WHITE_STROBE.toString(), BlinkenPattern.GREEN_WHITE_STROBE);
+		selection.addObject(BlinkenPattern.BLUE_SHAKE .toString(), BlinkenPattern.BLUE_SHAKE );
+		selection.addObject(BlinkenPattern.GREEN_SHAKE  .toString(), BlinkenPattern.GREEN_SHAKE  );
+		selection.addObject(BlinkenPattern.BLUE_SPARKLING .toString(), BlinkenPattern.BLUE_SPARKLING );
+		selection.addObject(BlinkenPattern.WAVY_BLUE .toString(), BlinkenPattern.WAVY_BLUE );
+		
 		SmartDashboard.putData("Best light", selection);
 		
 		//SOLID_BLUE
