@@ -99,7 +99,7 @@ public class Elevator extends RobotModule {
 		return elevatorPos;
 	}*/
 	
-	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation, boolean deliverCube) { //Elevator only cares about targetLocation
+	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation, SwitchConfig switchConfig, ScaleConfig scaleConfig) { //Elevator only cares about targetLocation
 		eMotor.setSelectedSensorPosition(3000, 0, 20);
 		if(targetLocation == TargetLocation.SWITCH) {
 			autoPosition = switchPos;
@@ -120,11 +120,5 @@ public class Elevator extends RobotModule {
 		eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.02));
 	}
 	
-	void autoInit(
-			RobotLocation robotLocation, 
-			TargetLocation targetLocation, 
-			SwitchConfig switchConfig, 
-			ScaleConfig scaleConfig) {
-		
-	}
+
 }
