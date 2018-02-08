@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** INTAKE CLASS
  * SUMMARY- The update method is set in the main code, and sets all the actions to each button 
- * which is called into the Robot.java. The 5 main actions are input, output, stop, squeeze, and 
- * tilt (5 buttons). The constructor at the beginning intiates some code needed for the code to properly run.
+ * which is called into the Robot.java. The 4 main actions are input, output, squeeze, and 
+ * tilt (4 buttons). The constructor at the beginning intiates some code needed for the code to properly run.
  *  
  * INPUTS-Two Cantalons (12 and 13 for testing, 8 and 9 for competitions) (controlled by double velocity).
  * 		  Two Solenoids (1 and 2 for testing, unknown ID for competitions).
@@ -49,8 +49,8 @@ public class Intake extends RobotModule {
 	}
 	
 	/**AUTO INIT METHOD
-	 *Sets deployCube to deploy so that we can either set deploy =true/false
-	 *in case we aren't using Auto code later on.
+	 *Sets deployCube to deploy depending on whether we are move only (false)
+	 *or anything else (true).
 	 * @param deploy
 	 */
 	void autoInit(
@@ -67,7 +67,15 @@ public class Intake extends RobotModule {
 		// else if we've been told to only move
 		// else if going to specific thing && thing is our color
 		// else going to specific thing and it's not our color
-		
+		if(robotLocation==RobotLocation.LEFT && targetLocation==TargetLocation.MOVE_ONLY) {
+			deployCube = false;
+		}
+		else if(robotLocation==RobotLocation.RIGHT && targetLocation==TargetLocation.MOVE_ONLY) {
+			deployCube = false;
+		}
+		else {
+			deployCube = true;
+		}
 	}
 	
 	/**AUTO
@@ -144,6 +152,7 @@ public class Intake extends RobotModule {
 		}
 		
 		motor1.set(ControlMode.PercentOutput,velocity);
+		
 		SmartDashboard.putNumber("velocity", velocity);
 		SmartDashboard.putBoolean("RedEye", redEye.get());   
 		SmartDashboard.putBoolean("Squeeze Intake", squeezeRun);
