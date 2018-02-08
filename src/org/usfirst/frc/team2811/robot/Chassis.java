@@ -9,6 +9,7 @@ import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
 
 import com.ctre.phoenix.motorcontrol.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
@@ -96,6 +97,10 @@ public class Chassis extends RobotModule {
 			driver.arcadeDrive(stickR.getY(), stickR.getX());
 		}
 
+		SmartDashboard.putNumber("Pos Right", -leadR.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Pos Left", -leadL.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Vel Right", leadR.getMotorOutputPercent());
+		SmartDashboard.putNumber("Vel Left", leadL.getMotorOutputPercent());
 		bind();
 	}
 	/*
@@ -114,7 +119,9 @@ public class Chassis extends RobotModule {
 	 */
 	public void resetEnc() {
 		leadL.setSelectedSensorPosition(0, 0, 20);
+		leadL.getSelectedSensorPosition(0);
 		leadR.setSelectedSensorPosition(0, 0, 20);
+		leadR.getSelectedSensorPosition(0);
 	}
 	
 	void autoInit(
@@ -124,12 +131,13 @@ public class Chassis extends RobotModule {
 			ScaleConfig scaleConfig) {
 		//save RobotLocation and TargetLocation to class fields, as we'll need in auto
 		
+		double scaleFactor = 0.08;
 		
 		if(robotLocation == RobotLocation.LEFT) {
 			if(targetLocation == TargetLocation.SCALE) {
 				if(scaleConfig == scaleConfig.LEFT) {
-					left1 = 1133415.0982;
-					right1 = 1110241.5762;
+					left1 = -1133415.0982*scaleFactor;
+					right1 = 1110241.5762*scaleFactor;
 					left2 = 0;
 					right2 = 0;
 					left3 = 0;
@@ -146,8 +154,8 @@ public class Chassis extends RobotModule {
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
 				if(switchConfig == switchConfig.LEFT) {
-					left1 = 603770.7021;
-					right1 = 537792.7431;
+					left1 = -603770.7021*scaleFactor;
+					right1 = 537792.7431*scaleFactor;
 					left2 = 0;
 					right2 = 0;
 					left3 = 0;
@@ -163,8 +171,8 @@ public class Chassis extends RobotModule {
 				}
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
-				left1 = 444000.0000;
-				right1 = 444000.0000;
+				left1 = -444000.0000*scaleFactor;
+				right1 = 444000.0000*scaleFactor;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -173,20 +181,20 @@ public class Chassis extends RobotModule {
 		}
 		if(robotLocation == RobotLocation.CENTER) {
 			if(switchConfig == switchConfig.LEFT) {
-				left1 = 412648.195;
-				right1 = 958971.1575;
-				left2 = 958971.1575																																																														;
-				right2 = 412648.195;
-				left3 = 299700.0000;
-				right3 = 299700.0000;
+				left1 = -412648.195*scaleFactor;
+				right1 = 958971.1575*scaleFactor;
+				left2 = -958971.1575*scaleFactor;																																																											;
+				right2 = 412648.195*scaleFactor;
+				left3 = -299700.0000*scaleFactor;
+				right3 = 299700.0000*scaleFactor;
 			}
 			else {
-				left1 = 210683.0573;
-				right1 = 74102.3167;
-				left2 = 74102.3167;
-				right2 = 210683.0573;
-				left3 = 299700.0000;
-				right3 = 299700.0000;
+				left1 = -210683.0573*scaleFactor;
+				right1 = 74102.3167*scaleFactor;
+				left2 = -74102.3167*scaleFactor;
+				right2 = 210683.0573*scaleFactor;
+				left3 = -299700.0000*scaleFactor;
+				right3 = 299700.0000*scaleFactor;
 			}
 		}
 		if(robotLocation == RobotLocation.RIGHT) {
@@ -200,8 +208,8 @@ public class Chassis extends RobotModule {
 					right3 = 0;
 				}
 				else {
-					left1 = 1110241.5762;
-					right1 = 1133415.0982;
+					left1 = -1110241.5762*scaleFactor;
+					right1 = 1133415.0982*scaleFactor;
 					left2 = 0;
 					right2 = 0;
 					left3 = 0;
@@ -218,8 +226,8 @@ public class Chassis extends RobotModule {
 					right3 = 0;
 				}
 				else {
-					left1 = 537792.7431;
-					right1 = 603770.7021;
+					left1 = -537792.7431*scaleFactor;
+					right1 = 603770.7021*scaleFactor;
 					left2 = 0;
 					right2 = 0;
 					left3 = 0;
@@ -227,14 +235,16 @@ public class Chassis extends RobotModule {
 				}
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
-				left1 = 444000.0000;
-				right1 = 444000.0000;
+				left1 = -444000.0000*scaleFactor;
+				right1 = 444000.0000*scaleFactor;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
 			}
 		}
+		
+		resetEnc();
 	}
 
 	
@@ -245,88 +255,41 @@ public class Chassis extends RobotModule {
 	 * @param pos
 	 */
 	void auto(int step, double time) {
+		
+		double rightV = 0;
+		double leftV = 0;
+		
 		switch(step) {
 			
 			case 0:
-				if(time >= 0) {
-					resetEnc();
-					driver.tankDrive(left1, right1);
-					//set up and start Case 1
-					}
-					else {
-						driver.tankDrive(0, 0);
-						//keep at Case 0
-					}
-					break;
+				break;
 					
 			case 1:
-				if(time >= 3) {
-					resetEnc();
-					left345.setMove(10000, 3, left2, 200);
-					right345.setMove(10000, 3, right2, 200);
-					driver.tankDrive(left345.getVel(time), right345.getVel(time));
-					//set up and start Case 2
-				}
-				else {
-					left345.setMove(10000, 3, left1, 200);
-					right345.setMove(10000, 3, right1, 200);
-					driver.tankDrive(left345.getVel(time), right345.getVel(time));
-					//keep at Case 1
-				}
+				left345.setMove(10000, 3, left1, 200);
+				right345.setMove(10000, 3, right1, 200);
+				//keep at Case 1
 				break;
 				
 			case 2:
-				if(time >= 3) {
-					resetEnc();
-					left345.setMove(10000, 3, left3, 200);
-					right345.setMove(10000, 3, right3, 200);
-					driver.tankDrive(left345.getVel(time), right345.getVel(time));
-					//set up and start Case 3
-				}
-				else {
-					left345.setMove(10000, 3, left2, 200);
-					right345.setMove(10000, 3, right2, 200);
-					driver.tankDrive(left345.getVel(time), right345.getVel(time));
-					//keep at Case 2
-				}
+				left345.setMove(10000, 3, left2, 200);
+				right345.setMove(10000, 3, right2, 200);
+				//keep at Case 2
 				break;
 				
 			case 3:
-				if(time >= 3) {
-					resetEnc();
-					driver.tankDrive(0, 0);
-					//set up and start Case 4
-				}
-				else {
-					left345.setMove(10000, 3, left3, 200);
-					right345.setMove(10000, 3, right3, 200);
-					driver.tankDrive(left345.getVel(time), right345.getVel(time));
-					//keep at Case 3
-				}
+				left345.setMove(10000, 3, left3, 200);
+				right345.setMove(10000, 3, right3, 200);
+				//keep at Case 3
 				break;
 				
 			case 4:
-				if(time >= 3) {
-					resetEnc();
-					driver.tankDrive(0, 0);
-					//set up and start Case 5
-				}
-				else {
-					driver.tankDrive(0, 0);
-					//keep at Case 4
-				}
+				driver.tankDrive(0, 0);
+				//keep at Case 4
 				break;
 				
 			case 5:
-				if(time >= 3) {
-					resetEnc();
-					driver.tankDrive(0, 0);
-					//set up and start Default
-				}
-				else {
-					driver.tankDrive(0, 0);
-					//keep at Case 5
-				}
+				driver.tankDrive(0, 0);
+				//keep at Case 5
 				break;
 				
 			default:
@@ -334,6 +297,22 @@ public class Chassis extends RobotModule {
 				//keep at default
 				break;
 		}
+		
+		if(step > 0 && step < 4) {
+			leftV = -left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.01);
+			rightV = right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.01);
+		}
+		
+		driver.tankDrive(leftV, rightV);
+		
+		SmartDashboard.putNumber("leftV", leftV);
+		SmartDashboard.putNumber("rightV", rightV);
+		SmartDashboard.putNumber("Pos Right", -leadR.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Pos Left", -leadL.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Vel Right", leadR.getMotorOutputPercent());
+		SmartDashboard.putNumber("Vel Left", leadL.getMotorOutputPercent());
+		SmartDashboard.putNumber("time", time);
+		SmartDashboard.putNumber("step", step);
 	}
 	
 

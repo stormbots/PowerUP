@@ -56,13 +56,13 @@ public class Robot extends IterativeRobot {
 	static double delayTime = 0;
 	static boolean deliverCube = true;
 	
-	long step0timer = 4000;
-	long step1timer = 4000;
+	long step0timer = 3000;
+	long step1timer = 3000;
 	long step2timer = 3000;
 	long step3timer = 3000;
 	long step4timer = 3000;
-	long step5timer = 3000;
-	long step6timer = 3000;
+	long step5timer = 1000;
+	long step6timer = 1000;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -120,7 +120,6 @@ public class Robot extends IterativeRobot {
 		intake.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		climber.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
-		drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 	}
 
 	/**
@@ -141,20 +140,29 @@ public class Robot extends IterativeRobot {
 			break;
 		case 1:
 			if(autotimer.ckTime(true, step1timer)) {
-				astep++;
-				autotimer.reset();
+				drive.resetEnc();
+				if(drive.leadR.getSelectedSensorPosition(0) == 0) {
+					astep++;
+					autotimer.reset();
+				}
 			}
 			break;
 		case 2:
 			if(autotimer.ckTime(true, step2timer)) {
-				astep++;
-				autotimer.reset();
+				drive.resetEnc();
+				if(drive.leadR.getSelectedSensorPosition(0) == 0) {
+					astep++;
+					autotimer.reset();
+				}
 			}
 			break;
 		case 3:
 			if(autotimer.ckTime(true, step3timer)) {
-				astep++;
-				autotimer.reset();
+				drive.resetEnc();
+				if(drive.leadR.getSelectedSensorPosition(0) == 0 && drive.leadL.getSelectedSensorPosition(0) == 0) {
+					astep++;
+					autotimer.reset();
+				}
 			}
 			break;
 		case 4:
@@ -180,10 +188,10 @@ public class Robot extends IterativeRobot {
 		}
 		
 		//Handle continuous updates for various modules
-		elevator.auto(step, autotimer.getTimeSec());
-		intake.auto(step, autotimer.getTimeSec());
-		drive.auto(step, autotimer.getTimeSec());
-		climber.auto(step, autotimer.getTimeSec());
+		elevator.auto(astep, autotimer.getTimeSec());
+		intake.auto(astep, autotimer.getTimeSec());
+		drive.auto(astep, autotimer.getTimeSec());
+		climber.auto(astep, autotimer.getTimeSec());
 
 		SmartDashboard.putNumber("Step", astep);
 	}
