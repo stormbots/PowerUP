@@ -23,7 +23,7 @@ public class Elevator extends RobotModule {
 	
 	 WPI_TalonSRX eMotor = new WPI_TalonSRX(12);
 	 double eVelocity = 0;
-	 double elevatorPos = 0; //Used as the position you want to get to.
+	 double elevatorPos = 0; //Used as the position you want the elevator to go to.
 	 
 	 double floorPos = 0.0;         //
 	 double portalPos = 10000;      //
@@ -33,21 +33,26 @@ public class Elevator extends RobotModule {
 	 
 	 double autoPosition = 0.0; //Where you want to go to during auto.
 	 double currentPos = 0.0;
+	 double midBP = 45000/2;
 	 
-	//FB.FB replaces feedBack
+	//FB.FB() replaces feedBack()
 	
 	public enum Mode{ 
 		MANUALVELOCITY, MANUALPOSITION, BUTTON,  //Used to change how the elevator is controlled
 	}
 	
-	public Mode mode = Mode.MANUALVELOCITY; 
+	public Mode mode = Mode.MANUALPOSITION; 
 	
 	public void changeMode (Mode newMode) {
 		mode = newMode;
 	}
 		
+	void init(){
+		reset();
+	}
+	
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) { //Only using functions1
-		
+		 double breakpoint = 0.0;
 		currentPos = eMotor.getSelectedSensorPosition(0);
 		
 		if(mode == Mode.MANUALVELOCITY) {
@@ -73,15 +78,39 @@ public class Elevator extends RobotModule {
 			
 		}*/
 		
-		else if(mode == Mode.MANUALPOSITION) { 
+		else if(mode == Mode.MANUALPOSITION) {
+			
 			
 			elevatorPos = ( (functions1.getY()-(-1)) / (1-(-1)) * (45000-0) + 0 ); //Maps controller y-axis to elevator position.
-			eVelocity =  FB.FB(elevatorPos, currentPos, 0.02);
+			
+			if(elevatorPos < midBP && currentPos > midBP) {
+				breakpoint = midBP;
+			}
+			else if(elevatorPos > midBP && currentPos < midBP) {
+				breakpoint = midBP;
+			}
+			else {
+				breakpoint = elevatorPos;
+				
+			}
+			
+			eVelocity = FB.FB(breakpoint, currentPos, 0.002);
+				
+			//figure out "real" elevator position, as above
+			//figure out the "fake" elevator position, at the breakpoints
+			//Set fb to the nearest breakpoint
+			//if close to the breakpoint, then we can move to the next breakpoint down or "real" position
+			
+			//eVelocity =  FB.FB(elevatorPos, currentPos, 0.02);
 			
 		}
 		
-		eMotor.set(ControlMode.PercentOutput, eVelocity);
-		SmartDashboard.putNumber("Position", eMotor.getSelectedSensorPosition(0));
+		eMotor.set(ControlMode.PercentOutput, -eVelocity);
+		SmartDashboard.putNumber("Current Position", eMotor.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Breakpoint", breakpoint);
+		SmartDashboard.putNumber("Desired Position", elevatorPos);
+		
+		
 	}
 	
 	/*public double moveJoystick (double stickValue) { 
@@ -119,6 +148,8 @@ public class Elevator extends RobotModule {
 		}
 		eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.02));
 	}
+	
+	
 	
 
 }

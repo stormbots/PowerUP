@@ -26,7 +26,7 @@ public class Robot extends IterativeRobot {
 	Joystick stickDrive1 = new Joystick(1);
 	Joystick stickDrive2 = new Joystick(2);
 	Joystick stickFunctions = new Joystick(3);
-	RobotModule elevator = new RobotModule();
+	RobotModule elevator = new Elevator();
 	RobotModule intake = new RobotModule();
 	Chassis drive = new Chassis();
 	RobotModule climber = new RobotModule();
@@ -319,6 +319,7 @@ public class Robot extends IterativeRobot {
 		drive.resetEnc();
 		autotimer.Update();
 		autotimer.reset();
+		elevator.init();
 	}
 
 	/**
