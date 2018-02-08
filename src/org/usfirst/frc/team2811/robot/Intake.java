@@ -10,15 +10,16 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** INTAKE CLASS
  * SUMMARY- The update method is set in the main code, and sets all the actions to each button 
  * which is called into the Robot.java. The 5 main actions are input, output, stop, squeeze, and 
  * tilt (5 buttons). The constructor at the beginning intiates some code needed for the code to properly run.
  *  
- * INPUTS-Two Cantalons (12 and 13 for testing, 8 and 9 for competitions).
+ * INPUTS-Two Cantalons (12 and 13 for testing, 8 and 9 for competitions) (controlled by double velocity).
  * 		  Two Solenoids (1 and 2 for testing, unknown ID for competitions).
- * 		  One Infared DigitalInput (1 for testing, unknown ID for competitions).
+ * 		  One Infared DigitalInput (4 for testing, unknown ID for competitions).
  * OUTPUTS-Taking in Powercubes and holding it (squeeze), outputing the Powercubes, and tilting the base up and down.
  * @author StormBots
  */
@@ -122,12 +123,15 @@ public class Intake extends RobotModule {
 			tiltSolenoid.set(false);
 		}
 		
-		
 		//debug Y-axis control
 		if(stick.getRawButton(7)) {
 			velocity = stick.getY();
 		}
 		
 		motor1.set(ControlMode.PercentOutput,velocity);
+		SmartDashboard.putNumber("velocity", velocity);
+		SmartDashboard.putBoolean("RedEye", redEye.get());   
+		SmartDashboard.putBoolean("Squeeze Intake", squeezeRun);
+		SmartDashboard.putBoolean("Tilt Base", tiltRun);
 	}
 }
