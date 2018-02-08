@@ -2,6 +2,8 @@
 package org.usfirst.frc.team2811.robot;
 
 import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
+import org.usfirst.frc.team2811.robot.Robot.ScaleConfig;
+import org.usfirst.frc.team2811.robot.Robot.SwitchConfig;
 import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -51,8 +53,21 @@ public class Intake extends RobotModule {
 	 *in case we aren't using Auto code later on.
 	 * @param deploy
 	 */
-	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation, boolean deliverCube) {
-		deployCube=deliverCube;
+	void autoInit(
+			RobotLocation robotLocation, 
+			TargetLocation targetLocation, 
+			SwitchConfig switchConfig, 
+			ScaleConfig scaleConfig) {
+		// Do some logic to see if we actually should deploy the cube
+		if(robotLocation==RobotLocation.CENTER) {
+			//Always true if we're in center position, since we're going to the switch
+			deployCube = true;
+		}
+		// Pseudocode for scenarios
+		// else if we've been told to only move
+		// else if going to specific thing && thing is our color
+		// else going to specific thing and it's not our color
+		
 	}
 	
 	/**AUTO
