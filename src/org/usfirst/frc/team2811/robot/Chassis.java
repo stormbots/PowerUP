@@ -97,8 +97,8 @@ public class Chassis extends RobotModule {
 			driver.arcadeDrive(stickR.getY(), stickR.getX());
 		}
 
-		SmartDashboard.putNumber("Pos Right", -leadR.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("Pos Left", -leadL.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Pos Right", leadR.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Pos Left", leadL.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Vel Right", leadR.getMotorOutputPercent());
 		SmartDashboard.putNumber("Vel Left", leadL.getMotorOutputPercent());
 		bind();
@@ -262,57 +262,83 @@ public class Chassis extends RobotModule {
 		switch(step) {
 			
 			case 0:
+				if(time == 0) {
+					resetEnc();
+				}
 				break;
 					
 			case 1:
+				if(time == 0) {
+					resetEnc();
+				}
 				left345.setMove(10000, 3, left1, 200);
 				right345.setMove(10000, 3, right1, 200);
 				//keep at Case 1
 				break;
 				
 			case 2:
+				if(time == 0) {
+					resetEnc();
+				}
 				left345.setMove(10000, 3, left2, 200);
 				right345.setMove(10000, 3, right2, 200);
 				//keep at Case 2
 				break;
 				
 			case 3:
+				if(time == 0) {
+					resetEnc();
+				}
 				left345.setMove(10000, 3, left3, 200);
 				right345.setMove(10000, 3, right3, 200);
 				//keep at Case 3
 				break;
 				
 			case 4:
+				if(time == 0) {
+					resetEnc();
+				}
 				driver.tankDrive(0, 0);
 				//keep at Case 4
 				break;
 				
 			case 5:
+				if(time == 0) {
+					resetEnc();
+				}
 				driver.tankDrive(0, 0);
 				//keep at Case 5
 				break;
 				
 			default:
+				if(time == 0) {
+					resetEnc();
+				}
 				driver.tankDrive(0, 0);
 				//keep at default
 				break;
 		}
 		
-		if(step > 0 && step < 4) {
-			leftV = -left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.01);
-			rightV = right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.01);
+		if(step > 0 && step < 4 && time > 0.1) {
+			leftV = -left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.008);
+			rightV = right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.008);
 		}
+		
 		
 		driver.tankDrive(leftV, rightV);
 		
 		SmartDashboard.putNumber("leftV", leftV);
 		SmartDashboard.putNumber("rightV", rightV);
-		SmartDashboard.putNumber("Pos Right", -leadR.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("Pos Left", -leadL.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Pos Right", leadR.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Pos Left", leadL.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Vel Right", leadR.getMotorOutputPercent());
 		SmartDashboard.putNumber("Vel Left", leadL.getMotorOutputPercent());
 		SmartDashboard.putNumber("time", time);
 		SmartDashboard.putNumber("step", step);
+		SmartDashboard.putNumber("right1", right1);
+		SmartDashboard.putNumber("left1", left1);
+		SmartDashboard.putNumber("leftTarg", left345.getPos(3));
+		SmartDashboard.putNumber("rightTarg", right345.getPos(3));
 	}
 	
 

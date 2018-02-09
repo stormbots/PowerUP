@@ -46,7 +46,7 @@ public class Robot extends IterativeRobot {
 	
 	public int step = 0;
 	
-	public static RobotLocation robotLocation = RobotLocation.CENTER; 
+	public static RobotLocation robotLocation = RobotLocation.LEFT; 
 	public static TargetLocation targetLocation = TargetLocation.SWITCH;
 	public static SwitchConfig switchConfig = SwitchConfig.UNKNOWN;
 	public static ScaleConfig scaleConfig = ScaleConfig.UNKNOWN;
@@ -56,13 +56,13 @@ public class Robot extends IterativeRobot {
 	static double delayTime = 0;
 	static boolean deliverCube = true;
 	
-	long step0timer = 3000;
-	long step1timer = 3000;
-	long step2timer = 3000;
-	long step3timer = 3000;
-	long step4timer = 3000;
-	long step5timer = 1000;
-	long step6timer = 1000;
+	long step0timer = 4000;
+	long step1timer = 4000;
+	long step2timer = 4000;
+	long step3timer = 4000;
+	long step4timer = 4000;
+	long step5timer = 2000;
+	long step6timer = 2000;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -92,6 +92,8 @@ public class Robot extends IterativeRobot {
 		// robotLocation = RobotLocation.CENTER
 		// targetLocation = TargetLocation.SWITCH
 		astep = 0;
+		autotimer.Update();
+		autotimer.reset();
 		
 		String gameData;
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
@@ -140,29 +142,29 @@ public class Robot extends IterativeRobot {
 			break;
 		case 1:
 			if(autotimer.ckTime(true, step1timer)) {
-				drive.resetEnc();
-				if(drive.leadR.getSelectedSensorPosition(0) == 0) {
+				//drive.resetEnc();
+				//if(drive.leadR.getSelectedSensorPosition(0) == 0 && drive.leadL.getSelectedSensorPosition(0) == 0) {
 					astep++;
 					autotimer.reset();
-				}
+				//}
 			}
 			break;
 		case 2:
 			if(autotimer.ckTime(true, step2timer)) {
-				drive.resetEnc();
-				if(drive.leadR.getSelectedSensorPosition(0) == 0) {
+				//drive.resetEnc();
+				//if(drive.leadR.getSelectedSensorPosition(0) == 0 && drive.leadL.getSelectedSensorPosition(0) == 0) {
 					astep++;
 					autotimer.reset();
-				}
+				//}
 			}
 			break;
 		case 3:
 			if(autotimer.ckTime(true, step3timer)) {
-				drive.resetEnc();
-				if(drive.leadR.getSelectedSensorPosition(0) == 0 && drive.leadL.getSelectedSensorPosition(0) == 0) {
+				//drive.resetEnc();
+				//if(drive.leadR.getSelectedSensorPosition(0) == 0 && drive.leadL.getSelectedSensorPosition(0) == 0) {
 					astep++;
 					autotimer.reset();
-				}
+				//}
 			}
 			break;
 		case 4:
