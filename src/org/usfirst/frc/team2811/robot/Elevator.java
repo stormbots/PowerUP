@@ -1,6 +1,8 @@
 package org.usfirst.frc.team2811.robot;
 
 import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
+import org.usfirst.frc.team2811.robot.Robot.ScaleConfig;
+import org.usfirst.frc.team2811.robot.Robot.SwitchConfig;
 import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -108,10 +110,17 @@ public class Elevator extends RobotModule {
 	}
 	
 	void auto(int stepAuto, double time) {
-		
 		if(time > 3 && stepAuto == 3) {
 			elevatorPos = autoPosition;
 		}
 		eMotor.set(ControlMode.PercentOutput, feedBack(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.02));
+	}
+	
+	void autoInit(
+			RobotLocation robotLocation, 
+			TargetLocation targetLocation, 
+			SwitchConfig switchConfig, 
+			ScaleConfig scaleConfig) {
+		
 	}
 }
