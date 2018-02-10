@@ -57,6 +57,8 @@ public class Elevator extends RobotModule {
 		
 		if(mode == Mode.MANUALVELOCITY) {
 			
+			eVelocity = functions1.getY();
+
 			if(currentPos >= 45000 && eVelocity > 0) { //Keeps elevator from going too high.
 				eVelocity = 0; 
 			}
@@ -64,7 +66,6 @@ public class Elevator extends RobotModule {
 				eVelocity = 0; 
 			}
 			else {
-				eVelocity = functions1.getY();
 			}
 			
 		
@@ -105,11 +106,16 @@ public class Elevator extends RobotModule {
 			
 		}
 		
-		eMotor.set(ControlMode.PercentOutput, -eVelocity);
+		//Invert motor phase. The Talon command to do this does not seem to work.
+		eVelocity = -eVelocity;
+		
+		eMotor.set(ControlMode.PercentOutput, eVelocity);
 		SmartDashboard.putNumber("Current Position", eMotor.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Breakpoint", breakpoint);
 		SmartDashboard.putNumber("Desired Position", elevatorPos);
-		
+		SmartDashboard.putNumber("Voltage", eMotor.getOutputCurrent());
+		SmartDashboard.putNumber("Joystick Position", functions1.getY());
+		SmartDashboard.putNumber("Velocity", eVelocity);
 		
 	}
 	
