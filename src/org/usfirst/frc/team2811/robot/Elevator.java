@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2811.robot.FB;
 
@@ -21,7 +22,8 @@ import org.usfirst.frc.team2811.robot.FB;
 
 public class Elevator extends RobotModule {
 	
-	 WPI_TalonSRX eMotor = new WPI_TalonSRX(12);
+	 WPI_TalonSRX eMotor = new WPI_TalonSRX(19); //19
+	 DigitalInput LimitSwitch = new DigitalInput(0);
 	 double eVelocity = 0;
 	 double elevatorPos = 0; //Used as the position you want the elevator to go to.
 	 
@@ -38,10 +40,10 @@ public class Elevator extends RobotModule {
 	//FB.FB() replaces feedBack()
 	
 	public enum Mode{ 
-		MANUALVELOCITY, MANUALPOSITION, BUTTON,  //Used to change how the elevator is controlled
+		MANUALVELOCITY, MANUALPOSITION, BUTTON, HOMING //Used to change how the elevator is controlled
 	}
 	
-	public Mode mode = Mode.MANUALPOSITION; 
+	public Mode mode = Mode.MANUALVELOCITY; 
 	
 	public void changeMode (Mode newMode) {
 		mode = newMode;
@@ -55,11 +57,21 @@ public class Elevator extends RobotModule {
 		 double breakpoint = 0.0;
 		currentPos = eMotor.getSelectedSensorPosition(0);
 		
-		if(mode == Mode.MANUALVELOCITY) {
+		if(mode == Mode.HOMING) {
+			if(!LimitSwitch.get()) {
+				eVelocity = 0.1;
+			}
+			else{
+				mode = Mode.MANUALPOSITION;
+				reset();
+			}
+		}
+		
+		else if(mode == Mode.MANUALVELOCITY) {
 			
 			eVelocity = functions1.getY();
 
-			if(currentPos >= 45000 && eVelocity > 0) { //Keeps elevator from going too high.
+			/*if(currentPos >= 45000 && eVelocity > 0) { //Keeps elevator from going too high.
 				eVelocity = 0; 
 			}
 			else if(currentPos <= 0 && eVelocity < 0) { //Keeps elevator from going too low.
@@ -67,7 +79,7 @@ public class Elevator extends RobotModule {
 			}
 			else {
 			}
-			
+			*/
 		
 		}
 		/*else if(mode == Mode.BUTTON) {
