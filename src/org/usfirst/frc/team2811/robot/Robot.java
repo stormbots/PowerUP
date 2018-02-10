@@ -29,7 +29,7 @@ public class Robot extends IterativeRobot {
 	RobotModule elevator = new RobotModule();
 	RobotModule intake = new RobotModule();
 	Chassis drive = new Chassis();
-	RobotModule climber = new RobotModule();
+	RobotModule climber = new Climber();
 	
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
