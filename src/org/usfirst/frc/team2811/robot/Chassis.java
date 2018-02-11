@@ -33,21 +33,24 @@ import edu.wpi.first.wpilibj.Talon;
  */
 
 public class Chassis extends RobotModule {
-	WPI_TalonSRX leadL = new WPI_TalonSRX(12);//2
-	Talon frontL = new Talon(1);
-	Talon rearL = new Talon(2);
-	//WPI_TalonSRX frontL = new WPI_TalonSRX(3);
-	//WPI_TalonSRX rearL = new WPI_TalonSRX(4);
-	WPI_TalonSRX leadR = new WPI_TalonSRX(13);//5
-	Talon frontR = new Talon(3);
-	Talon rearR = new Talon(4);
-	//WPI_TalonSRX frontR = new WPI_TalonSRX(6);
-	//WPI_TalonSRX rearR = new WPI_TalonSRX(7);
+	WPI_TalonSRX leadL = new WPI_TalonSRX(2);//
+	//Talon frontL = new Talon(1);
+	//Talon rearL = new Talon(2);
+	WPI_TalonSRX frontL = new WPI_TalonSRX(1);
+	WPI_TalonSRX rearL = new WPI_TalonSRX(0);
+	WPI_TalonSRX leadR = new WPI_TalonSRX(5);//
+	//Talon frontR = new Talon(3);
+	//Talon rearR = new Talon(4);
+	WPI_TalonSRX frontR = new WPI_TalonSRX(4);
+	WPI_TalonSRX rearR = new WPI_TalonSRX(3);
 	DifferentialDrive driver = new DifferentialDrive(leadL, leadR);
-	//Solenoid highGear = new Solenoid(3);
-	
+	Solenoid highGearA = new Solenoid(2);
+	Solenoid highGearB = new Solenoid(3);
+
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
 	Motion345 right345 = new Motion345(10000, 3, 0, 200);
+	
+	boolean isTank = false;
 	
 	public double left1 = 0;
 	public double left2 = 0;
@@ -62,6 +65,8 @@ public class Chassis extends RobotModule {
 	 */
 	public Chassis() {
 		//initializes the slaves
+		highGearA.set(false);
+		highGearB.set(false);
 		bind();
 	}
 
@@ -71,15 +76,20 @@ public class Chassis extends RobotModule {
 	 *   With TALONCRXs, uses follow functions.
 	 */
 	public void bind() {
-		frontL.set(leadL.get());
-		rearL.set(leadL.get());
-		frontR.set(leadR.get());
-		rearR.set(leadR.get());
+		//frontL.set(leadL.get());
+		//rearL.set(leadL.get());
+		//frontR.set(leadR.get());
+		//rearR.set(leadR.get());
 		// set slave talons
-		//frontL.follow(leadL);
-		//rearL.follow(leadL);
-		//frontR.follow(leadR);
-		//rearR.follow(leadR);
+		frontL.follow(leadL);
+		rearL.follow(leadL);
+		frontR.follow(leadR);
+		rearR.follow(leadR);
+	}
+	
+	void init() {
+		highGearA.set(false);
+		highGearB.set(false);
 	}
 	
 	/**
@@ -90,12 +100,21 @@ public class Chassis extends RobotModule {
 	 */
 	void update(Joystick stickR, Joystick stickL, Joystick functions) {
 		//updates the lead talons, then updates the slave talons
-		if(stickL.getRawButton(2)) {
-			driver.tankDrive(stickL.getY(), stickR.getY());
+		if(stickR.getRawButtonPressed(2) || stickL.getRawButtonPressed(2)) {
+			isTank = !isTank;
+		}
+			
+		if(stickR.getRawButtonPressed(1) || stickL.getRawButtonPressed(1)) {
+			shift();
+		}
+		
+		if(isTank) {
+			driver.tankDrive(-stickR.getY(), -stickL.getY());
 		}
 		else {
-			driver.arcadeDrive(stickR.getY(), stickR.getX());
+			driver.arcadeDrive(-stickR.getY(), -stickR.getX());
 		}
+
 
 		SmartDashboard.putNumber("Pos Right", leadR.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Pos Left", leadL.getSelectedSensorPosition(0));
@@ -103,12 +122,12 @@ public class Chassis extends RobotModule {
 		SmartDashboard.putNumber("Vel Left", leadL.getMotorOutputPercent());
 		bind();
 	}
-	/*
+
 	public void shift() {
 		// toggles the code
-		highGear.set(!highGear.get());
+		highGearA.set(!highGearA.get());
+		highGearB.set(!highGearB.get());
 	}
-	*/
 	
 	
 	// ---- Autonomous Stuff ----
@@ -133,42 +152,25 @@ public class Chassis extends RobotModule {
 		
 		double scaleFactor = 0.08;
 		
+		highGearA.set(false);
+		highGearB.set(false);
+		
 		if(robotLocation == RobotLocation.LEFT) {
 			if(targetLocation == TargetLocation.SCALE) {
-				if(scaleConfig == scaleConfig.LEFT) {
-					left1 = -1133415.0982*scaleFactor;
-					right1 = 1110241.5762*scaleFactor;
-					left2 = 0;
-					right2 = 0;
-					left3 = 0;
-					right3 = 0;
-				}
-				else {
-					left1 = 0;
-					right1 = 0;
-					left2 = 0;
-					right2 = 0;
-					left3 = 0;
-					right3 = 0;
-				}
+				left1 = -1133415.0982*scaleFactor;
+				right1 = 1110241.5762*scaleFactor;
+				left2 = 0;
+				right2 = 0;
+				left3 = 0;
+				right3 = 0;
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
-				if(switchConfig == switchConfig.LEFT) {
-					left1 = -603770.7021*scaleFactor;
-					right1 = 537792.7431*scaleFactor;
-					left2 = 0;
-					right2 = 0;
-					left3 = 0;
-					right3 = 0;
-				}
-				else {
-					left1 = 0;
-					right1 = 0;
-					left2 = 0;
-					right2 = 0;
-					left3 = 0;
-					right3 = 0;
-				}
+				left1 = -603770.7021*scaleFactor;
+				right1 = 537792.7431*scaleFactor;
+				left2 = 0;
+				right2 = 0;
+				left3 = 0;
+				right3 = 0;
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
 				left1 = -444000.0000*scaleFactor;
@@ -199,40 +201,20 @@ public class Chassis extends RobotModule {
 		}
 		if(robotLocation == RobotLocation.RIGHT) {
 			if(targetLocation == TargetLocation.SCALE) {
-				if(scaleConfig == scaleConfig.LEFT) {
-					left1 = 0;
-					right1 = 0;
-					left2 = 0;
-					right2 = 0;
-					left3 = 0;
-					right3 = 0;
-				}
-				else {
-					left1 = -1110241.5762*scaleFactor;
-					right1 = 1133415.0982*scaleFactor;
-					left2 = 0;
-					right2 = 0;
-					left3 = 0;
-					right3 = 0;
-				}
+				left1 = -1110241.5762*scaleFactor;
+				right1 = 1133415.0982*scaleFactor;
+				left2 = 0;
+				right2 = 0;
+				left3 = 0;
+				right3 = 0;
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
-				if(switchConfig == switchConfig.LEFT) {
-					left1 = 0;
-					right1 = 0;
-					left2 = 0;
-					right2 = 0;
-					left3 = 0;
-					right3 = 0;
-				}
-				else {
-					left1 = -537792.7431*scaleFactor;
-					right1 = 603770.7021*scaleFactor;
-					left2 = 0;
-					right2 = 0;
-					left3 = 0;
-					right3 = 0;
-				}
+				left1 = -537792.7431*scaleFactor;
+				right1 = 603770.7021*scaleFactor;
+				left2 = 0;
+				right2 = 0;
+				left3 = 0;
+				right3 = 0;
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
 				left1 = -444000.0000*scaleFactor;

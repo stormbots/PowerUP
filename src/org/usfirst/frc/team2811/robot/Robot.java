@@ -26,9 +26,9 @@ public class Robot extends IterativeRobot {
 	Joystick stickDrive1 = new Joystick(1);
 	Joystick stickDrive2 = new Joystick(2);
 	Joystick stickFunctions = new Joystick(3);
-	RobotModule elevator = new Elevator();
+	RobotModule elevator = new RobotModule();
 	RobotModule intake = new RobotModule();
-	Chassis drive = new Chassis();
+	RobotModule drive = new Chassis();
 	RobotModule climber = new RobotModule();
 	
 	private static final String kDefaultAuto = "Default";
@@ -52,7 +52,7 @@ public class Robot extends IterativeRobot {
 	
 	public int step = 0;
 	
-	public static RobotLocation robotLocation = RobotLocation.LEFT; 
+	public static RobotLocation robotLocation = RobotLocation.CENTER; 
 	public static TargetLocation targetLocation = TargetLocation.SWITCH;
 	public static SwitchConfig switchConfig = SwitchConfig.UNKNOWN;
 	public static ScaleConfig scaleConfig = ScaleConfig.UNKNOWN;
@@ -93,12 +93,12 @@ public class Robot extends IterativeRobot {
 		startPosition.addObject("right", RobotLocation.RIGHT);
 		SmartDashboard.putData("Robot Position", startPosition);
 		
-		switchAbility.addDefault("yes", true);
-		switchAbility.addObject("no", false);
+		switchAbility.addDefault("yes (switch)", true);
+		switchAbility.addObject("no (switch)", false);
 		SmartDashboard.putData("Switch", switchAbility);
 		
-		scaleAbility.addDefault("yes", true);
-		scaleAbility.addObject("no", false);
+		scaleAbility.addDefault("yes (scale)", true);
+		scaleAbility.addObject("no (scale)", false);
 		SmartDashboard.putData("Scale", scaleAbility);
 		
 		locationPreference.addDefault("scale", TargetLocation.SCALE);
@@ -240,7 +240,12 @@ public class Robot extends IterativeRobot {
 		 * 			
 		 */
 				
-				
+		
+		// removes unused steps from the switch
+		if(robotLocation != RobotLocation.CENTER) {
+			step2timer = 0;
+			step3timer = 0;
+		}
 		
 		
 

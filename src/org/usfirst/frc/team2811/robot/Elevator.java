@@ -21,7 +21,7 @@ import org.usfirst.frc.team2811.robot.FB;
 
 public class Elevator extends RobotModule {
 	
-	 WPI_TalonSRX eMotor = new WPI_TalonSRX(12);
+	 WPI_TalonSRX eMotor = new WPI_TalonSRX(19);
 	 double eVelocity = 0;
 	 double elevatorPos = 0; //Used as the position you want the elevator to go to.
 	 
@@ -54,6 +54,7 @@ public class Elevator extends RobotModule {
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) { //Only using functions1
 		 double breakpoint = 0.0;
 		currentPos = eMotor.getSelectedSensorPosition(0);
+		eVelocity = functions1.getY();
 		
 		if(mode == Mode.MANUALVELOCITY) {
 			
@@ -64,7 +65,7 @@ public class Elevator extends RobotModule {
 				eVelocity = 0; 
 			}
 			else {
-				eVelocity = functions1.getY();
+				
 			}
 			
 		
