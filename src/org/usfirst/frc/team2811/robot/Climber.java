@@ -7,8 +7,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Climber extends RobotModule {
 	
-	WPI_TalonSRX mtr1 = new WPI_TalonSRX(22);
-	WPI_TalonSRX mtr2 = new WPI_TalonSRX(6);
+	WPI_TalonSRX mtr1 = new WPI_TalonSRX(9);
+	WPI_TalonSRX mtr2 = new WPI_TalonSRX(10);
 		
 	void update(Joystick driver1,Joystick driver2, Joystick stick) {
 		if(stick.getRawButton(5)) {
