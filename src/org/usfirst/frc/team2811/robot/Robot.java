@@ -26,14 +26,20 @@ public class Robot extends IterativeRobot {
 	Joystick stickDrive1 = new Joystick(1);
 	Joystick stickDrive2 = new Joystick(2);
 	Joystick stickFunctions = new Joystick(3);
-	RobotModule elevator = new RobotModule();
+	RobotModule elevator = new Elevator();
 	RobotModule intake = new RobotModule();
-	Chassis drive = new Chassis();
 	RobotModule climber = new Climber();
+	RobotModule drive = new Chassis();
 	
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
 	private SendableChooser<String> m_chooser = new SendableChooser<>();
+	
+	private SendableChooser<Double> delaySelection =  new SendableChooser<>();
+	private SendableChooser<RobotLocation> startPosition = new SendableChooser<>();
+	private SendableChooser<Boolean> switchAbility = new SendableChooser<>();
+	private SendableChooser<Boolean> scaleAbility = new SendableChooser<>();
+	private SendableChooser<TargetLocation> locationPreference = new SendableChooser<>();
 	
 	int astep = 0;
 	CXTIMER autotimer = new CXTIMER();
@@ -73,6 +79,32 @@ public class Robot extends IterativeRobot {
 		m_chooser.addDefault("Default Auto", kDefaultAuto);
 		m_chooser.addObject("My Auto", kCustomAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
+		
+		delaySelection.addDefault("0 (default)", 0.0);
+		delaySelection.addObject("1", 1.0);
+		delaySelection.addObject("2", 2.0);
+		delaySelection.addObject("4", 4.0);
+		delaySelection.addObject("6", 6.0);
+		SmartDashboard.putData("Delay (sec)", delaySelection);
+		
+		startPosition.addDefault("field default", RobotLocation.LEFT);
+		startPosition.addObject("left", RobotLocation.LEFT);
+		startPosition.addObject("center", RobotLocation.CENTER);
+		startPosition.addObject("right", RobotLocation.RIGHT);
+		SmartDashboard.putData("Robot Position", startPosition);
+		
+		switchAbility.addDefault("yes", true);
+		switchAbility.addObject("no", false);
+		SmartDashboard.putData("Switch", switchAbility);
+		
+		scaleAbility.addDefault("yes", true);
+		scaleAbility.addObject("no", false);
+		SmartDashboard.putData("Scale", scaleAbility);
+		
+		locationPreference.addDefault("scale", TargetLocation.SCALE);
+		locationPreference.addObject("switch", TargetLocation.SWITCH);
+		SmartDashboard.putData("Preference", locationPreference);
+		
 	}
 
 	/**
@@ -113,7 +145,102 @@ public class Robot extends IterativeRobot {
 				scaleConfig = ScaleConfig.RIGHT;
 			}
 		}
-		else {}
+		
+		
+		//set our auto delay time
+		step0timer = delaySelection.getSelected().longValue()*1000;
+
+		// Determine driver strategy
+		if(robotLocation == RobotLocation.CENTER) {
+			targetLocation = TargetLocation.SWITCH;
+		}
+		else if(robotLocation == RobotLocation.LEFT) {
+			if(locationPreference.getSelected()==TargetLocation.SCALE ){
+				
+				if(scaleAbility.getSelected()==true && scaleConfig == ScaleConfig.LEFT) {
+					targetLocation = TargetLocation.SCALE;
+				}
+				else if(switchAbility.getSelected()==true && switchConfig == SwitchConfig.LEFT) {
+					targetLocation = TargetLocation.SWITCH;
+				}
+				else {
+					targetLocation = TargetLocation.MOVE_ONLY;
+				}
+				
+			}
+			else if(locationPreference.getSelected()==TargetLocation.SWITCH) {
+				
+				if(switchAbility.getSelected()==true && switchConfig == SwitchConfig.LEFT) {
+					targetLocation = TargetLocation.SWITCH;
+				}
+				else if(scaleAbility.getSelected()==true && scaleConfig == ScaleConfig.LEFT) {
+					targetLocation = TargetLocation.SCALE;
+				}
+				else {
+					targetLocation = TargetLocation.MOVE_ONLY;
+				}
+			}
+		}
+		
+		else if(robotLocation == RobotLocation.RIGHT) {
+			if(locationPreference.getSelected()==TargetLocation.SCALE ){
+				
+				if(scaleAbility.getSelected()==true && scaleConfig == ScaleConfig.RIGHT) {
+					targetLocation = TargetLocation.SCALE;
+				}
+				else if(switchAbility.getSelected()==true && switchConfig == SwitchConfig.RIGHT) {
+					targetLocation = TargetLocation.SWITCH;
+				}
+				else {
+					targetLocation = TargetLocation.MOVE_ONLY;
+				}
+				
+			}
+			else if(locationPreference.getSelected()==TargetLocation.SWITCH) {
+				
+				if(switchAbility.getSelected()==true && switchConfig == SwitchConfig.RIGHT) {
+					targetLocation = TargetLocation.SWITCH;
+				}
+				else if(scaleAbility.getSelected()==true && scaleConfig == ScaleConfig.RIGHT) {
+					targetLocation = TargetLocation.SCALE;
+				}
+				else {
+					targetLocation = TargetLocation.MOVE_ONLY;
+				}
+			}
+		}
+		
+		else {
+			//auto select based off field
+		}
+	
+			
+		
+		
+		
+		/* delay = selecton of delay
+		 * 
+		 * 
+		 * if position == center
+		 * 		do we go to switch? 
+		 * 
+		 *  if position == left 
+		 *  	if pref == scale
+		 *  		if scale == yes && scaleConfig == left
+		 *  			go to scale
+		 *  		else if switch == yes and switchconfig == left
+		 *  			go to switch
+		 *  		else
+		 *  			move only
+		 *  
+		 *  
+		 * 
+		 * 			
+		 */
+				
+				
+		
+		
 
 		/*  THIS IS WHERE THE ROBOT CODE SENDS THE DATA TO THE MODULES */
 		elevator.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
@@ -192,6 +319,7 @@ public class Robot extends IterativeRobot {
 		drive.resetEnc();
 		autotimer.Update();
 		autotimer.reset();
+		elevator.init();
 	}
 
 	/**
