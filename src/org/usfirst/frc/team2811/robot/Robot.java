@@ -64,11 +64,11 @@ public class Robot extends IterativeRobot {
 	
 	long step0timer = 4000;
 	long step1timer = 4000;
-	long step2timer = 3000;
-	long step3timer = 3000;
-	long step4timer = 3000;
-	long step5timer = 3000;
-	long step6timer = 3000;
+	long step2timer = 4000;
+	long step3timer = 4000;
+	long step4timer = 4000;
+	long step5timer = 2000;
+	long step6timer = 2000;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -93,12 +93,12 @@ public class Robot extends IterativeRobot {
 		startPosition.addObject("right", RobotLocation.RIGHT);
 		SmartDashboard.putData("Robot Position", startPosition);
 		
-		switchAbility.addDefault("yes", true);
-		switchAbility.addObject("no", false);
+		switchAbility.addDefault("yes (switch)", true);
+		switchAbility.addObject("no (switch)", false);
 		SmartDashboard.putData("Switch", switchAbility);
 		
-		scaleAbility.addDefault("yes", true);
-		scaleAbility.addObject("no", false);
+		scaleAbility.addDefault("yes (scale)", true);
+		scaleAbility.addObject("no (scale)", false);
 		SmartDashboard.putData("Scale", scaleAbility);
 		
 		locationPreference.addDefault("scale", TargetLocation.SCALE);
@@ -124,6 +124,8 @@ public class Robot extends IterativeRobot {
 		// robotLocation = RobotLocation.CENTER
 		// targetLocation = TargetLocation.SWITCH
 		astep = 0;
+		autotimer.Update();
+		autotimer.reset();
 		
 		String gameData;
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
@@ -238,7 +240,12 @@ public class Robot extends IterativeRobot {
 		 * 			
 		 */
 				
-				
+		
+		// removes unused steps from the switch
+		if(robotLocation != RobotLocation.CENTER) {
+			step2timer = 0;
+			step3timer = 0;
+		}
 		
 		
 
@@ -247,7 +254,6 @@ public class Robot extends IterativeRobot {
 		intake.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		climber.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
-		drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 	}
 
 	/**
@@ -268,20 +274,29 @@ public class Robot extends IterativeRobot {
 			break;
 		case 1:
 			if(autotimer.ckTime(true, step1timer)) {
-				astep++;
-				autotimer.reset();
+				//drive.resetEnc();
+				//if(drive.leadR.getSelectedSensorPosition(0) == 0 && drive.leadL.getSelectedSensorPosition(0) == 0) {
+					astep++;
+					autotimer.reset();
+				//}
 			}
 			break;
 		case 2:
 			if(autotimer.ckTime(true, step2timer)) {
-				astep++;
-				autotimer.reset();
+				//drive.resetEnc();
+				//if(drive.leadR.getSelectedSensorPosition(0) == 0 && drive.leadL.getSelectedSensorPosition(0) == 0) {
+					astep++;
+					autotimer.reset();
+				//}
 			}
 			break;
 		case 3:
 			if(autotimer.ckTime(true, step3timer)) {
-				astep++;
-				autotimer.reset();
+				//drive.resetEnc();
+				//if(drive.leadR.getSelectedSensorPosition(0) == 0 && drive.leadL.getSelectedSensorPosition(0) == 0) {
+					astep++;
+					autotimer.reset();
+				//}
 			}
 			break;
 		case 4:
@@ -307,10 +322,10 @@ public class Robot extends IterativeRobot {
 		}
 		
 		//Handle continuous updates for various modules
-		elevator.auto(step, autotimer.getTimeSec());
-		intake.auto(step, autotimer.getTimeSec());
-		drive.auto(step, autotimer.getTimeSec());
-		climber.auto(step, autotimer.getTimeSec());
+		elevator.auto(astep, autotimer.getTimeSec());
+		intake.auto(astep, autotimer.getTimeSec());
+		drive.auto(astep, autotimer.getTimeSec());
+		climber.auto(astep, autotimer.getTimeSec());
 
 		SmartDashboard.putNumber("Step", astep);
 	}
