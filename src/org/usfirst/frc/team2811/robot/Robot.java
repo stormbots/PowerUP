@@ -27,9 +27,9 @@ public class Robot extends IterativeRobot {
 	Joystick stickDrive2 = new Joystick(2);
 	Joystick stickFunctions = new Joystick(3);
 	RobotModule elevator = new Elevator();
-	RobotModule intake = new RobotModule();
-	RobotModule climber = new Climber();
+	RobotModule intake = new Intake();
 	RobotModule drive = new Chassis();
+	RobotModule climber = new Climber();
 	
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
