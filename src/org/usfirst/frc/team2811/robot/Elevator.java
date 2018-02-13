@@ -44,7 +44,7 @@ public class Elevator extends RobotModule {
 		MANUALVELOCITY, MANUALPOSITION, BUTTON, HOMING //Used to change how the elevator is controlled
 	}
 	
-	public Mode mode = Mode.MANUALVELOCITY; 
+	public Mode mode = Mode.MANUALPOSITION; 
 	
 	public void changeMode (Mode newMode) {
 		mode = newMode;
@@ -73,21 +73,14 @@ public class Elevator extends RobotModule {
 			
 			eVelocity = functions1.getY();
 
-			/*if(currentPos >= 45000 && eVelocity > 0) { //Keeps elevator from going too high.
-				eVelocity = 0; 
-			}
-			else if(currentPos <= 0 && eVelocity < 0) { //Keeps elevator from going too low.
-				eVelocity = 0; 
-			}
-			else {
-			}
-			*/
+			
+			
 		
 		}
 		/*else if(mode == Mode.BUTTON) {
 			
 			//eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.02)); 
-			eVelocity = FB.FB(elevatorPos, currentPos, 0.02);
+			eVelocity = FB.FB(elevatorPos, -currentPos, 0.02);
 			//Takes an inputed position and adjusts the velocity to get there.
 			//Last value needs to be tested and adjusted.
 			
@@ -96,9 +89,9 @@ public class Elevator extends RobotModule {
 		else if(mode == Mode.MANUALPOSITION) {
 			
 			
-			elevatorPos = ( (functions1.getY()-(-1)) / (1-(-1)) * (45000-0) + 0 ); //Maps controller y-axis to elevator position.
+			elevatorPos = ( (functions1.getY()-(-1)) / (1-(-1)) * (65000-0) + 0 ); //Maps controller y-axis to elevator position.
 			
-			if(elevatorPos < midBP && currentPos > midBP) {
+			/*if(elevatorPos < midBP && currentPos > midBP) {
 				breakpoint = midBP;
 			}
 			else if(elevatorPos > midBP && currentPos < midBP) {
@@ -107,9 +100,9 @@ public class Elevator extends RobotModule {
 			else {
 				breakpoint = elevatorPos;
 				
-			}
+			}*/
 			
-			eVelocity = FB.FB(breakpoint, currentPos, 0.002);
+			eVelocity = FB.FB(-elevatorPos, -currentPos, 0.002);
 				
 			//figure out "real" elevator position, as above
 			//figure out the "fake" elevator position, at the breakpoints
@@ -121,7 +114,17 @@ public class Elevator extends RobotModule {
 		}
 		
 		//Invert motor phase. The Talon command to do this does not seem to work.
+		if(currentPos <= -65000 && eVelocity < 0) { //Keeps elevator from going too high.
+			eVelocity = 0; 
+		}
+		else if(currentPos >= 0 && eVelocity > 0) { //Keeps elevator from going too low.
+			eVelocity = 0; 
+		}
+		else {
+		}
+		
 		eVelocity = -eVelocity;
+		
 		
 		eMotor.set(ControlMode.PercentOutput, eVelocity);
 		SmartDashboard.putNumber("Current Position", eMotor.getSelectedSensorPosition(0));

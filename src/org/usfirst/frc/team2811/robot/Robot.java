@@ -335,6 +335,7 @@ public class Robot extends IterativeRobot {
 		autotimer.Update();
 		autotimer.reset();
 		elevator.init();
+		intake.init();
 	}
 
 	/**

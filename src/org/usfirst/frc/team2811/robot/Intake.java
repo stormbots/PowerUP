@@ -100,6 +100,8 @@ public class Intake extends RobotModule {
 	 *Nothing currently.
 	 */
 	public void init() {
+		tiltSolenoidA.set(false);
+		tiltSolenoidB.set(true);
 	}
 	
 	/**UPDATE (TELEOP PERIODIC) METHOD
