@@ -28,9 +28,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Intake extends RobotModule {
 	WPI_TalonSRX motor1 = new WPI_TalonSRX(6);
 	WPI_TalonSRX motor2 = new WPI_TalonSRX(7);
-	Solenoid squeezeSolenoid = new Solenoid(4);
-	Solenoid tiltSolenoid = new Solenoid(1);
-	Solenoid tiltSolenoid1 = new Solenoid(7);
+	Solenoid squeezeSolenoidA = new Solenoid(6); 
+	Solenoid squeezeSolenoidB = new Solenoid(7);
+	Solenoid tiltSolenoidA = new Solenoid(0);
+	Solenoid tiltSolenoidB = new Solenoid(1);
 	DigitalInput redEye = new DigitalInput(0);
 	Boolean squeezeRun = false;
 	Boolean tiltRun = false;
@@ -47,8 +48,10 @@ public class Intake extends RobotModule {
 		motor2.follow(motor1);
 		motor2.setInverted(true);
 		
-		squeezeSolenoid.set(false);
-		tiltSolenoid.set(false);
+		squeezeSolenoidA.set(false);
+		squeezeSolenoidB.set(true);
+		tiltSolenoidA.set(false);
+		tiltSolenoidB.set(true);
 	}
 	
 	/**AUTO INIT METHOD
@@ -129,10 +132,12 @@ public class Intake extends RobotModule {
 		//temp code: This makes it a when held
 		squeezeRun = stick.getRawButton(3);
 		if(squeezeRun) {
-			squeezeSolenoid.set(true);
+			squeezeSolenoidA.set(true);
+			squeezeSolenoidB.set(false);
 		}
 		else {
-			squeezeSolenoid.set(false);
+			squeezeSolenoidA.set(false);
+			squeezeSolenoidB.set(true);
 		}
 		
 		
@@ -141,12 +146,12 @@ public class Intake extends RobotModule {
 			tiltRun = !tiltRun;
 		}
 		if(tiltRun) {
-			tiltSolenoid.set(true);
-			tiltSolenoid1.set(true);
+			tiltSolenoidA.set(true);
+			tiltSolenoidB.set(false);
 		}
 		else {
-			tiltSolenoid.set(false);
-			tiltSolenoid1.set(false);
+			tiltSolenoidA.set(false);
+			tiltSolenoidB.set(true);
 		}
 		
 		

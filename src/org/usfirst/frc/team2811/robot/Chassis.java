@@ -44,8 +44,10 @@ public class Chassis extends RobotModule {
 	WPI_TalonSRX frontR = new WPI_TalonSRX(4);
 	WPI_TalonSRX rearR = new WPI_TalonSRX(3);
 	DifferentialDrive driver = new DifferentialDrive(leadL, leadR);
-	Solenoid highGearA = new Solenoid(2);
-	Solenoid highGearB = new Solenoid(3);
+	Solenoid leftShiftA = new Solenoid(2);
+	Solenoid leftShiftB = new Solenoid(3);
+	Solenoid rightShiftA = new Solenoid(4);
+	Solenoid rightShiftB = new Solenoid(5);
 
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
 	Motion345 right345 = new Motion345(10000, 3, 0, 200);
@@ -65,8 +67,10 @@ public class Chassis extends RobotModule {
 	 */
 	public Chassis() {
 		//initializes the slaves
-		highGearA.set(false);
-		highGearB.set(false);
+		leftShiftA.set(false);
+		leftShiftB.set(true);
+		rightShiftA.set(false);
+		rightShiftB.set(true);
 		bind();
 	}
 
@@ -88,8 +92,10 @@ public class Chassis extends RobotModule {
 	}
 	
 	void init() {
-		highGearA.set(false);
-		highGearB.set(false);
+		leftShiftA.set(false);
+		leftShiftB.set(true);
+		rightShiftA.set(false);
+		rightShiftB.set(true);
 	}
 	
 	/**
@@ -125,8 +131,10 @@ public class Chassis extends RobotModule {
 
 	public void shift() {
 		// toggles the code
-		highGearA.set(!highGearA.get());
-		highGearB.set(!highGearB.get());
+		leftShiftA.set(!leftShiftA.get());
+		leftShiftB.set(!leftShiftB.get());
+		rightShiftA.set(!rightShiftA.get());
+		rightShiftB.set(!rightShiftB.get());
 	}
 	
 	
@@ -152,8 +160,8 @@ public class Chassis extends RobotModule {
 		
 		double scaleFactor = 0.08;
 		
-		highGearA.set(false);
-		highGearB.set(false);
+		leftShiftA.set(false);
+		rightShiftB.set(false);
 		
 		if(robotLocation == RobotLocation.LEFT) {
 			if(targetLocation == TargetLocation.SCALE) {

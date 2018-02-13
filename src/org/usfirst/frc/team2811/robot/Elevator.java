@@ -22,8 +22,8 @@ import org.usfirst.frc.team2811.robot.FB;
 
 public class Elevator extends RobotModule {
 	
-	 WPI_TalonSRX eMotor = new WPI_TalonSRX(19);
-	 DigitalInput LimitSwitch = new DigitalInput(0);
+	 WPI_TalonSRX eMotor = new WPI_TalonSRX(8);
+	 DigitalInput LimitSwitch = new DigitalInput(1);
 
 	 double eVelocity = 0;
 	 double elevatorPos = 0; //Used as the position you want the elevator to go to.
