@@ -62,7 +62,7 @@ public class Motion345 {
 		 * @return
 		 */
 		public double getVelPosFb(double t, double pactual,double k) {
-			double pideal=getPos(t/traveltime);			
+			double pideal=getPos(t);			
 			return FB(pactual,pideal,k);
 		}
 		
@@ -74,6 +74,7 @@ public class Motion345 {
 		 */
 		public double getVel(double t) {
 			double v=0.0;
+			t=t/traveltime;
 			if(t>1.0)t=1.0;
 			v=(movcnt/traveltime)*V345(t)/maxvel; // produces a value -1 to 1 based on move count and time for move
 			if(v>1.0)v=1.0;
@@ -83,6 +84,7 @@ public class Motion345 {
 		
 		// based on how far to move return the position in counts
 		public double getPos(double t) {
+			t=t/traveltime;
 			if(t>1.0)t=1.0;
 			double p=0.0;
 			p=movcnt*P345(t);
