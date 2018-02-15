@@ -63,7 +63,7 @@ public class Robot extends IterativeRobot {
 	static boolean deliverCube = true;
 	
 	long step0timer = 4000;
-	long step1timer = 4000;
+	long step1timer = 6000;
 	long step2timer = 4000;
 	long step3timer = 4000;
 	long step4timer = 4000;

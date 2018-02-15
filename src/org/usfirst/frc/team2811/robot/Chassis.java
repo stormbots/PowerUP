@@ -86,12 +86,12 @@ public class Chassis extends RobotModule {
 		if(brake == false) {
 			mode = NeutralMode.Coast;
 		}
-		leadL.setNeutralMode(mode);
-		frontL.setNeutralMode(mode);
-		rearL.setNeutralMode(mode);
-		leadR.setNeutralMode(mode);
-		frontR.setNeutralMode(mode);
-		rearR.setNeutralMode(mode);
+		leadL.setNeutralMode(NeutralMode.Brake);
+		frontL.setNeutralMode(NeutralMode.Brake);
+		rearL.setNeutralMode(NeutralMode.Brake);
+		leadR.setNeutralMode(NeutralMode.Brake);
+		frontR.setNeutralMode(NeutralMode.Brake);
+		rearR.setNeutralMode(NeutralMode.Brake);
 	}
 	
 
@@ -139,7 +139,7 @@ public class Chassis extends RobotModule {
 			driver.tankDrive(-stickR.getY(), -stickL.getY());
 		}
 		else {
-			driver.arcadeDrive(-stickR.getY(), -stickR.getX());
+			driver.arcadeDrive(-stickR.getY(), -stickL.getX());
 		}
 
 
@@ -284,8 +284,8 @@ public class Chassis extends RobotModule {
 				if(time == 0) {
 					resetEnc();
 				}
-				left345.setMove(10000, 3, left1, 200);
-				right345.setMove(10000, 3, right1, 200);
+				left345.setMove(10000, 5, left1, 200);
+				right345.setMove(10000, 5, right1, 200);
 				//keep at Case 1
 				break;
 				
@@ -333,12 +333,12 @@ public class Chassis extends RobotModule {
 		}
 		
 		if(step > 0 && step < 4 && time > 0.1) {
-			leftV = -left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.008);
-			rightV = right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.008);
+			leftV = -left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.0065);
+			rightV = right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.0065);
 		}
-		
-		
-		driver.tankDrive(leftV, rightV);
+	
+
+		driver.tankDrive(rightV, leftV);
 		
 		SmartDashboard.putNumber("leftV", leftV);
 		SmartDashboard.putNumber("rightV", rightV);
@@ -348,14 +348,14 @@ public class Chassis extends RobotModule {
 		SmartDashboard.putNumber("Vel Left", leadL.getMotorOutputPercent());
 		SmartDashboard.putNumber("time", time);
 		SmartDashboard.putNumber("step", step);
-		SmartDashboard.putNumber("right1", right345.getPos(time));
-		SmartDashboard.putNumber("left1", left345.getPos(time));
-		SmartDashboard.putNumber("leftTarg", left345.getPos(3));
-		SmartDashboard.putNumber("rightTarg", right345.getPos(3));
+		SmartDashboard.putNumber("right1", right1);
+		SmartDashboard.putNumber("left1", left1);
+		SmartDashboard.putNumber("leftTarg", left345.getPos(time));
+		SmartDashboard.putNumber("rightTarg", right345.getPos(time));
 	}
 	
 	public void disabled() {
-		braking(false);
+		//braking(false);
 	}
 
 }
