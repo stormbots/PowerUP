@@ -26,10 +26,10 @@ public class Robot extends IterativeRobot {
 	Joystick stickDrive1 = new Joystick(1);
 	Joystick stickDrive2 = new Joystick(2);
 	Joystick stickFunctions = new Joystick(3);
-	RobotModule elevator = new Elevator();
-	RobotModule intake = new Intake();
+	RobotModule elevator = new RobotModule();
+	RobotModule intake = new RobotModule();
 	RobotModule drive = new Chassis();
-	RobotModule climber = new Climber();
+	RobotModule climber = new RobotModule();
 	
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
@@ -52,8 +52,8 @@ public class Robot extends IterativeRobot {
 	
 	public int step = 0;
 	
-	public static RobotLocation robotLocation = RobotLocation.CENTER; 
-	public static TargetLocation targetLocation = TargetLocation.SWITCH;
+	public static RobotLocation robotLocation = RobotLocation.LEFT; 
+	public static TargetLocation targetLocation = TargetLocation.MOVE_ONLY;
 	public static SwitchConfig switchConfig = SwitchConfig.UNKNOWN;
 	public static ScaleConfig scaleConfig = ScaleConfig.UNKNOWN;
 	
@@ -150,7 +150,7 @@ public class Robot extends IterativeRobot {
 		
 		
 		//set our auto delay time
-		step0timer = delaySelection.getSelected().longValue()*1000;
+		//step0timer = delaySelection.getSelected().longValue()*1000;
 
 		// Determine driver strategy
 		if(robotLocation == RobotLocation.CENTER) {
@@ -356,4 +356,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 	}
+	
+	public void disabledPeriodic() {
+		drive.disabled();
+	}
+	
 }

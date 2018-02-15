@@ -52,6 +52,7 @@ public class Chassis extends RobotModule {
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
 	Motion345 right345 = new Motion345(10000, 3, 0, 200);
 	
+	boolean braking = true;
 	boolean isTank = false;
 	
 	public double left1 = 0;
@@ -60,6 +61,8 @@ public class Chassis extends RobotModule {
 	public double right1 = 0;
 	public double right2 = 0;
 	public double right3 = 0;
+
+
 
 	/**
 	 * the constructor: 
@@ -73,6 +76,24 @@ public class Chassis extends RobotModule {
 		rightShiftB.set(true);
 		bind();
 	}
+	
+	/**
+	 * sets braking or coasting based on input
+	 * @param brake
+	 */
+	public void braking(boolean brake) {
+		NeutralMode mode = NeutralMode.Brake;
+		if(brake == false) {
+			mode = NeutralMode.Coast;
+		}
+		leadL.setNeutralMode(mode);
+		frontL.setNeutralMode(mode);
+		rearL.setNeutralMode(mode);
+		leadR.setNeutralMode(mode);
+		frontR.setNeutralMode(mode);
+		rearR.setNeutralMode(mode);
+	}
+	
 
 	/**
 	 * sets the slaves:
@@ -122,8 +143,8 @@ public class Chassis extends RobotModule {
 		}
 
 
-		SmartDashboard.putNumber("Pos Right", leadR.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("Pos Left", leadL.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Pos Right", -leadR.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Pos Left", -leadL.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Vel Right", leadR.getMotorOutputPercent());
 		SmartDashboard.putNumber("Vel Left", leadL.getMotorOutputPercent());
 		bind();
@@ -158,31 +179,33 @@ public class Chassis extends RobotModule {
 			ScaleConfig scaleConfig) {
 		//save RobotLocation and TargetLocation to class fields, as we'll need in auto
 		
-		double scaleFactor = 0.08;
+		braking(true);
+		shift();
+		double scaleFactor = 0.078;
 		
 		leftShiftA.set(false);
 		rightShiftB.set(false);
 		
 		if(robotLocation == RobotLocation.LEFT) {
 			if(targetLocation == TargetLocation.SCALE) {
-				left1 = -1133415.0982*scaleFactor;
-				right1 = 1110241.5762*scaleFactor;
+				left1 = 1133415.0982*scaleFactor;
+				right1 = -1110241.5762*scaleFactor;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
-				left1 = -603770.7021*scaleFactor;
-				right1 = 537792.7431*scaleFactor;
+				left1 = 603770.7021*scaleFactor;
+				right1 = -537792.7431*scaleFactor;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
-				left1 = -444000.0000*scaleFactor;
-				right1 = 444000.0000*scaleFactor;
+				left1 = 444000.0000*scaleFactor;
+				right1 = -444000.0000*scaleFactor;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -191,42 +214,42 @@ public class Chassis extends RobotModule {
 		}
 		if(robotLocation == RobotLocation.CENTER) {
 			if(switchConfig == switchConfig.LEFT) {
-				left1 = -412648.195*scaleFactor;
-				right1 = 958971.1575*scaleFactor;
-				left2 = -958971.1575*scaleFactor;																																																											;
-				right2 = 412648.195*scaleFactor;
-				left3 = -299700.0000*scaleFactor;
-				right3 = 299700.0000*scaleFactor;
+				left1 = 412648.195*scaleFactor;
+				right1 = -958971.1575*scaleFactor;
+				left2 = 958971.1575*scaleFactor;																																																											;
+				right2 = -412648.195*scaleFactor;
+				left3 = 299700.0000*scaleFactor;
+				right3 = -299700.0000*scaleFactor;
 			}
 			else {
-				left1 = -210683.0573*scaleFactor;
-				right1 = 74102.3167*scaleFactor;
-				left2 = -74102.3167*scaleFactor;
-				right2 = 210683.0573*scaleFactor;
-				left3 = -299700.0000*scaleFactor;
-				right3 = 299700.0000*scaleFactor;
+				left1 = 210683.0573*scaleFactor;
+				right1 = -74102.3167*scaleFactor;
+				left2 = 74102.3167*scaleFactor;
+				right2 = -210683.0573*scaleFactor;
+				left3 = 299700.0000*scaleFactor;
+				right3 = -299700.0000*scaleFactor;
 			}
 		}
 		if(robotLocation == RobotLocation.RIGHT) {
 			if(targetLocation == TargetLocation.SCALE) {
-				left1 = -1110241.5762*scaleFactor;
-				right1 = 1133415.0982*scaleFactor;
+				left1 = 1110241.5762*scaleFactor;
+				right1 = -1133415.0982*scaleFactor;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
-				left1 = -537792.7431*scaleFactor;
-				right1 = 603770.7021*scaleFactor;
+				left1 = 537792.7431*scaleFactor;
+				right1 = -603770.7021*scaleFactor;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
-				left1 = -444000.0000*scaleFactor;
-				right1 = 444000.0000*scaleFactor;
+				left1 = 444000.0000*scaleFactor;
+				right1 = -444000.0000*scaleFactor;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -319,17 +342,20 @@ public class Chassis extends RobotModule {
 		
 		SmartDashboard.putNumber("leftV", leftV);
 		SmartDashboard.putNumber("rightV", rightV);
-		SmartDashboard.putNumber("Pos Right", leadR.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("Pos Left", leadL.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Pos Right", -leadR.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Pos Left", -leadL.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Vel Right", leadR.getMotorOutputPercent());
 		SmartDashboard.putNumber("Vel Left", leadL.getMotorOutputPercent());
 		SmartDashboard.putNumber("time", time);
 		SmartDashboard.putNumber("step", step);
-		SmartDashboard.putNumber("right1", right1);
-		SmartDashboard.putNumber("left1", left1);
+		SmartDashboard.putNumber("right1", right345.getPos(time));
+		SmartDashboard.putNumber("left1", left345.getPos(time));
 		SmartDashboard.putNumber("leftTarg", left345.getPos(3));
 		SmartDashboard.putNumber("rightTarg", right345.getPos(3));
 	}
 	
+	public void disabled() {
+		braking(false);
+	}
 
 }
