@@ -33,6 +33,8 @@ public class Elevator extends RobotModule {
 	 double switchPos = 20000;      // Set heights (estimated) for each location the elevator needs to get to.
 	 double scaleLowPos = 25000;    //
 	 double scaleHighPos = 30000;   //
+	 double maxPos = 85000;
+	 double minPos = 0;
 	 
 	 double autoPosition = 0.0; //Where you want to go to during auto.
 	 double currentPos = 0.0;
@@ -57,7 +59,7 @@ public class Elevator extends RobotModule {
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) { //Only using functions1
 		double breakpoint = 0.0;
 		currentPos = -eMotor.getSelectedSensorPosition(0);
-		double stickValue = -functions1.getY();
+		double stickValue = -functions1.getRawAxis(3);
 		
 		if(mode == Mode.HOMING) {
 			if(!LimitSwitch.get()) {
@@ -90,7 +92,7 @@ public class Elevator extends RobotModule {
 		else if(mode == Mode.MANUALPOSITION) {
 			
 			
-			elevatorPos = ( (stickValue-(-1)) / (1-(-1)) * (65000-0) + 0 ); //Maps controller y-axis to elevator position.
+			elevatorPos = ( (stickValue-(-1)) / (1-(-1)) * (maxPos-minPos) + minPos ); //Maps controller y-axis to elevator position.
 			
 			//Not applicable to practice robot, not used
 			/*if(elevatorPos < midBP && currentPos > midBP) {
@@ -104,27 +106,27 @@ public class Elevator extends RobotModule {
 				
 			}*/
 			
-			eVelocity = FB.FB(elevatorPos, currentPos, 0.002);			
+			eVelocity = FB.FB(elevatorPos, currentPos, 0.007);			
 			
 		}
 		
 		//Invert motor phase. The Talon command to do this does not seem to work.
-		if(currentPos >= 65000 && eVelocity > 0) { //Keeps elevator from going too high.
+		/*if(currentPos >= maxPos && eVelocity > 0) { //Keeps elevator from going too high.
 			eVelocity = 0; 
 		}
-		else if(currentPos <= 0 && eVelocity < 0) { //Keeps elevator from going too low.
+		else if(currentPos <= minPos && eVelocity < 0) { //Keeps elevator from going too low.
 			eVelocity = 0; 
 		}
 		else {
 		}
-		
+		*/
 	
 		//Set Motor phase, currently not needed 
 		//eVelocity = -eVelocity;
 		
 		
 		eMotor.set(ControlMode.PercentOutput, eVelocity);
-		SmartDashboard.putNumber("Current Position", eMotor.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Current Position", currentPos);
 		SmartDashboard.putNumber("Breakpoint", breakpoint);
 		SmartDashboard.putNumber("Desired Position", elevatorPos);
 		SmartDashboard.putNumber("Voltage", eMotor.getOutputCurrent());
