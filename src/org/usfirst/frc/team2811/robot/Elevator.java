@@ -33,6 +33,8 @@ public class Elevator extends RobotModule {
 	 double switchPos = 20000;      // Set heights (estimated) for each location the elevator needs to get to.
 	 double scaleLowPos = 25000;    //
 	 double scaleHighPos = 30000;   //
+	 double maxPos = 85000;
+	 double minPos = 0;
 	 
 	 double autoPosition = 0.0; //Where you want to go to during auto.
 	 double currentPos = 0.0;
@@ -55,9 +57,9 @@ public class Elevator extends RobotModule {
 	}
 	
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) { //Only using functions1
-		 double breakpoint = 0.0;
-		currentPos = eMotor.getSelectedSensorPosition(0);
-		eVelocity = functions1.getY();
+		double breakpoint = 0.0;
+		currentPos = -eMotor.getSelectedSensorPosition(0);
+		double stickValue = -functions1.getRawAxis(3);
 		
 		if(mode == Mode.HOMING) {
 			if(!LimitSwitch.get()) {
@@ -71,12 +73,13 @@ public class Elevator extends RobotModule {
 		
 		else if(mode == Mode.MANUALVELOCITY) {
 			
-			eVelocity = functions1.getY();
+			eVelocity = stickValue;
 
 			
 			
 		
 		}
+		//Position setlist, currently unused
 		/*else if(mode == Mode.BUTTON) {
 			
 			//eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.02)); 
@@ -89,8 +92,9 @@ public class Elevator extends RobotModule {
 		else if(mode == Mode.MANUALPOSITION) {
 			
 			
-			elevatorPos = ( (functions1.getY()-(-1)) / (1-(-1)) * (65000-0) + 0 ); //Maps controller y-axis to elevator position.
+			elevatorPos = ( (stickValue-(-1)) / (1-(-1)) * (maxPos-minPos) + minPos ); //Maps controller y-axis to elevator position.
 			
+			//Not applicable to practice robot, not used
 			/*if(elevatorPos < midBP && currentPos > midBP) {
 				breakpoint = midBP;
 			}
@@ -102,32 +106,27 @@ public class Elevator extends RobotModule {
 				
 			}*/
 			
-			eVelocity = FB.FB(-elevatorPos, -currentPos, 0.002);
-				
-			//figure out "real" elevator position, as above
-			//figure out the "fake" elevator position, at the breakpoints
-			//Set fb to the nearest breakpoint
-			//if close to the breakpoint, then we can move to the next breakpoint down or "real" position
-			
-			//eVelocity =  FB.FB(elevatorPos, currentPos, 0.02);
+			eVelocity = FB.FB(elevatorPos, currentPos, 0.007);			
 			
 		}
 		
 		//Invert motor phase. The Talon command to do this does not seem to work.
-		if(currentPos <= -65000 && eVelocity < 0) { //Keeps elevator from going too high.
+		/*if(currentPos >= maxPos && eVelocity > 0) { //Keeps elevator from going too high.
 			eVelocity = 0; 
 		}
-		else if(currentPos >= 0 && eVelocity > 0) { //Keeps elevator from going too low.
+		else if(currentPos <= minPos && eVelocity < 0) { //Keeps elevator from going too low.
 			eVelocity = 0; 
 		}
 		else {
 		}
-		
-		eVelocity = -eVelocity;
+		*/
+	
+		//Set Motor phase, currently not needed 
+		//eVelocity = -eVelocity;
 		
 		
 		eMotor.set(ControlMode.PercentOutput, eVelocity);
-		SmartDashboard.putNumber("Current Position", eMotor.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Current Position", currentPos);
 		SmartDashboard.putNumber("Breakpoint", breakpoint);
 		SmartDashboard.putNumber("Desired Position", elevatorPos);
 		SmartDashboard.putNumber("Voltage", eMotor.getOutputCurrent());
@@ -135,22 +134,12 @@ public class Elevator extends RobotModule {
 		SmartDashboard.putNumber("Velocity", eVelocity);
 		
 	}
-	
-	/*public double moveJoystick (double stickValue) { 
-		eVelocity = stickValue;
-		return eVelocity;
-	}*/
-	
+		
 	public void reset() {
 		eMotor.setSelectedSensorPosition(0, 0, 20); //First argument is desired position, second is the type of loop? (0 or 1), third is the timeout.
 		
 	}
-	
-	/*public double moveToPos (double inputPosition) { 
-		elevatorPos = inputPosition;
-		return elevatorPos;
-	}*/
-	
+		
 	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation, SwitchConfig switchConfig, ScaleConfig scaleConfig) { //Elevator only cares about targetLocation
 		eMotor.setSelectedSensorPosition(3000, 0, 20);
 		if(targetLocation == TargetLocation.SWITCH) {
@@ -169,6 +158,8 @@ public class Elevator extends RobotModule {
 		if(time > 3 && stepAuto == 3) {
 			elevatorPos = autoPosition;
 		}
+		
+		//TODO may need to set these motor phases
 		eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.02));
 	}
 	
