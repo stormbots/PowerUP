@@ -84,6 +84,9 @@ public class RobotModule {
 		
 	}
 
+	public void disabled() {
+		
+	}
 	
 	//used by chassis class, added here to avoid breakage
 	public void resetEnc() {

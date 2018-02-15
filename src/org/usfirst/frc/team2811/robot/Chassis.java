@@ -52,6 +52,7 @@ public class Chassis extends RobotModule {
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
 	Motion345 right345 = new Motion345(10000, 3, 0, 200);
 	
+	boolean braking = true;
 	boolean isTank = false;
 	
 	public double left1 = 0;
@@ -60,6 +61,8 @@ public class Chassis extends RobotModule {
 	public double right1 = 0;
 	public double right2 = 0;
 	public double right3 = 0;
+
+
 
 	/**
 	 * the constructor: 
@@ -73,6 +76,24 @@ public class Chassis extends RobotModule {
 		rightShiftB.set(true);
 		bind();
 	}
+	
+	/**
+	 * sets braking or coasting based on input
+	 * @param brake
+	 */
+	public void braking(boolean brake) {
+		NeutralMode mode = NeutralMode.Brake;
+		if(brake == false) {
+			mode = NeutralMode.Coast;
+		}
+		leadL.setNeutralMode(mode);
+		frontL.setNeutralMode(mode);
+		rearL.setNeutralMode(mode);
+		leadR.setNeutralMode(mode);
+		frontR.setNeutralMode(mode);
+		rearR.setNeutralMode(mode);
+	}
+	
 
 	/**
 	 * sets the slaves:
@@ -158,6 +179,7 @@ public class Chassis extends RobotModule {
 			ScaleConfig scaleConfig) {
 		//save RobotLocation and TargetLocation to class fields, as we'll need in auto
 		
+		braking(true);
 		shift();
 		double scaleFactor = 0.078;
 		
@@ -332,5 +354,8 @@ public class Chassis extends RobotModule {
 		SmartDashboard.putNumber("rightTarg", right345.getPos(3));
 	}
 	
+	public void disabled() {
+		braking(false);
+	}
 
 }
