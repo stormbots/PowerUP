@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class Robot extends IterativeRobot {
 	
-	Joystick stickDrive1 = new Joystick(1);
+	Joystick stickDrive1 = new Joystick(0);
 	Joystick stickDrive2 = new Joystick(2);
 	Joystick stickFunctions = new Joystick(3);
 	RobotModule elevator = new Elevator();

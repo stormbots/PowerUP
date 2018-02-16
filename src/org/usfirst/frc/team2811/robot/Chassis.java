@@ -113,10 +113,10 @@ public class Chassis extends RobotModule {
 	}
 	
 	void init() {
-		leftShiftA.set(false);
-		leftShiftB.set(true);
-		rightShiftA.set(false);
-		rightShiftB.set(true);
+		leftShiftA.set(true);
+		leftShiftB.set(false);
+		rightShiftA.set(true);
+		rightShiftB.set(false);
 	}
 	
 	/**
@@ -125,23 +125,15 @@ public class Chassis extends RobotModule {
 	 *   Then binds the slaves to the leads
 	 * @param stick
 	 */
-	void update(Joystick stickR, Joystick stickL, Joystick functions) {
+	void update(Joystick stickDrive, Joystick stickL, Joystick functions) {
 		//updates the lead talons, then updates the slave talons
-		if(stickR.getRawButtonPressed(2) || stickL.getRawButtonPressed(2)) {
-			isTank = !isTank;
-		}
 			
-		if(stickR.getRawButtonPressed(1) || stickL.getRawButtonPressed(1)) {
-			shift();
+		shiftLow();
+		if(stickDrive.getRawButtonPressed(8)) {
+			shiftHigh();
 		}
 		
-		if(isTank) {
-			driver.tankDrive(-stickR.getY(), -stickL.getY());
-		}
-		else {
-			driver.arcadeDrive(-stickR.getY(), -stickL.getX());
-		}
-
+		driver.arcadeDrive(-stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0));
 
 		SmartDashboard.putNumber("Pos Right", -leadR.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Pos Left", -leadL.getSelectedSensorPosition(0));
@@ -149,13 +141,21 @@ public class Chassis extends RobotModule {
 		SmartDashboard.putNumber("Vel Left", leadL.getMotorOutputPercent());
 		bind();
 	}
+	
+	public void shiftLow() {
+		// sets the gear to low
+		leftShiftA.set(false);
+		leftShiftB.set(true);
+		rightShiftA.set(false);
+		rightShiftB.set(true);
+	}
 
-	public void shift() {
-		// toggles the code
-		leftShiftA.set(!leftShiftA.get());
-		leftShiftB.set(!leftShiftB.get());
-		rightShiftA.set(!rightShiftA.get());
-		rightShiftB.set(!rightShiftB.get());
+	public void shiftHigh() {
+		// sets the gear to high
+		leftShiftA.set(true);
+		leftShiftB.set(false);
+		rightShiftA.set(true);
+		rightShiftB.set(false);
 	}
 	
 	
@@ -180,12 +180,9 @@ public class Chassis extends RobotModule {
 		//save RobotLocation and TargetLocation to class fields, as we'll need in auto
 		
 		braking(true);
-		shift();
+		shiftLow();
 		double scaleFactor = 0.078;
-		
-		leftShiftA.set(false);
-		rightShiftB.set(false);
-		
+
 		if(robotLocation == RobotLocation.LEFT) {
 			if(targetLocation == TargetLocation.SCALE) {
 				left1 = 1133415.0982*scaleFactor;
