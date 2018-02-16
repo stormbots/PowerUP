@@ -176,6 +176,7 @@ public class Chassis extends RobotModule {
 		double scaleFactor = 0.078;
 
 		if(robotLocation == RobotLocation.LEFT) {
+			
 			if(targetLocation == TargetLocation.SCALE) {
 				left1 = 1133415.0982*scaleFactor;
 				right1 = -1110241.5762*scaleFactor;

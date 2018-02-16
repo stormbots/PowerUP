@@ -157,7 +157,7 @@ public class Elevator extends RobotModule {
 	}
 		
 	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation, SwitchConfig switchConfig, ScaleConfig scaleConfig) { //Elevator only cares about targetLocation
-		eMotor.setSelectedSensorPosition(3000, 0, 20);
+		eMotor.setSelectedSensorPosition(25000, 0, 20);
 		if(targetLocation == TargetLocation.SWITCH) {
 			autoPosition = switchPos;
 		}

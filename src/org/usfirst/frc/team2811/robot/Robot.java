@@ -52,8 +52,8 @@ public class Robot extends IterativeRobot {
 	
 	public int step = 0;
 	
-	public static RobotLocation robotLocation = RobotLocation.LEFT; 
-	public static TargetLocation targetLocation = TargetLocation.MOVE_ONLY;
+	public static RobotLocation robotLocation = RobotLocation.CENTER; 
+	public static TargetLocation targetLocation = TargetLocation.SCALE;
 	public static SwitchConfig switchConfig = SwitchConfig.UNKNOWN;
 	public static ScaleConfig scaleConfig = ScaleConfig.UNKNOWN;
 	
@@ -127,9 +127,8 @@ public class Robot extends IterativeRobot {
 		autotimer.Update();
 		autotimer.reset();
 		
-		String gameData;
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		SmartDashboard.putString("fieldstepup", gameData);
+		fieldData = DriverStation.getInstance().getGameSpecificMessage();
+		SmartDashboard.putString("fieldstepup", fieldData);
 				
 		//get field data
 		if(fieldData.length()>0){
@@ -215,42 +214,22 @@ public class Robot extends IterativeRobot {
 		else {
 			//auto select based off field
 		}
-	
-			
-		
-		
-		
-		/* delay = selecton of delay
-		 * 
-		 * 
-		 * if position == center
-		 * 		do we go to switch? 
-		 * 
-		 *  if position == left 
-		 *  	if pref == scale
-		 *  		if scale == yes && scaleConfig == left
-		 *  			go to scale
-		 *  		else if switch == yes and switchconfig == left
-		 *  			go to switch
-		 *  		else
-		 *  			move only
-		 *  
-		 *  
-		 * 
-		 * 			
-		 */
-				
-		
+
 		// removes unused steps from the switch
 		if(robotLocation != RobotLocation.CENTER) {
 			step2timer = 0;
 			step3timer = 0;
 		}
-		
+
+		System.out.println(fieldData);
+		System.out.println(robotLocation);
+		System.out.println(targetLocation);
+		System.out.println(switchConfig);
+		System.out.println(scaleConfig);
 		
 
 		/*  THIS IS WHERE THE ROBOT CODE SENDS THE DATA TO THE MODULES */
-		elevator.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
+		//elevator.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		intake.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		climber.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
@@ -322,7 +301,7 @@ public class Robot extends IterativeRobot {
 		}
 		
 		//Handle continuous updates for various modules
-		elevator.auto(astep, autotimer.getTimeSec());
+		//elevator.auto(astep, autotimer.getTimeSec());
 		intake.auto(astep, autotimer.getTimeSec());
 		drive.auto(astep, autotimer.getTimeSec());
 		climber.auto(astep, autotimer.getTimeSec());
