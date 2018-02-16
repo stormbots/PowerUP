@@ -142,6 +142,11 @@ public class Intake extends RobotModule {
 			squeezeSolenoidB.set(true);
 		}
 		
+		//put cube hold into power saving 
+		if(redEye.get() && squeezeRun) {
+			velocity = 0.05;		
+		}
+
 		
 		//tilt toggle
 		if(stick.getRawButtonPressed(4)) {
