@@ -34,15 +34,11 @@ import edu.wpi.first.wpilibj.Talon;
 
 public class Chassis extends RobotModule {
 	WPI_TalonSRX leadL = new WPI_TalonSRX(2);//
-	//Talon frontL = new Talon(1);
-	//Talon rearL = new Talon(2);
-	WPI_TalonSRX frontL = new WPI_TalonSRX(1);
-	WPI_TalonSRX rearL = new WPI_TalonSRX(0);
+	TalonSRX frontL = new TalonSRX(1);
+	TalonSRX rearL = new TalonSRX(0);
 	WPI_TalonSRX leadR = new WPI_TalonSRX(5);//
-	//Talon frontR = new Talon(3);
-	//Talon rearR = new Talon(4);
-	WPI_TalonSRX frontR = new WPI_TalonSRX(4);
-	WPI_TalonSRX rearR = new WPI_TalonSRX(3);
+	TalonSRX frontR = new TalonSRX(4);
+	TalonSRX rearR = new TalonSRX(3);
 	DifferentialDrive driver = new DifferentialDrive(leadL, leadR);
 	Solenoid leftShiftA = new Solenoid(2);
 	Solenoid leftShiftB = new Solenoid(3);
@@ -69,7 +65,7 @@ public class Chassis extends RobotModule {
 	 *initializes the slave talons
 	 */
 	public Chassis() {
-		//initializes the slaves
+		//initializes the slaves and shifters
 		leftShiftA.set(false);
 		leftShiftB.set(true);
 		rightShiftA.set(false);
@@ -101,10 +97,6 @@ public class Chassis extends RobotModule {
 	 *   With TALONCRXs, uses follow functions.
 	 */
 	public void bind() {
-		//frontL.set(leadL.get());
-		//rearL.set(leadL.get());
-		//frontR.set(leadR.get());
-		//rearR.set(leadR.get());
 		// set slave talons
 		frontL.follow(leadL);
 		rearL.follow(leadL);
