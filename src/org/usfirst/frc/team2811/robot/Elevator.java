@@ -46,7 +46,8 @@ public class Elevator extends RobotModule {
 		MANUALVELOCITY, MANUALPOSITION, BUTTON, HOMING //Used to change how the elevator is controlled
 	}
 	
-	public Mode mode = Mode.MANUALVELOCITY; 
+	public Mode mode = Mode.MANUALPOSITION;
+	private boolean homed=false; 
 	
 	public void changeMode (Mode newMode) {
 		mode = newMode;
@@ -67,6 +68,7 @@ public class Elevator extends RobotModule {
 			}
 			else{
 				mode = Mode.MANUALPOSITION;
+				homed = true;
 				reset();
 			}
 		}
@@ -111,15 +113,22 @@ public class Elevator extends RobotModule {
 		}
 		
 		//Invert motor phase. The Talon command to do this does not seem to work.
-		/*if(currentPos >= maxPos && eVelocity > 0) { //Keeps elevator from going too high.
+		if(currentPos >= maxPos && eVelocity > 0) { //Keeps elevator from going too high.
 			eVelocity = 0; 
+		}
+		else if(LimitSwitch.get()) {
+			reset();
+			homed = true;
+			if(eVelocity < 0) {
+			eVelocity = 0;
+			}
 		}
 		else if(currentPos <= minPos && eVelocity < 0) { //Keeps elevator from going too low.
 			eVelocity = 0; 
 		}
 		else {
 		}
-		*/
+		
 	
 		//Set Motor phase, currently not needed 
 		//eVelocity = -eVelocity;
