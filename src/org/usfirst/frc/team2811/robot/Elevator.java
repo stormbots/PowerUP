@@ -47,7 +47,7 @@ public class Elevator extends RobotModule {
 		MANUALVELOCITY, MANUALPOSITION, BUTTON, HOMING //Used to change how the elevator is controlled
 	}
 	
-	public Mode mode = Mode.MANUALPOSITION;
+	public Mode mode = Mode.MANUALVELOCITY;
 	private boolean homed=false; 
 	
 	public void changeMode (Mode newMode) {
@@ -61,7 +61,9 @@ public class Elevator extends RobotModule {
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) { //Only using functions1
 		double breakpoint = 0.0;
 		currentPos = -eMotor.getSelectedSensorPosition(0);
-		double stickValue = -functions1.getRawAxis(3); //.getRawAxis(3)
+
+		double stickValue = -functions1.getRawAxis(3);
+
 		
 		if(mode == Mode.HOMING) {
 			if(!LimitSwitch.get()) {
