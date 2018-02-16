@@ -143,7 +143,7 @@ public class Intake extends RobotModule {
 		}
 		
 		//put cube hold into power saving 
-		if(redEye.get() && squeezeRun) {
+		if(redEye.get() && !squeezeRun) {
 			velocity = 0.05;		
 		}
 

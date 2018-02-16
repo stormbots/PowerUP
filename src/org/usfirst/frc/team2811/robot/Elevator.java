@@ -35,6 +35,7 @@ public class Elevator extends RobotModule {
 	 double scaleHighPos = 30000;   //
 	 double maxPos = 85000;
 	 double minPos = 0;
+	 double softLimit = -2000;
 	 
 	 double autoPosition = 0.0; //Where you want to go to during auto.
 	 double currentPos = 0.0;
@@ -60,7 +61,7 @@ public class Elevator extends RobotModule {
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) { //Only using functions1
 		double breakpoint = 0.0;
 		currentPos = -eMotor.getSelectedSensorPosition(0);
-		double stickValue = -functions1.getY(); //.getRawAxis(3)
+		double stickValue = -functions1.getRawAxis(3); //.getRawAxis(3)
 		
 		if(mode == Mode.HOMING) {
 			if(!LimitSwitch.get()) {
@@ -116,14 +117,17 @@ public class Elevator extends RobotModule {
 		if(currentPos >= maxPos && eVelocity > 0) { //Keeps elevator from going too high.
 			eVelocity = 0; 
 		}
-		else if(LimitSwitch.get()) {
+		else if(!LimitSwitch.get()) {
 			reset();
 			homed = true;
 			if(eVelocity < 0) {
-			eVelocity = 0;
+				eVelocity = 0;
 			}
 		}
-		else if(currentPos <= minPos && eVelocity < 0) { //Keeps elevator from going too low.
+		else if(functions1.getRawButton(5)) {
+			eVelocity = -0.5;
+		}
+		else if(currentPos <= softLimit && eVelocity < 0) { //Keeps elevator from going too low.
 			eVelocity = 0; 
 		}
 		else {
@@ -141,6 +145,7 @@ public class Elevator extends RobotModule {
 		SmartDashboard.putNumber("Voltage", eMotor.getOutputCurrent());
 		SmartDashboard.putNumber("Joystick Position", functions1.getY());
 		SmartDashboard.putNumber("Velocity", eVelocity);
+		SmartDashboard.putBoolean("LimitSwitch", LimitSwitch.get());
 		
 	}
 		
