@@ -34,7 +34,7 @@ public class Intake extends RobotModule {
 	Solenoid tiltSolenoidB = new Solenoid(1);
 	DigitalInput redEye = new DigitalInput(0);
 	Boolean squeezeRun = false;
-	Boolean tiltRun = false;
+	Boolean tiltRun = true;
 	Boolean deployCube = false;
 	
 	double velocity = 0.0;
@@ -50,8 +50,8 @@ public class Intake extends RobotModule {
 		
 		squeezeSolenoidA.set(false);
 		squeezeSolenoidB.set(true);
-		tiltSolenoidA.set(false);
-		tiltSolenoidB.set(true);
+		tiltSolenoidA.set(true);
+		tiltSolenoidB.set(false);
 	}
 	
 	/**AUTO INIT METHOD
@@ -100,8 +100,8 @@ public class Intake extends RobotModule {
 	 *Nothing currently.
 	 */
 	public void init() {
-		tiltSolenoidA.set(false);
-		tiltSolenoidB.set(true);
+		tiltSolenoidA.set(true);
+		tiltSolenoidB.set(false);
 	}
 	
 	/**UPDATE (TELEOP PERIODIC) METHOD
@@ -143,10 +143,10 @@ public class Intake extends RobotModule {
 		}
 		
 		//put cube hold into power saving 
-		if(redEye.get() && !squeezeRun) {
-			velocity = 0.05;		
-		}
-
+		//if(redEye.get() && squeezeRun) {
+			//velocity = 0.05;		
+		//}
+		//wrong voltage on practice bot
 		
 		//tilt toggle
 		if(stick.getRawButtonPressed(4)) {
