@@ -2,10 +2,15 @@ package org.usfirst.frc.team2811.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 
+
+
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.awt.List;
+import java.lang.reflect.Array;
 
 import org.usfirst.frc.team2811.robot.BlinkenPattern;
 
@@ -23,14 +28,50 @@ public class Lighting {
 	}
 	
 	public void robotInit() {
-		selection.addDefault(BlinkenPattern.SOLID_BLUE   .toString(), BlinkenPattern.SOLID_BLUE   );
-//		selection.addObject(BlinkenPattern.C12_SINELON.toString(), BlinkenPattern.C12_SINELON);
-		selection.addObject(BlinkenPattern.RED_WHITE_STROBE.toString(), BlinkenPattern.RED_WHITE_STROBE);
-		selection.addObject(BlinkenPattern.GREEN_WHITE_STROBE.toString(), BlinkenPattern.GREEN_WHITE_STROBE);
-		selection.addObject(BlinkenPattern.BLUE_SHAKE .toString(), BlinkenPattern.BLUE_SHAKE );
-		selection.addObject(BlinkenPattern.GREEN_SHAKE  .toString(), BlinkenPattern.GREEN_SHAKE  );
-		selection.addObject(BlinkenPattern.BLUE_SPARKLING .toString(), BlinkenPattern.BLUE_SPARKLING );
-		selection.addObject(BlinkenPattern.WAVY_BLUE .toString(), BlinkenPattern.WAVY_BLUE );
+		selection.addDefault(BlinkenPattern.BRIGHT_DEFAULT_BLUE.toString(), BlinkenPattern.BRIGHT_DEFAULT_BLUE);	
+	      BlinkenPattern[] coolPatterns = {
+	    		  
+	    		  //POSSIBLE BLUE ALLIANCE COLORS
+	    		  BlinkenPattern.BLUE_SONIC,
+	    		  BlinkenPattern.WAVY_BLUE,
+	    		  BlinkenPattern.CODE_BLUE,
+	    		  BlinkenPattern.BLUE_LARSON,
+	    		  BlinkenPattern.LIGHT_BLUE,
+	    		  BlinkenPattern.BRIGHT_DEFAULT_BLUE,
+	    		  
+	    		  //POSSIBLE RED ALLIANCE COLORS
+	    		  BlinkenPattern.RED_SONIC,
+	    		  BlinkenPattern.RED_WHITE,
+	    		  BlinkenPattern.WAVY_RED,  
+	    		  BlinkenPattern.RED_LARSON,
+	    		  BlinkenPattern.CODE_RED,
+	    		  BlinkenPattern.SOLID_RED,
+	    		  
+	    		  //OTHER COLORS:
+	    		  BlinkenPattern.BLINKING_RAINBOW,
+	    		  BlinkenPattern.RAINBOW_SONIC,
+	    		  BlinkenPattern.RAINBOW_SONIC_V2,
+	    		  BlinkenPattern.GREEN_WHITE_SONIC,
+	    		  BlinkenPattern.BLINKING_RAINBOW_V2,
+	    		  BlinkenPattern.GREEN_WHITE,
+	    		  BlinkenPattern.SLOW_RAINBOW,
+	    		  BlinkenPattern.WAVY_GREEN,
+	    		  BlinkenPattern.LAVENDER_WHITE_LARSON,
+	    		  BlinkenPattern.YELLOW_LARSON,
+	    		  BlinkenPattern.SOLID_PURPLE,
+	    		  BlinkenPattern.SOLID_ORANGE,
+	    		  BlinkenPattern.LIME_GREEN, 
+	    		  BlinkenPattern.LIGHT_GREEN,
+	    		  BlinkenPattern.SOLID_GREEN,
+	    		  BlinkenPattern.SOLID_LAVENDER,
+	    		  BlinkenPattern.SOLID_MAGENTA,
+	    		  
+	      };
+	      // Run through and add them to our list
+	      for (BlinkenPattern pattern: coolPatterns) {
+	  		selection.addObject(pattern.toString(), pattern);
+	      }
+
 		
 		SmartDashboard.putData("Best light", selection);
 		
@@ -39,7 +80,7 @@ public class Lighting {
 	}
 	
 	public void init() {
-//		SmartDashboard.putNumber("Lighting Pattern", 0);
+	SmartDashboard.putNumber("Lighting Pattern", 0);
 	}
 	
 	public void autoInit() {
@@ -51,7 +92,7 @@ public class Lighting {
 	}
 	
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) {
-		//		light.set(joystick.getY());
+		//	light.set(joystick.getY());
 		
 		pwmvalue=prefs.getDouble("testLightValue", 0);
 		
