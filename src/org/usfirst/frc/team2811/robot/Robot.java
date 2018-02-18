@@ -7,6 +7,7 @@
 
 package org.usfirst.frc.team2811.robot;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -79,6 +80,8 @@ public class Robot extends IterativeRobot {
 		m_chooser.addDefault("Default Auto", kDefaultAuto);
 		m_chooser.addObject("My Auto", kCustomAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
+		
+		CameraServer.getInstance().startAutomaticCapture();
 		
 		delaySelection.addDefault("0 (default)", 0.0);
 		delaySelection.addObject("1", 1.0);

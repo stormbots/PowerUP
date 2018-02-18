@@ -11,7 +11,7 @@ public class Climber extends RobotModule {
 	WPI_TalonSRX mtr2 = new WPI_TalonSRX(10);
 		
 	void update(Joystick driver1,Joystick driver2, Joystick stick) {
-		if(stick.getRawButton(5)) {
+		if(stick.getRawButton(6)) { // changed to 6
 			mtr1.set(ControlMode.PercentOutput, stick.getY()); //replace getY with fixed value on robot
 			mtr2.set(ControlMode.PercentOutput, stick.getY());
 		}

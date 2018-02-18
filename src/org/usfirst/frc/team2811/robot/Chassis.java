@@ -11,16 +11,17 @@ import com.ctre.phoenix.motorcontrol.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 
 /* Inputs:
  *   Joystick Y & X axis
  *   One Joystick Button
- *   Encouders on the TalonCRXs
+ *   Encoders on the TalonCRXs
  * 
  * Outputs:
- *   drive velocity to yhr motors
+ *   drive velocity to motors
  *   shifts the gear
  * 
  * Summary:
@@ -33,17 +34,16 @@ import edu.wpi.first.wpilibj.Talon;
  */
 
 public class Chassis extends RobotModule {
-	WPI_TalonSRX leadL = new WPI_TalonSRX(2);//
+	WPI_TalonSRX leadL = new WPI_TalonSRX(2);
 	TalonSRX frontL = new TalonSRX(1);
 	TalonSRX rearL = new TalonSRX(0);
-	WPI_TalonSRX leadR = new WPI_TalonSRX(5);//
+	WPI_TalonSRX leadR = new WPI_TalonSRX(5);
 	TalonSRX frontR = new TalonSRX(4);
 	TalonSRX rearR = new TalonSRX(3);
 	DifferentialDrive driver = new DifferentialDrive(leadL, leadR);
-	Solenoid leftShiftA = new Solenoid(2);
-	Solenoid leftShiftB = new Solenoid(3);
-	Solenoid rightShiftA = new Solenoid(4);
-	Solenoid rightShiftB = new Solenoid(5);
+	Solenoid shiftA = new Solenoid(2);
+	Solenoid shiftB = new Solenoid(3);
+	Preferences prefs = Preferences.getInstance();
 
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
 	Motion345 right345 = new Motion345(10000, 3, 0, 200);
@@ -66,11 +66,9 @@ public class Chassis extends RobotModule {
 	 */
 	public Chassis() {
 		//initializes the slaves and shifters
-		leftShiftA.set(false);
-		leftShiftB.set(true);
-		rightShiftA.set(false);
-		rightShiftB.set(true);
+		shiftLow();
 		bind();
+		prefs.getBoolean("compbot", false);
 	}
 	
 	/**
@@ -105,27 +103,29 @@ public class Chassis extends RobotModule {
 	}
 	
 	void init() {
-		leftShiftA.set(true);
-		leftShiftB.set(false);
-		rightShiftA.set(true);
-		rightShiftB.set(false);
+		braking(true);
+		shiftLow();
 	}
 	
 	/**
 	 * Drives:
-	 *   gets the stick axi, and plug that into the 2 mtr arcade drive.
+	 *   gets the stick axi, and plug that into the 2 motor arcade drive.
 	 *   Then binds the slaves to the leads
 	 * @param stick
 	 */
 	void update(Joystick stickDrive, Joystick stickL, Joystick functions) {
 		//updates the lead talons, then updates the slave talons
-			
-		shiftLow();
-		if(stickDrive.getRawButtonPressed(8)) {
+
+		if(stickDrive.getRawButton(6)) {
 			shiftHigh();
+		}
+		else {
+			shiftLow();
 		}
 		
 		driver.arcadeDrive(-stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0));
+		bind();
+
 
 		SmartDashboard.putNumber("Pos Right", -leadR.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Pos Left", -leadL.getSelectedSensorPosition(0));
@@ -136,18 +136,14 @@ public class Chassis extends RobotModule {
 	
 	public void shiftLow() {
 		// sets the gear to low
-		leftShiftA.set(false);
-		leftShiftB.set(true);
-		rightShiftA.set(false);
-		rightShiftB.set(true);
+		shiftA.set(true);
+		shiftB.set(false);
 	}
 
 	public void shiftHigh() {
 		// sets the gear to high
-		leftShiftA.set(true);
-		leftShiftB.set(false);
-		rightShiftA.set(true);
-		rightShiftB.set(false);
+		shiftA.set(false);
+		shiftB.set(true);
 	}
 	
 	

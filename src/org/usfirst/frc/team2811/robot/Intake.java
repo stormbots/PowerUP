@@ -28,8 +28,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Intake extends RobotModule {
 	WPI_TalonSRX motor1 = new WPI_TalonSRX(6);
 	WPI_TalonSRX motor2 = new WPI_TalonSRX(7);
-	Solenoid squeezeSolenoidA = new Solenoid(6); 
-	Solenoid squeezeSolenoidB = new Solenoid(7);
+	Solenoid squeezeSolenoidA = new Solenoid(4); 
+	Solenoid squeezeSolenoidB = new Solenoid(5);
 	Solenoid tiltSolenoidA = new Solenoid(0);
 	Solenoid tiltSolenoidB = new Solenoid(1);
 	DigitalInput redEye = new DigitalInput(0);
@@ -48,8 +48,8 @@ public class Intake extends RobotModule {
 		motor2.follow(motor1);
 		motor2.setInverted(true);
 		
-		squeezeSolenoidA.set(false);
-		squeezeSolenoidB.set(true);
+		squeezeSolenoidA.set(true);
+		squeezeSolenoidB.set(false);
 		tiltSolenoidA.set(true);
 		tiltSolenoidB.set(false);
 	}
@@ -134,12 +134,12 @@ public class Intake extends RobotModule {
 		//temp code: This makes it a when held
 		squeezeRun = stick.getRawButton(3);
 		if(squeezeRun) {
-			squeezeSolenoidA.set(true);
-			squeezeSolenoidB.set(false);
-		}
-		else {
 			squeezeSolenoidA.set(false);
 			squeezeSolenoidB.set(true);
+		}
+		else {
+			squeezeSolenoidA.set(true);
+			squeezeSolenoidB.set(false);
 		}
 		
 		//put cube hold into power saving 
