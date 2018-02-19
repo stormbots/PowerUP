@@ -162,15 +162,17 @@ public class Elevator extends RobotModule {
 		
 		elevatorPos=25000;
 		if(targetLocation == TargetLocation.SWITCH) {
-			autoPosition = switchPos;
-		}
-		if(targetLocation == TargetLocation.SCALE) {
 			autoPosition = scaleHighPos;
 		}
-		if(targetLocation == TargetLocation.MOVE_ONLY) {
+		else if(targetLocation == TargetLocation.SCALE) {
+			autoPosition = scaleHighPos;
+		}
+		else if(targetLocation == TargetLocation.MOVE_ONLY) {
 			autoPosition = switchPos;
 		}
-		elevatorPos = switchPos;
+		else {
+			autoPosition = 25000;		
+		}
 	}
 	
 	void auto(int stepAuto, double time) {

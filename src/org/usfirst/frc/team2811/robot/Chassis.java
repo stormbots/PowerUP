@@ -173,29 +173,29 @@ public class Chassis extends RobotModule {
 		
 		braking(true);
 		shiftLow();
-		double scaleFactor = 0.078;
+		double scaleFactor = 291;
 
 		if(robotLocation == RobotLocation.LEFT) {
 			
 			if(targetLocation == TargetLocation.SCALE) {
-				left1 = 1133415.0982*scaleFactor;
-				right1 = -1110241.5762*scaleFactor;
+				left1 = 262.1284*scaleFactor;
+				right1 = -270.0641*scaleFactor;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
-				left1 = 603770.7021*scaleFactor;
-				right1 = -537792.7431*scaleFactor;
+				left1 = 108.6405*scaleFactor;
+				right1 = -133.5790*scaleFactor;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
-				left1 = 444000.0000*scaleFactor;
-				right1 = -444000.0000*scaleFactor;
+				left1 = 120*scaleFactor;
+				right1 = -120*scaleFactor;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -204,42 +204,42 @@ public class Chassis extends RobotModule {
 		}
 		if(robotLocation == RobotLocation.CENTER) {
 			if(switchConfig == switchConfig.LEFT) {
-				left1 = 412648.195*scaleFactor;
-				right1 = -958971.1575*scaleFactor;
-				left2 = 958971.1575*scaleFactor;																																																											;
-				right2 = -412648.195*scaleFactor;
-				left3 = 299700.0000*scaleFactor;
-				right3 = -299700.0000*scaleFactor;
+				left1 = 29.0597*scaleFactor;
+				right1 = -68.3296*scaleFactor;
+				left2 = 68.3296*scaleFactor;																																																											;
+				right2 = -29.0597*scaleFactor;
+				left3 = 38*scaleFactor;
+				right3 = -38*scaleFactor;
 			}
 			else {
-				left1 = 210683.0573*scaleFactor;
-				right1 = -74102.3167*scaleFactor;
-				left2 = 74102.3167*scaleFactor;
-				right2 = -210683.0573*scaleFactor;
-				left3 = 299700.0000*scaleFactor;
-				right3 = -299700.0000*scaleFactor;
+				left1 = 71.4712*scaleFactor;
+				right1 = -32.2013*scaleFactor;
+				left2 = 32.2013*scaleFactor;
+				right2 = -71.4712*scaleFactor;
+				left3 = 29*scaleFactor;
+				right3 = -29*scaleFactor;
 			}
 		}
 		if(robotLocation == RobotLocation.RIGHT) {
 			if(targetLocation == TargetLocation.SCALE) {
-				left1 = 1110241.5762*scaleFactor;
-				right1 = -1133415.0982*scaleFactor;
+				left1 = 270.0641*scaleFactor;
+				right1 = -262.1284*scaleFactor;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
-				left1 = 537792.7431*scaleFactor;
-				right1 = -603770.7021*scaleFactor;
+				left1 = -133.5790*scaleFactor;
+				right1 = 108.6405*scaleFactor;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
-				left1 = 444000.0000*scaleFactor;
-				right1 = -444000.0000*scaleFactor;
+				left1 = 120*scaleFactor;
+				right1 = -120*scaleFactor;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -274,8 +274,8 @@ public class Chassis extends RobotModule {
 				if(time == 0) {
 					resetEnc();
 				}
-				left345.setMove(10000, 5, left1, 200);
-				right345.setMove(10000, 5, right1, 200);
+				left345.setMove(10000, 6, left1, 200);
+				right345.setMove(10000, 6, right1, 200);
 				//keep at Case 1
 				break;
 				
@@ -323,8 +323,8 @@ public class Chassis extends RobotModule {
 		}
 		
 		if(step > 0 && step < 4 && time > 0.1) {
-			leftV = -left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.0065);
-			rightV = right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.0065);
+			leftV = -left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.014);
+			rightV = right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.014);
 		}
 	
 

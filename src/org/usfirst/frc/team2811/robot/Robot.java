@@ -54,7 +54,7 @@ public class Robot extends IterativeRobot {
 	public int step = 0;
 	
 	public static RobotLocation robotLocation = RobotLocation.CENTER; 
-	public static TargetLocation targetLocation = TargetLocation.SWITCH;
+	public static TargetLocation targetLocation = TargetLocation.SCALE;
 	public static SwitchConfig switchConfig = SwitchConfig.UNKNOWN;
 	public static ScaleConfig scaleConfig = ScaleConfig.UNKNOWN;
 	
@@ -64,7 +64,7 @@ public class Robot extends IterativeRobot {
 	static boolean deliverCube = true;
 	
 	long step0timer = 4000;
-	long step1timer = 6000;
+	long step1timer = 7000;
 	long step2timer = 4000;
 	long step3timer = 4000;
 	long step4timer = 4000;
@@ -217,7 +217,12 @@ public class Robot extends IterativeRobot {
 		else {
 			//auto select based off field
 		}
-
+		
+		
+		//Debug overrides, please remove
+		robotLocation = RobotLocation.RIGHT;
+		targetLocation = TargetLocation.SCALE;
+		
 		// removes unused steps from the switch
 		if(robotLocation != RobotLocation.CENTER) {
 			step2timer = 0;
@@ -304,9 +309,9 @@ public class Robot extends IterativeRobot {
 		}
 		
 		//Handle continuous updates for various modules
-		elevator.auto(astep, autotimer.getTimeSec());
+		//elevator.auto(astep, autotimer.getTimeSec());
 		intake.auto(astep, autotimer.getTimeSec());
-		//drive.auto(astep, autotimer.getTimeSec());
+		drive.auto(astep, autotimer.getTimeSec());
 		//climber.auto(astep, autotimer.getTimeSec());
 
 		SmartDashboard.putNumber("Step", astep);
