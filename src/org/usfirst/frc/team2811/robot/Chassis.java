@@ -41,8 +41,10 @@ public class Chassis extends RobotModule {
 	TalonSRX frontR = new TalonSRX(4);
 	TalonSRX rearR = new TalonSRX(3);
 	DifferentialDrive driver = new DifferentialDrive(leadL, leadR);
-	Solenoid shiftA = new Solenoid(2);
-	Solenoid shiftB = new Solenoid(3);
+	Solenoid LeftShiftA = new Solenoid(2);
+	Solenoid LeftShiftB = new Solenoid(3);
+	Solenoid RightShiftA = new Solenoid(4);
+	Solenoid RightShiftB = new Solenoid(5);
 	Preferences prefs = Preferences.getInstance();
 
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
@@ -116,7 +118,7 @@ public class Chassis extends RobotModule {
 	void update(Joystick stickDrive, Joystick stickL, Joystick functions) {
 		//updates the lead talons, then updates the slave talons
 
-		if(stickDrive.getRawButton(6)) {
+		if(stickDrive.getRawButton(8)) {
 			shiftHigh();
 		}
 		else {
@@ -126,24 +128,26 @@ public class Chassis extends RobotModule {
 		driver.arcadeDrive(-stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0));
 		bind();
 
-
 		SmartDashboard.putNumber("Pos Right", -leadR.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Pos Left", -leadL.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Vel Right", leadR.getMotorOutputPercent());
 		SmartDashboard.putNumber("Vel Left", leadL.getMotorOutputPercent());
-		bind();
 	}
 	
 	public void shiftLow() {
 		// sets the gear to low
-		shiftA.set(true);
-		shiftB.set(false);
+		LeftShiftA.set(false);
+		LeftShiftB.set(true);
+		LeftShiftA.set(false);
+		LeftShiftB.set(true);
 	}
 
 	public void shiftHigh() {
 		// sets the gear to high
-		shiftA.set(false);
-		shiftB.set(true);
+		LeftShiftA.set(true);
+		LeftShiftB.set(false);
+		LeftShiftA.set(true);
+		LeftShiftB.set(false);
 	}
 	
 	

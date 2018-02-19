@@ -54,7 +54,7 @@ public class Robot extends IterativeRobot {
 	public int step = 0;
 	
 	public static RobotLocation robotLocation = RobotLocation.CENTER; 
-	public static TargetLocation targetLocation = TargetLocation.SCALE;
+	public static TargetLocation targetLocation = TargetLocation.SWITCH;
 	public static SwitchConfig switchConfig = SwitchConfig.UNKNOWN;
 	public static ScaleConfig scaleConfig = ScaleConfig.UNKNOWN;
 	
@@ -232,7 +232,7 @@ public class Robot extends IterativeRobot {
 		
 
 		/*  THIS IS WHERE THE ROBOT CODE SENDS THE DATA TO THE MODULES */
-		//elevator.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
+		elevator.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		intake.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		climber.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
@@ -304,10 +304,10 @@ public class Robot extends IterativeRobot {
 		}
 		
 		//Handle continuous updates for various modules
-		//elevator.auto(astep, autotimer.getTimeSec());
+		elevator.auto(astep, autotimer.getTimeSec());
 		intake.auto(astep, autotimer.getTimeSec());
-		drive.auto(astep, autotimer.getTimeSec());
-		climber.auto(astep, autotimer.getTimeSec());
+		//drive.auto(astep, autotimer.getTimeSec());
+		//climber.auto(astep, autotimer.getTimeSec());
 
 		SmartDashboard.putNumber("Step", astep);
 	}

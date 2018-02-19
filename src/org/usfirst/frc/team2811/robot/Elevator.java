@@ -61,7 +61,7 @@ public class Elevator extends RobotModule {
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) { //Only using functions1
 		double breakpoint = 0.0;
 		//practice currentPos = -eMotor.getSelectedSensorPosition(0);
-		currentPos = eMotor.getSelectedSensorPosition(0);
+		currentPos = -eMotor.getSelectedSensorPosition(0);
 
 		double stickValue = -functions1.getRawAxis(3);
 
@@ -147,7 +147,7 @@ public class Elevator extends RobotModule {
 		SmartDashboard.putNumber("Desired Position", elevatorPos);
 		SmartDashboard.putNumber("Voltage", eMotor.getOutputCurrent());
 		SmartDashboard.putNumber("Joystick Position", functions1.getY());
-		SmartDashboard.putNumber("Velocity", eVelocity);
+		SmartDashboard.putNumber("elevatorVelocity", eVelocity);
 		SmartDashboard.putBoolean("LimitSwitch", LimitSwitch.get());
 		
 	}
@@ -158,7 +158,9 @@ public class Elevator extends RobotModule {
 	}
 		
 	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation, SwitchConfig switchConfig, ScaleConfig scaleConfig) { //Elevator only cares about targetLocation
-		eMotor.setSelectedSensorPosition(25000, 0, 20);
+		eMotor.setSelectedSensorPosition(0, 25000, 20);
+		
+		elevatorPos=25000;
 		if(targetLocation == TargetLocation.SWITCH) {
 			autoPosition = switchPos;
 		}
@@ -177,7 +179,12 @@ public class Elevator extends RobotModule {
 		}
 		
 		//TODO may need to set these motor phases
-		eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.02));
+		eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, -eMotor.getSelectedSensorPosition(0), 0.01));
+		SmartDashboard.putNumber("ElevatorCurrentPos", -eMotor.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("ElevatorAutoPos", autoPosition);
+		SmartDashboard.putNumber("Elevatorvelocity", eMotor.getMotorOutputPercent());
+		SmartDashboard.putNumber("ElevatorPos", elevatorPos);
+		
 	}
 	
 	

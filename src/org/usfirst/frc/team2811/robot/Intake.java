@@ -28,8 +28,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Intake extends RobotModule {
 	WPI_TalonSRX motor1 = new WPI_TalonSRX(6);
 	WPI_TalonSRX motor2 = new WPI_TalonSRX(7);
-	Solenoid squeezeSolenoidA = new Solenoid(4); 
-	Solenoid squeezeSolenoidB = new Solenoid(5);
+	Solenoid squeezeSolenoidA = new Solenoid(6); 
+	Solenoid squeezeSolenoidB = new Solenoid(7);
 	Solenoid tiltSolenoidA = new Solenoid(0);
 	Solenoid tiltSolenoidB = new Solenoid(1);
 	DigitalInput redEye = new DigitalInput(0);
@@ -86,7 +86,12 @@ public class Intake extends RobotModule {
 		//possibly implement a step 3 code for opening elevator?
 		//if (step==3 && deployCube) {
 		//	
-		//}
+		if(step==3) {
+			tiltSolenoidA.set(false);
+			tiltSolenoidB.set(true);
+			tiltRun=false;
+		}
+		
 		if (step==4 && deployCube) {
 			velocity = -0.5;
 		}
