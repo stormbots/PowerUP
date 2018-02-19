@@ -48,10 +48,10 @@ public class Intake extends RobotModule {
 		motor2.follow(motor1);
 		motor2.setInverted(true);
 		
-		squeezeSolenoidA.set(true);
-		squeezeSolenoidB.set(false);
-		tiltSolenoidA.set(true);
-		tiltSolenoidB.set(false);
+		squeezeSolenoidA.set(false);
+		squeezeSolenoidB.set(true);
+		tiltSolenoidA.set(false);
+		tiltSolenoidB.set(true);
 	}
 	
 	/**AUTO INIT METHOD
@@ -128,11 +128,9 @@ public class Intake extends RobotModule {
 		}
 				
 		//squeeze toggle 
-//		if(stick.getRawButtonPressed(3)) {
-//			squeezeRun = !squeezeRun;
-//		}
-		//temp code: This makes it a when held
-		squeezeRun = stick.getRawButton(3);
+		if(stick.getRawButtonPressed(3)) {
+			squeezeRun = !squeezeRun;
+		}
 		if(squeezeRun) {
 			squeezeSolenoidA.set(false);
 			squeezeSolenoidB.set(true);
