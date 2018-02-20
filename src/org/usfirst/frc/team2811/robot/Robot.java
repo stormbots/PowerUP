@@ -220,8 +220,8 @@ public class Robot extends IterativeRobot {
 		
 		
 		//Debug overrides, please remove
-		robotLocation = RobotLocation.RIGHT;
-		targetLocation = TargetLocation.SCALE;
+		robotLocation = RobotLocation.CENTER;
+		targetLocation = TargetLocation.SWITCH;
 		
 		// removes unused steps from the switch
 		if(robotLocation != RobotLocation.CENTER) {

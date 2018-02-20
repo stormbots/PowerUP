@@ -60,8 +60,8 @@ public class Elevator extends RobotModule {
 	
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) { //Only using functions1
 		double breakpoint = 0.0;
-		//practice currentPos = -eMotor.getSelectedSensorPosition(0);
-		currentPos = -eMotor.getSelectedSensorPosition(0);
+		//practice bot currentPos = -eMotor.getSelectedSensorPosition(0);
+		currentPos = eMotor.getSelectedSensorPosition(0);
 
 		double stickValue = -functions1.getRawAxis(3);
 
@@ -181,8 +181,11 @@ public class Elevator extends RobotModule {
 		}
 		
 		//TODO may need to set these motor phases
-		eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, -eMotor.getSelectedSensorPosition(0), 0.01));
-		SmartDashboard.putNumber("ElevatorCurrentPos", -eMotor.getSelectedSensorPosition(0));
+		//practice bot eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, -eMotor.getSelectedSensorPosition(0), 0.01));
+		eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.01));
+		//practice bot SmartDashboard.putNumber("ElevatorCurrentPos", -eMotor.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("ElevatorCurrentPos", eMotor.getSelectedSensorPosition(0));
+
 		SmartDashboard.putNumber("ElevatorAutoPos", autoPosition);
 		SmartDashboard.putNumber("Elevatorvelocity", eMotor.getMotorOutputPercent());
 		SmartDashboard.putNumber("ElevatorPos", elevatorPos);

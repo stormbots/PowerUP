@@ -41,10 +41,14 @@ public class Chassis extends RobotModule {
 	TalonSRX frontR = new TalonSRX(4);
 	TalonSRX rearR = new TalonSRX(3);
 	DifferentialDrive driver = new DifferentialDrive(leadL, leadR);
-	Solenoid LeftShiftA = new Solenoid(2);
-	Solenoid LeftShiftB = new Solenoid(3);
-	Solenoid RightShiftA = new Solenoid(4);
-	Solenoid RightShiftB = new Solenoid(5);
+	Solenoid shiftA = new Solenoid(2);
+	Solenoid shiftB = new Solenoid(3);
+
+	//practice bot
+	//	Solenoid LeftShiftA = new Solenoid(2);
+//	Solenoid LeftShiftB = new Solenoid(3);
+//	Solenoid RightShiftA = new Solenoid(4);
+//	Solenoid RightShiftB = new Solenoid(5);
 	Preferences prefs = Preferences.getInstance();
 
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
@@ -125,7 +129,8 @@ public class Chassis extends RobotModule {
 			shiftLow();
 		}
 		
-		driver.arcadeDrive(-stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0));
+		//practice bot driver.arcadeDrive(-stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0));
+		driver.arcadeDrive(stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0));
 		bind();
 
 		SmartDashboard.putNumber("Pos Right", -leadR.getSelectedSensorPosition(0));
@@ -136,18 +141,18 @@ public class Chassis extends RobotModule {
 	
 	public void shiftLow() {
 		// sets the gear to low
-		LeftShiftA.set(false);
-		LeftShiftB.set(true);
-		LeftShiftA.set(false);
-		LeftShiftB.set(true);
+		shiftA.set(true);
+		shiftB.set(false);		
+		//practice shiftA.set(true);
+		//practice shiftB.set(false);
 	}
 
 	public void shiftHigh() {
 		// sets the gear to high
-		LeftShiftA.set(true);
-		LeftShiftB.set(false);
-		LeftShiftA.set(true);
-		LeftShiftB.set(false);
+		shiftA.set(false);
+		shiftB.set(true);
+		//practice shiftA.set(false);
+		//practice shiftB.set(true);
 	}
 	
 	
@@ -257,7 +262,7 @@ public class Chassis extends RobotModule {
 	 * 
 	 * @param pos
 	 */
-	void auto(int step, double time) {
+	void auto(int step, double time) { // GOING BACKWARDS -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 		
 		double rightV = 0;
 		double leftV = 0;
@@ -323,16 +328,16 @@ public class Chassis extends RobotModule {
 		}
 		
 		if(step > 0 && step < 4 && time > 0.1) {
-			leftV = -left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.014);
-			rightV = right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.014);
+			//leftV = -left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.014);
+			rightV = right345.getVelPosFb(time, leadR.getSelectedSensorPosition(0), 0.014);
 		}
 	
 
-		driver.tankDrive(rightV, leftV);
+		driver.tankDrive(leftV, rightV);
 		
 		SmartDashboard.putNumber("leftV", leftV);
 		SmartDashboard.putNumber("rightV", rightV);
-		SmartDashboard.putNumber("Pos Right", -leadR.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Pos Right", leadR.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Pos Left", -leadL.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Vel Right", leadR.getMotorOutputPercent());
 		SmartDashboard.putNumber("Vel Left", leadL.getMotorOutputPercent());

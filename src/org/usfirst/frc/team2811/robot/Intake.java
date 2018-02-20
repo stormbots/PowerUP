@@ -28,12 +28,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Intake extends RobotModule {
 	WPI_TalonSRX motor1 = new WPI_TalonSRX(6);
 	WPI_TalonSRX motor2 = new WPI_TalonSRX(7);
-	Solenoid squeezeSolenoidA = new Solenoid(6); 
-	Solenoid squeezeSolenoidB = new Solenoid(7);
+	Solenoid squeezeSolenoidA = new Solenoid(4); 
+	Solenoid squeezeSolenoidB = new Solenoid(5);
+	//practice bot Solenoid squeezeSolenoidA = new Solenoid(6); 
+	//practice bot Solenoid squeezeSolenoidB = new Solenoid(7);
 	Solenoid tiltSolenoidA = new Solenoid(0);
 	Solenoid tiltSolenoidB = new Solenoid(1);
 	DigitalInput redEye = new DigitalInput(0);
-	Boolean squeezeRun = false;
+	Boolean squeezing = false;
 	Boolean tiltRun = true;
 	Boolean deployCube = false;
 	
@@ -48,10 +50,35 @@ public class Intake extends RobotModule {
 		motor2.follow(motor1);
 		motor2.setInverted(true);
 		
-		squeezeSolenoidA.set(false);
-		squeezeSolenoidB.set(true);
-		tiltSolenoidA.set(false);
-		tiltSolenoidB.set(true);
+		squeezeOpen(true);
+		//practice squeezeSolenoidA.set(false);
+		//practice squeezeSolenoidB.set(true);
+		tiltBackward(true);
+		//practice tiltSolenoidA.set(false);
+		//practice tiltSolenoidB.set(true);
+	}
+	
+	public void squeezeOpen(boolean open) {
+		if(open) {
+			squeezeSolenoidA.set(true);
+			squeezeSolenoidB.set(false);
+		}
+		else {
+			squeezeSolenoidA.set(false);
+			squeezeSolenoidB.set(true);
+		}
+	}
+	
+	public void tiltBackward(boolean backward) {
+		if(backward) {
+			tiltSolenoidA.set(true);
+			tiltSolenoidB.set(false);
+
+		}
+		else {
+			tiltSolenoidA.set(false);
+			tiltSolenoidB.set(true);
+		}
 	}
 	
 	/**AUTO INIT METHOD
@@ -87,8 +114,9 @@ public class Intake extends RobotModule {
 		//if (step==3 && deployCube) {
 		//	
 		if(step==3) {
-			tiltSolenoidA.set(false);
-			tiltSolenoidB.set(true);
+			tiltBackward(true);
+			//practice tiltSolenoidA.set(false);
+			//practice tiltSolenoidB.set(true);
 			tiltRun=false;
 		}
 		
@@ -105,8 +133,10 @@ public class Intake extends RobotModule {
 	 *Nothing currently.
 	 */
 	public void init() {
-		tiltSolenoidA.set(true);
-		tiltSolenoidB.set(false);
+		tiltBackward(false);
+		
+		//practice tiltSolenoidA.set(true);
+		//practice tiltSolenoidB.set(false);
 	}
 	
 	/**UPDATE (TELEOP PERIODIC) METHOD
@@ -134,15 +164,17 @@ public class Intake extends RobotModule {
 				
 		//squeeze toggle 
 		if(stick.getRawButtonPressed(3)) {
-			squeezeRun = !squeezeRun;
+			squeezing = !squeezing;
 		}
-		if(squeezeRun) {
-			squeezeSolenoidA.set(false);
-			squeezeSolenoidB.set(true);
+		if(squeezing) {
+			squeezeOpen(false);
+			//practice squeezeSolenoidA.set(false);
+			//practice squeezeSolenoidB.set(true);
 		}
 		else {
-			squeezeSolenoidA.set(true);
-			squeezeSolenoidB.set(false);
+			squeezeOpen(true);
+			//practice squeezeSolenoidA.set(true);
+			//practice squeezeSolenoidB.set(false);
 		}
 		
 		//put cube hold into power saving 
@@ -156,12 +188,14 @@ public class Intake extends RobotModule {
 			tiltRun = !tiltRun;
 		}
 		if(tiltRun) {
-			tiltSolenoidA.set(true);
-			tiltSolenoidB.set(false);
+			tiltBackward(false);
+			//practice tiltSolenoidA.set(true);
+			//practice tiltSolenoidB.set(false);
 		}
 		else {
-			tiltSolenoidA.set(false);
-			tiltSolenoidB.set(true);
+			tiltBackward(true);
+			//practice tiltSolenoidA.set(false);
+			//practice tiltSolenoidB.set(true);
 		}
 		
 		
@@ -174,7 +208,7 @@ public class Intake extends RobotModule {
 		
 		SmartDashboard.putNumber("Velocity", velocity);
 		SmartDashboard.putBoolean("RedEye", redEye.get());   
-		SmartDashboard.putBoolean("Squeeze Intake", squeezeRun);
+		SmartDashboard.putBoolean("Squeeze Intake", squeezing);
 		SmartDashboard.putBoolean("Tilt Base", tiltRun);
 	}
 }
