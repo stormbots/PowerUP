@@ -33,7 +33,7 @@ public class Elevator extends RobotModule {
 	 double switchPos = 20000;      // Set heights (estimated) for each location the elevator needs to get to.
 	 double scaleLowPos = 25000;    //
 	 double scaleHighPos = 30000;   //
-	 double maxPos = 85000;
+	 double maxPos = 92000;
 	 double minPos = 0;
 	 double softLimit = -2000;
 	 
@@ -142,7 +142,7 @@ public class Elevator extends RobotModule {
 		
 		
 		eMotor.set(ControlMode.PercentOutput, eVelocity);
-		SmartDashboard.putNumber("Current Position", currentPos);
+		SmartDashboard.putNumber("Elevator Current Position", currentPos);
 		SmartDashboard.putNumber("Breakpoint", breakpoint);
 		SmartDashboard.putNumber("Desired Position", elevatorPos);
 		SmartDashboard.putNumber("Voltage", eMotor.getOutputCurrent());

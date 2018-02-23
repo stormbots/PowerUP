@@ -63,7 +63,9 @@ public class Chassis extends RobotModule {
 	public double right1 = 0;
 	public double right2 = 0;
 	public double right3 = 0;
-
+	public double t1=2.5;
+	public double t2=2.5;
+	public double t3=2.5;
 
 
 	/**
@@ -176,31 +178,42 @@ public class Chassis extends RobotModule {
 			ScaleConfig scaleConfig) {
 		//save RobotLocation and TargetLocation to class fields, as we'll need in auto
 		
+		
 		braking(true);
 		shiftLow();
-		double scaleFactor = 291;
+		double scaleFactorL = 199.8;
+		double scaleFactorR = 405.4;
 
 		if(robotLocation == RobotLocation.LEFT) {
-			
+			SmartDashboard.putString("rloc", "left");
 			if(targetLocation == TargetLocation.SCALE) {
-				left1 = 262.1284*scaleFactor;
-				right1 = -270.0641*scaleFactor;
+				SmartDashboard.putString("tloc", "scale");
+
+				left1 = 270.1284*scaleFactorL;
+				right1 = -260.0641*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
+				t1=7.0;
+				t2=0;
+				t3=0;
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
-				left1 = 108.6405*scaleFactor;
-				right1 = -133.5790*scaleFactor;
+				SmartDashboard.putString("tloc", "switch");
+
+				left1 = 133.6405*scaleFactorL;
+				right1 = -108.5790*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
-				left1 = 120*scaleFactor;
-				right1 = -120*scaleFactor;
+				SmartDashboard.putString("tloc", "move");
+
+				left1 = 120*scaleFactorL;
+				right1 = -120*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -208,43 +221,63 @@ public class Chassis extends RobotModule {
 			}
 		}
 		if(robotLocation == RobotLocation.CENTER) {
+			SmartDashboard.putString("rloc", "center");
+			SmartDashboard.putString("tloc", "switch");
+
+			t1=2.5;
+			t2=2.5;
+			t3=2.5;
 			if(switchConfig == switchConfig.LEFT) {
-				left1 = 29.0597*scaleFactor;
-				right1 = -68.3296*scaleFactor;
-				left2 = 68.3296*scaleFactor;																																																											;
-				right2 = -29.0597*scaleFactor;
-				left3 = 38*scaleFactor;
-				right3 = -38*scaleFactor;
+				left1 = 29.0597*scaleFactorL;
+				right1 = -68.3296*scaleFactorR;
+				left2 = 70.3296*scaleFactorL;																																																											;
+				right2 = -29.0597*scaleFactorR;
+				left3 = 37*scaleFactorL;
+				right3 = -37*scaleFactorR;
+				SmartDashboard.putString("swconf", "left");
+
 			}
 			else {
-				left1 = 71.4712*scaleFactor;
-				right1 = -32.2013*scaleFactor;
-				left2 = 32.2013*scaleFactor;
-				right2 = -71.4712*scaleFactor;
-				left3 = 29*scaleFactor;
-				right3 = -29*scaleFactor;
+				SmartDashboard.putString("swconf", "right");
+				left1 = 81.4712*scaleFactorL;
+				right1 = -41.5013*scaleFactorR;
+				left2 = 41.5013*scaleFactorL;
+				right2 = -81.4712*scaleFactorR;
+				left3 = 8*scaleFactorL;
+				right3 = -8*scaleFactorR;
 			}
 		}
 		if(robotLocation == RobotLocation.RIGHT) {
+			SmartDashboard.putString("rloc", "right");
+
 			if(targetLocation == TargetLocation.SCALE) {
-				left1 = 270.0641*scaleFactor;
-				right1 = -262.1284*scaleFactor;
+				left1 = 262.0641*scaleFactorL;
+				right1 = -270.1284*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
+				t1=7.0;
+				t2=0.0;
+				t3=0.0;
+				SmartDashboard.putString("tloc", "scale");
+
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
-				left1 = -133.5790*scaleFactor;
-				right1 = 108.6405*scaleFactor;
+				left1 = 108.5790*scaleFactorL;
+				right1 = -133.6405*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
+				SmartDashboard.putString("tloc", "switch");
+
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
-				left1 = 120*scaleFactor;
-				right1 = -120*scaleFactor;
+				SmartDashboard.putString("tloc", "move");
+
+				left1 = 120*scaleFactorL;
+				right1 = -120*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -262,7 +295,7 @@ public class Chassis extends RobotModule {
 	 * 
 	 * @param pos
 	 */
-	void auto(int step, double time) { // GOING BACKWARDS -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+	void auto(int step, double time) { // GOING BACKWARDS -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ maybe
 		
 		double rightV = 0;
 		double leftV = 0;
@@ -279,8 +312,8 @@ public class Chassis extends RobotModule {
 				if(time == 0) {
 					resetEnc();
 				}
-				left345.setMove(10000, 6, left1, 200);
-				right345.setMove(10000, 6, right1, 200);
+				left345.setMove(10000, t1, left1, 200);
+				right345.setMove(10000, t1, right1, 200);
 				//keep at Case 1
 				break;
 				
@@ -288,8 +321,8 @@ public class Chassis extends RobotModule {
 				if(time == 0) {
 					resetEnc();
 				}
-				left345.setMove(10000, 3, left2, 200);
-				right345.setMove(10000, 3, right2, 200);
+				left345.setMove(10000, t2, left2, 200);
+				right345.setMove(10000, t2, right2, 200);
 				//keep at Case 2
 				break;
 				
@@ -297,8 +330,8 @@ public class Chassis extends RobotModule {
 				if(time == 0) {
 					resetEnc();
 				}
-				left345.setMove(10000, 3, left3, 200);
-				right345.setMove(10000, 3, right3, 200);
+				left345.setMove(10000, t3, left3, 200);
+				right345.setMove(10000, t3, right3, 200);
 				//keep at Case 3
 				break;
 				
@@ -328,8 +361,8 @@ public class Chassis extends RobotModule {
 		}
 		
 		if(step > 0 && step < 4 && time > 0.1) {
-			//leftV = -left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.014);
-			rightV = right345.getVelPosFb(time, leadR.getSelectedSensorPosition(0), 0.014);
+			leftV = left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.018);
+			rightV = -right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.018);
 		}
 	
 

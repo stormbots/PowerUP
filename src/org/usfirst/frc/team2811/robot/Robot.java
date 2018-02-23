@@ -63,10 +63,10 @@ public class Robot extends IterativeRobot {
 	static double delayTime = 0;
 	static boolean deliverCube = true;
 	
-	long step0timer = 4000;
-	long step1timer = 7000;
-	long step2timer = 4000;
-	long step3timer = 4000;
+	long step0timer = 1000;
+	long step1timer = 2500;
+	long step2timer = 2500;
+	long step3timer = 2500;
 	long step4timer = 4000;
 	long step5timer = 2000;
 	long step6timer = 2000;
@@ -220,8 +220,8 @@ public class Robot extends IterativeRobot {
 		
 		
 		//Debug overrides, please remove
-		robotLocation = RobotLocation.CENTER;
-		targetLocation = TargetLocation.SWITCH;
+		
+		step1timer=7000;
 		
 		// removes unused steps from the switch
 		if(robotLocation != RobotLocation.CENTER) {
