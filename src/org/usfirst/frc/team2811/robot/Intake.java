@@ -163,7 +163,7 @@ public class Intake extends RobotModule {
 			velocity = 0.5;
 		}
 		//put cube
-		else if (stick.getRawButton(2)) {
+		else if (stick.getRawButton(4)) {
 			velocity = -0.5;
 		}
 		else {
@@ -171,7 +171,7 @@ public class Intake extends RobotModule {
 		}
 				
 		//squeeze toggle 
-		if(stick.getRawButtonPressed(3)) {
+		if(stick.getRawButtonPressed(2)) {
 			squeezing = !squeezing;
 		}
 		if(squeezing) {
@@ -188,7 +188,7 @@ public class Intake extends RobotModule {
 		//wrong voltage on practice bot
 		
 		//tilt toggle
-		if(stick.getRawButtonPressed(4)) {
+		if(stick.getRawButtonPressed(10)) {
 			tiltRun = !tiltRun;
 		}
 		if(tiltRun) {
@@ -199,9 +199,9 @@ public class Intake extends RobotModule {
 		}
 		
 		//debug Y-axis control
-		if(stick.getRawButton(7)) {
+		/*if(stick.getRawButton(7)) {
 			velocity = stick.getY();
-		}
+		}*/
 		
 		motor1.set(ControlMode.PercentOutput,velocity);
 		

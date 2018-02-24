@@ -139,7 +139,7 @@ public class Elevator extends RobotModule {
 				eVelocity = 0;
 			}
 		}
-		else if(functions1.getRawButton(5)) {
+		else if(functions1.getRawButton(3)) {
 			eVelocity = -0.5;
 		}
 		else if(currentPos <= softLimit && eVelocity < 0) { //Keeps elevator from going too low.
