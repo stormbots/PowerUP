@@ -7,6 +7,7 @@
 
 package org.usfirst.frc.team2811.robot;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -23,7 +24,7 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class Robot extends IterativeRobot {
 	
-	Joystick stickDrive1 = new Joystick(1);
+	Joystick stickDrive1 = new Joystick(0);
 	Joystick stickDrive2 = new Joystick(2);
 	Joystick stickFunctions = new Joystick(3);
 	RobotModule elevator = new Elevator();
@@ -34,31 +35,42 @@ public class Robot extends IterativeRobot {
 	
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
-	private String m_autoSelected;
 	private SendableChooser<String> m_chooser = new SendableChooser<>();
+	
+	private SendableChooser<Double> delaySelection =  new SendableChooser<>();
+	private SendableChooser<RobotLocation> startPosition = new SendableChooser<>();
+	private SendableChooser<Boolean> switchAbility = new SendableChooser<>();
+	private SendableChooser<Boolean> scaleAbility = new SendableChooser<>();
+	private SendableChooser<TargetLocation> locationPreference = new SendableChooser<>();
 	
 	int astep = 0;
 	CXTIMER autotimer = new CXTIMER();
 
-	public static enum RobotLocation{LEFT,RIGHT,CENTER};
-	public static enum TargetLocation{SWITCH,SCALE,MOVE_ONLY};
-	public static enum TeamColor{RED,BLUE};
-
-	RobotLocation robotLocation =  RobotLocation.CENTER;
-	TargetLocation targetLocation =  TargetLocation.SWITCH;
+	public static enum RobotLocation{LEFT, RIGHT,CENTER};
+	public static enum TargetLocation{SWITCH, SCALE, MOVE_ONLY};
+	public static enum SwitchConfig{UNKNOWN, LEFT, RIGHT};
+	public static enum ScaleConfig{UNKNOWN, LEFT, RIGHT};
+	public static enum TeamColor{RED, BLUE};
 	
-	static String fieldData = "XXX";
+	public int step = 0;
+	
+	public static RobotLocation robotLocation = RobotLocation.CENTER; 
+	public static TargetLocation targetLocation = TargetLocation.SCALE;
+	public static SwitchConfig switchConfig = SwitchConfig.UNKNOWN;
+	public static ScaleConfig scaleConfig = ScaleConfig.UNKNOWN;
+	
+	static String fieldData = "";
 	
 	static double delayTime = 0;
 	static boolean deliverCube = true;
 	
-	long step0timer = 4000;
-	long step1timer = 4000;
-	long step2timer = 3000;
-	long step3timer = 3000;
-	long step4timer = 3000;
-	long step5timer = 3000;
-	long step6timer = 3000;
+	long step0timer = 1000;
+	long step1timer = 2500;
+	long step2timer = 2500;
+	long step3timer = 2500;
+	long step4timer = 4000;
+	long step5timer = 2000;
+	long step6timer = 2000;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -67,6 +79,37 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {		
 		lighting.robotInit();
+
+		m_chooser.addDefault("Default Auto", kDefaultAuto);
+		m_chooser.addObject("My Auto", kCustomAuto);
+		SmartDashboard.putData("Auto choices", m_chooser);
+		
+		CameraServer.getInstance().startAutomaticCapture();
+		
+		delaySelection.addDefault("0 (default)", 0.0);
+		delaySelection.addObject("1", 1.0);
+		delaySelection.addObject("2", 2.0);
+		delaySelection.addObject("4", 4.0);
+		delaySelection.addObject("6", 6.0);
+		SmartDashboard.putData("Delay (sec)", delaySelection);
+		
+		startPosition.addDefault("field default", RobotLocation.LEFT);
+		startPosition.addObject("left", RobotLocation.LEFT);
+		startPosition.addObject("center", RobotLocation.CENTER);
+		startPosition.addObject("right", RobotLocation.RIGHT);
+		SmartDashboard.putData("Robot Position", startPosition);
+		
+		switchAbility.addDefault("yes (switch)", true);
+		switchAbility.addObject("no (switch)", false);
+		SmartDashboard.putData("Switch", switchAbility);
+		
+		scaleAbility.addDefault("yes (scale)", true);
+		scaleAbility.addObject("no (scale)", false);
+		SmartDashboard.putData("Scale", scaleAbility);
+		
+		locationPreference.addDefault("scale", TargetLocation.SCALE);
+		locationPreference.addObject("switch", TargetLocation.SWITCH);
+		SmartDashboard.putData("Preference", locationPreference);
 	}
 
 	/**
@@ -82,29 +125,126 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		
 		//TODO: Parse the field string into the appropriate values for use in auto commands
 		// robotLocation = RobotLocation.CENTER
 		// targetLocation = TargetLocation.SWITCH
 		astep = 0;
-		
-		String gameData;
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		SmartDashboard.putString("fieldstepup", gameData);
-		
-		m_autoSelected = m_chooser.getSelected();
-		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
-		System.out.println("Auto selected: " + m_autoSelected);
 		autotimer.Update();
 		autotimer.reset();
 		
-		//Fix this 
-		int delay = 0;
-		elevator.autoInit(robotLocation, targetLocation, delay, deliverCube);
-		drive.autoInit(robotLocation, targetLocation, delay, deliverCube);
-		intake.autoInit(robotLocation, targetLocation, delay, deliverCube);
+		fieldData = DriverStation.getInstance().getGameSpecificMessage();
+		SmartDashboard.putString("fieldstepup", fieldData);
+				
+		//get field data
+		if(fieldData.length()>0){
+			if(fieldData.charAt(0)=='L') {
+				switchConfig = SwitchConfig.LEFT;
+			}
+			else {
+				switchConfig = SwitchConfig.RIGHT;
+			}
+			
+			if(fieldData.charAt(1)=='L') {
+				scaleConfig = ScaleConfig.LEFT;
+			}
+			else {
+				scaleConfig = ScaleConfig.RIGHT;
+			}
+		}
 		
+		
+		//set our auto delay time
+		//step0timer = delaySelection.getSelected().longValue()*1000;
+
+		// Determine driver strategy
+		if(robotLocation == RobotLocation.CENTER) {
+			targetLocation = TargetLocation.SWITCH;
+		}
+		
+		else if(robotLocation == RobotLocation.LEFT) {
+			if(scaleConfig == ScaleConfig.LEFT && switchConfig == SwitchConfig.LEFT) {
+				if(switchAbility.getSelected()==true && scaleAbility.getSelected()==true) {
+					targetLocation = locationPreference.getSelected();
+				}
+				else if(switchAbility.getSelected()==true){
+					targetLocation = TargetLocation.SWITCH;
+				}
+				else if(scaleAbility.getSelected()==true){
+					targetLocation = TargetLocation.SCALE;
+				}
+				else {
+					targetLocation = TargetLocation.MOVE_ONLY;
+				}
+			}
+			else if(scaleConfig == ScaleConfig.LEFT && scaleAbility.getSelected()==true) {
+				targetLocation = TargetLocation.SCALE;
+			}
+			else if(switchConfig == SwitchConfig.LEFT && switchAbility.getSelected()==true) {
+				targetLocation = TargetLocation.SWITCH;
+			}
+			else {
+				targetLocation = TargetLocation.MOVE_ONLY;
+			}
+		}
+		
+		else if(robotLocation == RobotLocation.RIGHT){
+			if(scaleConfig == ScaleConfig.RIGHT && switchConfig == SwitchConfig.RIGHT) {
+				if(switchAbility.getSelected()==true && scaleAbility.getSelected()==true) {
+					targetLocation = locationPreference.getSelected();
+				}
+				else if(switchAbility.getSelected()==true){
+					targetLocation = TargetLocation.SWITCH;
+				}
+				else if(scaleAbility.getSelected()==true){
+					targetLocation = TargetLocation.SCALE;
+				}
+				else {
+					targetLocation = TargetLocation.MOVE_ONLY;
+				}
+			}
+			else if(scaleConfig == ScaleConfig.RIGHT && scaleAbility.getSelected()==true) {
+				targetLocation = TargetLocation.SCALE;
+			}
+			else if(switchConfig == SwitchConfig.RIGHT && switchAbility.getSelected()==true) {
+				targetLocation = TargetLocation.SWITCH;
+			}
+			else {
+				targetLocation = TargetLocation.MOVE_ONLY;
+			}
+		}
+		
+		else {
+			//auto select based off field
+		}
+		
+		
+		//Debug overrides, please remove
+		
+		robotLocation=RobotLocation.CENTER;
+		targetLocation=TargetLocation.SWITCH;
+		switchConfig=SwitchConfig.RIGHT;
+		scaleConfig = ScaleConfig.RIGHT;
+		
+		step1timer=7000;
+		
+		// removes unused steps from the switch
+		if(robotLocation != RobotLocation.CENTER) {
+			step2timer = 0;
+			step3timer = 0;
+		}
+
+		System.out.println(fieldData);
+		System.out.println(robotLocation);
+		System.out.println(targetLocation);
+		System.out.println(switchConfig);
+		System.out.println(scaleConfig);
+		
+
+		/*  THIS IS WHERE THE ROBOT CODE SENDS THE DATA TO THE MODULES */
+		elevator.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
+		intake.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
+		drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
+		climber.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 	}
 
 	/**
@@ -113,44 +253,48 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		autotimer.Update();
+
+		// Handle timer and step progression
+		// Anything that runs once on a timer edge should be added here
 		switch (astep) {
 		case 0:
 			if(autotimer.ckTime(true, step0timer)) {
 				astep++;
 				autotimer.reset();
 			}
-			drive.auto(astep,autotimer.getTimeSec());
 			break;
 		case 1:
 			if(autotimer.ckTime(true, step1timer)) {
-				astep++;
-				autotimer.reset();
+				//drive.resetEnc();
+				//if(drive.leadR.getSelectedSensorPosition(0) == 0 && drive.leadL.getSelectedSensorPosition(0) == 0) {
+					astep++;
+					autotimer.reset();
+				//}
 			}
-			drive.auto(astep,autotimer.getTimeSec());
 			break;
 		case 2:
 			if(autotimer.ckTime(true, step2timer)) {
-				astep++;
-				autotimer.reset();
+				//drive.resetEnc();
+				//if(drive.leadR.getSelectedSensorPosition(0) == 0 && drive.leadL.getSelectedSensorPosition(0) == 0) {
+					astep++;
+					autotimer.reset();
+				//}
 			}
-			drive.auto(astep,autotimer.getTimeSec());
 			break;
 		case 3:
 			if(autotimer.ckTime(true, step3timer)) {
-				astep++;
-				autotimer.reset();
+				//drive.resetEnc();
+				//if(drive.leadR.getSelectedSensorPosition(0) == 0 && drive.leadL.getSelectedSensorPosition(0) == 0) {
+					astep++;
+					autotimer.reset();
+				//}
 			}
-			drive.auto(astep,autotimer.getTimeSec());
-			elevator.auto(astep, autotimer.getTimeSec());
-			intake.auto(astep, autotimer.getTimeSec());
 			break;
 		case 4:
 			if(autotimer.ckTime(true, step4timer)) {
 				astep++;
 				autotimer.reset();
 			}
-			elevator.auto(astep, autotimer.getTimeSec());
-			intake.auto(astep,autotimer.getTimeSec());
 			break;
 		case 5:
 			if(autotimer.ckTime(true, step5timer)) {
@@ -163,23 +307,26 @@ public class Robot extends IterativeRobot {
 				astep++;
 				autotimer.reset();
 			}
-			drive.auto(astep,autotimer.getTimeSec());
-			elevator.auto(astep, autotimer.getTimeSec());
-			intake.auto(astep, autotimer.getTimeSec());
 			break;
 		default:
-			drive.auto(astep,autotimer.getTimeSec());
-			elevator.auto(astep, autotimer.getTimeSec());
-			intake.auto(astep, autotimer.getTimeSec());
 			break;
 		}
-		SmartDashboard.putNumber("Step", astep);
 		
+		//Handle continuous updates for various modules
+		//elevator.auto(astep, autotimer.getTimeSec());
+		intake.auto(astep, autotimer.getTimeSec());
+		drive.auto(astep, autotimer.getTimeSec());
+		//climber.auto(astep, autotimer.getTimeSec());
+
+		SmartDashboard.putNumber("Step", astep);
 	}
+	
 	public void teleopInit() {
 		drive.resetEnc();
 		autotimer.Update();
 		autotimer.reset();
+		elevator.init();
+		intake.init();
 	}
 
 	/**
@@ -202,4 +349,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 	}
+	
+	public void disabledPeriodic() {
+		drive.disabledPeriodic();
+		elevator.disabledPeriodic();
+		intake.disabledPeriodic();
+		climber.disabledPeriodic();
+	}
+	
 }
