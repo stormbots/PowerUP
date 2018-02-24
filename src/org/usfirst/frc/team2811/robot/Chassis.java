@@ -41,15 +41,14 @@ public class Chassis extends RobotModule {
 	TalonSRX frontR = new TalonSRX(4);
 	TalonSRX rearR = new TalonSRX(3);
 	DifferentialDrive driver = new DifferentialDrive(leadL, leadR);
-	Solenoid shiftA = new Solenoid(2);
-	Solenoid shiftB = new Solenoid(3);
-
-	//practice bot
-	//	Solenoid LeftShiftA = new Solenoid(2);
-//	Solenoid LeftShiftB = new Solenoid(3);
-//	Solenoid RightShiftA = new Solenoid(4);
-//	Solenoid RightShiftB = new Solenoid(5);
 	Preferences prefs = Preferences.getInstance();
+	
+	//Initialization is robot specific, done in constructor
+	Solenoid LeftShiftA;
+	Solenoid LeftShiftB;
+	Solenoid RightShiftA;
+	Solenoid RightShiftB;
+	
 
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
 	Motion345 right345 = new Motion345(10000, 3, 0, 200);
@@ -73,10 +72,26 @@ public class Chassis extends RobotModule {
 	 *initializes the slave talons
 	 */
 	public Chassis() {
+		if(prefs.getBoolean("compbot", false)) {
+			//Comp Bot
+			LeftShiftA = new Solenoid(2);
+			LeftShiftB = new Solenoid(3);
+			RightShiftA = new Solenoid(6); //not actually used
+			RightShiftB = new Solenoid(7);	//not actually used
+		}
+		else {
+			//practice bot
+			LeftShiftA = new Solenoid(2);
+			LeftShiftB = new Solenoid(3);
+			RightShiftA = new Solenoid(4);
+			RightShiftB = new Solenoid(5);		
+		}
+
 		//initializes the slaves and shifters
+
 		shiftLow();
 		bind();
-		prefs.getBoolean("compbot", false);
+		prefs.getBoolean("compbot", false); // true if on the compbot
 	}
 	
 	/**
@@ -88,6 +103,8 @@ public class Chassis extends RobotModule {
 		if(brake == false) {
 			mode = NeutralMode.Coast;
 		}
+		
+		// need to fix for coast on disable
 		leadL.setNeutralMode(NeutralMode.Brake);
 		frontL.setNeutralMode(NeutralMode.Brake);
 		rearL.setNeutralMode(NeutralMode.Brake);
@@ -128,11 +145,19 @@ public class Chassis extends RobotModule {
 			shiftHigh();
 		}
 		else {
-			shiftLow();
+			shiftLow(); 
 		}
 		
-		//practice bot driver.arcadeDrive(-stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0));
-		driver.arcadeDrive(stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0));
+		if(prefs.getBoolean("compbot", false)) {
+			//comp bot
+			driver.arcadeDrive(stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0));
+		}
+		else {
+			//prac bot
+			driver.arcadeDrive(-stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0));
+		}
+
+
 		bind();
 
 		SmartDashboard.putNumber("Pos Right", -leadR.getSelectedSensorPosition(0));
@@ -143,18 +168,35 @@ public class Chassis extends RobotModule {
 	
 	public void shiftLow() {
 		// sets the gear to low
-		shiftA.set(true);
-		shiftB.set(false);		
-		//practice shiftA.set(true);
-		//practice shiftB.set(false);
+		if(prefs.getBoolean("compbot", false)) {
+			//comp bot
+			LeftShiftA.set(true);
+			LeftShiftB.set(false);			
+		}
+		else {
+			//prac bot
+			LeftShiftA.set(false);
+			LeftShiftB.set(true);		
+			RightShiftA.set(false);
+			RightShiftB.set(true);
+		}
+		
 	}
 
 	public void shiftHigh() {
 		// sets the gear to high
-		shiftA.set(false);
-		shiftB.set(true);
-		//practice shiftA.set(false);
-		//practice shiftB.set(true);
+		if(prefs.getBoolean("compbot", false)) {
+			//comp bot
+			LeftShiftA.set(false);
+			LeftShiftB.set(true);			
+		}
+		else {
+			//prac bot
+			LeftShiftA.set(true);
+			LeftShiftB.set(false);
+			RightShiftA.set(true);
+			RightShiftB.set(false);
+		}
 	}
 	
 	
@@ -166,9 +208,7 @@ public class Chassis extends RobotModule {
 	 */
 	public void resetEnc() {
 		leadL.setSelectedSensorPosition(0, 0, 20);
-		leadL.getSelectedSensorPosition(0);
 		leadR.setSelectedSensorPosition(0, 0, 20);
-		leadR.getSelectedSensorPosition(0);
 	}
 	
 	void autoInit(
@@ -178,16 +218,28 @@ public class Chassis extends RobotModule {
 			ScaleConfig scaleConfig) {
 		//save RobotLocation and TargetLocation to class fields, as we'll need in auto
 		
+		double scaleFactorL;
+		double scaleFactorR;
 		
 		braking(true);
 		shiftLow();
-		double scaleFactorL = 199.8;
-		double scaleFactorR = 405.4;
+		double scale = prefs.getDouble("chassisScaleFactor", 291);
+		if(prefs.getBoolean("compbot", false)) {
+			//comp bot
+			scaleFactorL = 199.8;//change to preference
+			scaleFactorR = 405.4;//change to preference
+		}
+		else {
+			//prac bot
+			scaleFactorL = scale;
+			scaleFactorR = scale;			
+		}
+		
 
 		if(robotLocation == RobotLocation.LEFT) {
-			SmartDashboard.putString("rloc", "left");
+			SmartDashboard.putString("RobotLoc", "left");
 			if(targetLocation == TargetLocation.SCALE) {
-				SmartDashboard.putString("tloc", "scale");
+				SmartDashboard.putString("TargLoc", "scale");
 
 				left1 = 270.1284*scaleFactorL;
 				right1 = -260.0641*scaleFactorR;
@@ -195,12 +247,10 @@ public class Chassis extends RobotModule {
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
-				t1=7.0;
-				t2=0;
-				t3=0;
+				t1=8.0; t2=0; t3=0;
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
-				SmartDashboard.putString("tloc", "switch");
+				SmartDashboard.putString("TargLoc", "switch");
 
 				left1 = 133.6405*scaleFactorL;
 				right1 = -108.5790*scaleFactorR;
@@ -208,9 +258,11 @@ public class Chassis extends RobotModule {
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
+				t1=8.0; t2=0; t3=0;
+
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
-				SmartDashboard.putString("tloc", "move");
+				SmartDashboard.putString("TargLoc", "move");
 
 				left1 = 120*scaleFactorL;
 				right1 = -120*scaleFactorR;
@@ -218,15 +270,15 @@ public class Chassis extends RobotModule {
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
+				t1=8.0; t2=0; t3=0;
+
 			}
 		}
 		if(robotLocation == RobotLocation.CENTER) {
-			SmartDashboard.putString("rloc", "center");
-			SmartDashboard.putString("tloc", "switch");
+			SmartDashboard.putString("RobotLoc", "center");
+			SmartDashboard.putString("TargLoc", "switch");
 
-			t1=2.5;
-			t2=2.5;
-			t3=2.5;
+			t1=2.5; t2=2.5;	t3=2.5;
 			if(switchConfig == switchConfig.LEFT) {
 				left1 = 29.0597*scaleFactorL;
 				right1 = -68.3296*scaleFactorR;
@@ -234,11 +286,11 @@ public class Chassis extends RobotModule {
 				right2 = -29.0597*scaleFactorR;
 				left3 = 37*scaleFactorL;
 				right3 = -37*scaleFactorR;
-				SmartDashboard.putString("swconf", "left");
+				SmartDashboard.putString("SwitchConfig", "left");
 
 			}
 			else {
-				SmartDashboard.putString("swconf", "right");
+				SmartDashboard.putString("SwitchConfig", "right");
 				left1 = 81.4712*scaleFactorL;
 				right1 = -41.5013*scaleFactorR;
 				left2 = 41.5013*scaleFactorL;
@@ -248,7 +300,7 @@ public class Chassis extends RobotModule {
 			}
 		}
 		if(robotLocation == RobotLocation.RIGHT) {
-			SmartDashboard.putString("rloc", "right");
+			SmartDashboard.putString("RobotLoc", "right");
 
 			if(targetLocation == TargetLocation.SCALE) {
 				left1 = 262.0641*scaleFactorL;
@@ -257,10 +309,8 @@ public class Chassis extends RobotModule {
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
-				t1=7.0;
-				t2=0.0;
-				t3=0.0;
-				SmartDashboard.putString("tloc", "scale");
+				t1=8.0;	t2=0.0;	t3=0.0;
+				SmartDashboard.putString("TargLoc", "scale");
 
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
@@ -270,11 +320,12 @@ public class Chassis extends RobotModule {
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
-				SmartDashboard.putString("tloc", "switch");
+				t1=8.0;	t2=0.0;	t3=0.0;
+				SmartDashboard.putString("TargLoc", "switch");
 
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
-				SmartDashboard.putString("tloc", "move");
+				SmartDashboard.putString("TargLoc", "move");
 
 				left1 = 120*scaleFactorL;
 				right1 = -120*scaleFactorR;
@@ -282,6 +333,8 @@ public class Chassis extends RobotModule {
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
+				t1=8.0;	t2=0.0;	t3=0.0;
+
 			}
 		}
 		
@@ -295,7 +348,7 @@ public class Chassis extends RobotModule {
 	 * 
 	 * @param pos
 	 */
-	void auto(int step, double time) { // GOING BACKWARDS -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ maybe
+	void auto(int step, double time) {
 		
 		double rightV = 0;
 		double leftV = 0;
@@ -339,7 +392,6 @@ public class Chassis extends RobotModule {
 				if(time == 0) {
 					resetEnc();
 				}
-				driver.tankDrive(0, 0);
 				//keep at Case 4
 				break;
 				
@@ -347,7 +399,6 @@ public class Chassis extends RobotModule {
 				if(time == 0) {
 					resetEnc();
 				}
-				driver.tankDrive(0, 0);
 				//keep at Case 5
 				break;
 				
@@ -355,18 +406,33 @@ public class Chassis extends RobotModule {
 				if(time == 0) {
 					resetEnc();
 				}
-				driver.tankDrive(0, 0);
 				//keep at default
 				break;
 		}
 		
 		if(step > 0 && step < 4 && time > 0.1) {
-			leftV = left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.018);
-			rightV = -right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.018);
+			if(prefs.getBoolean("compbot", false)) {
+				//comp bot
+				leftV = left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.018);
+				rightV = -right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.018);
+			}
+			else {
+				//prac bot
+				leftV = -left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.018);
+				rightV = right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.018);				
+			}	
 		}
-	
-
-		driver.tankDrive(leftV, rightV);
+		
+		
+		if (prefs.getBoolean("compbot", false)){
+			//comp bot
+			driver.tankDrive(leftV, rightV);
+		}
+		else {
+			//prac bot
+			driver.tankDrive(rightV, leftV);	
+		}
+		
 		
 		SmartDashboard.putNumber("leftV", leftV);
 		SmartDashboard.putNumber("rightV", rightV);
