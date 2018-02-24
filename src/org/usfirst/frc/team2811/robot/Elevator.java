@@ -66,6 +66,7 @@ public class Elevator extends RobotModule {
 	}
 	
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) { //Only using functions1
+		
 		double breakpoint = 0.0;
 		
 		if(prefs.getBoolean("compbot", false)) {
@@ -78,6 +79,18 @@ public class Elevator extends RobotModule {
 		}
 		double stickValue = -functions1.getRawAxis(3);
 
+		if(functions1.getRawButtonPressed(11)) {
+			if(mode == Mode.MANUALPOSITION) {
+				mode = Mode.MANUALVELOCITY;
+			}
+			else if(mode == Mode.MANUALVELOCITY) {
+				mode = Mode.MANUALPOSITION;
+			}
+			else {
+				//this shouldn't happen
+				mode = Mode.MANUALPOSITION;
+			}
+		}
 		
 		if(mode == Mode.HOMING) {
 			if(!LimitSwitch.get()) {
