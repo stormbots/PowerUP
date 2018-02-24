@@ -27,16 +27,12 @@ public class Robot extends IterativeRobot {
 	Joystick stickDrive1 = new Joystick(0);
 	Joystick stickDrive2 = new Joystick(2);
 	Joystick stickFunctions = new Joystick(3);
-	RobotModule elevator = new Elevator();
-	RobotModule intake = new Intake();
-	RobotModule drive = new Chassis();
-	RobotModule climber = new Climber();
+	public static RobotModule elevator = new Elevator();
+	public static RobotModule intake = new Intake();
+	public static RobotModule drive = new Chassis();
+	public static RobotModule climber = new Climber();
 	Lighting lighting = new Lighting();
-	
-	private static final String kDefaultAuto = "Default";
-	private static final String kCustomAuto = "My Auto";
-	private SendableChooser<String> m_chooser = new SendableChooser<>();
-	
+		
 	private SendableChooser<Double> delaySelection =  new SendableChooser<>();
 	private SendableChooser<RobotLocation> startPosition = new SendableChooser<>();
 	private SendableChooser<Boolean> switchAbility = new SendableChooser<>();
@@ -78,12 +74,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {		
-		lighting.robotInit();
-
-		m_chooser.addDefault("Default Auto", kDefaultAuto);
-		m_chooser.addObject("My Auto", kCustomAuto);
-		SmartDashboard.putData("Auto choices", m_chooser);
-		
 		CameraServer.getInstance().startAutomaticCapture();
 		
 		delaySelection.addDefault("0 (default)", 0.0);
@@ -348,6 +338,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		lighting.testPeriodic();
 	}
 	
 	public void disabledPeriodic() {

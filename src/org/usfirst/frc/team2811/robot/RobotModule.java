@@ -89,6 +89,19 @@ public class RobotModule {
 	public void disabledPeriodic() {
 		
 	}
+
+	public void testPeriodic() {
+		
+	}
+	
+	/**
+	 * Return module-dependent value for what lighting should do
+	 * @return 0 if nothing interesting, value otherwise
+	 */
+	public double getLightPattern() {
+		return 0;
+		
+	}
 	
 	//used by chassis class, added here to avoid breakage
 	public void resetEnc() {

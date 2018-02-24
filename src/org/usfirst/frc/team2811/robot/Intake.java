@@ -210,4 +210,14 @@ public class Intake extends RobotModule {
 		SmartDashboard.putBoolean("Squeeze Intake", squeezing);
 		SmartDashboard.putBoolean("Tilt Base", tiltRun);
 	}
+	
+
+	/**
+	 * Return cube state
+	 * @return 0 if no cube, 1 if cube
+	 */
+	public double getLightPattern() {
+		if( redEye.get() ) return 1;
+		return 0;
+	}
 }
