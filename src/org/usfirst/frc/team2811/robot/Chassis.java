@@ -150,11 +150,11 @@ public class Chassis extends RobotModule {
 		
 		if(prefs.getBoolean("compbot", false)) {
 			//comp bot
-			driver.arcadeDrive(stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0));
+			driver.arcadeDrive(stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0),true);
 		}
 		else {
 			//prac bot
-			driver.arcadeDrive(-stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0));
+			driver.arcadeDrive(-stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0),true);
 		}
 
 
