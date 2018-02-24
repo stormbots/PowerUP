@@ -24,6 +24,7 @@ public class Lighting {
 	double pwmvalue=0.0;
 	
 	private SendableChooser<BlinkenPattern> selection = new SendableChooser<>();
+	private SendableChooser<Boolean> enableLights = new SendableChooser<>();
 
 	Lighting(){
 		selection.addDefault(BlinkenPattern.BRIGHT_DEFAULT_BLUE.toString(), BlinkenPattern.BRIGHT_DEFAULT_BLUE);	
@@ -69,8 +70,11 @@ public class Lighting {
 		  selection.addObject(pattern.toString(), pattern);
 	  }
 
-		
 	  SmartDashboard.putData("Best light", selection);
+	  
+	  enableLights.addDefault("Enable lights", true);
+	  enableLights.addObject("Disable lights", false);
+	  SmartDashboard.putData("enablelights",enableLights);
 	}
 	
 	public void init() {
@@ -89,6 +93,7 @@ public class Lighting {
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) {
 		BlinkenPattern tele = pattern;
 		
+		
 		//Look for do we have the switch! If so, change pattern
 		if(Robot.intake.getLightPattern() == 1) {
 			tele = BlinkenPattern.LIME_GREEN;
@@ -101,6 +106,10 @@ public class Lighting {
 		pwmvalue = selection.getSelected().pwm();
 		SmartDashboard.putNumber("pwmcheck",pwmvalue);
 		light.set(pwmvalue);
+	}
+	
+	void disabledPeriodic() {
+		//This is a motor, we cannot impact blinkens here :(
 	}
 	
 	void setColorPattern() {
@@ -116,7 +125,11 @@ public class Lighting {
 		else { //invalid
 			pattern = BlinkenPattern.CODE_BLUE;
 		}
-
+		
+		//Read smartdashboard option to turn it off
+		if( !enableLights.getSelected() ) {
+			pattern = BlinkenPattern.SOLID_BLACK;
+		}
 	}
 } 
 
