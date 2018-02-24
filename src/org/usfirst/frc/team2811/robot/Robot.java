@@ -158,59 +158,56 @@ public class Robot extends IterativeRobot {
 		if(robotLocation == RobotLocation.CENTER) {
 			targetLocation = TargetLocation.SWITCH;
 		}
+		
 		else if(robotLocation == RobotLocation.LEFT) {
-			if(locationPreference.getSelected()==TargetLocation.SCALE ){
-				
-				if(scaleAbility.getSelected()==true && scaleConfig == ScaleConfig.LEFT) {
-					targetLocation = TargetLocation.SCALE;
+			if(scaleConfig == ScaleConfig.LEFT && switchConfig == SwitchConfig.LEFT) {
+				if(switchAbility.getSelected()==true && scaleAbility.getSelected()==true) {
+					targetLocation = locationPreference.getSelected();
 				}
-				else if(switchAbility.getSelected()==true && switchConfig == SwitchConfig.LEFT) {
+				else if(switchAbility.getSelected()==true){
 					targetLocation = TargetLocation.SWITCH;
+				}
+				else if(scaleAbility.getSelected()==true){
+					targetLocation = TargetLocation.SCALE;
 				}
 				else {
 					targetLocation = TargetLocation.MOVE_ONLY;
 				}
-				
 			}
-			else if(locationPreference.getSelected()==TargetLocation.SWITCH) {
-				
-				if(switchAbility.getSelected()==true && switchConfig == SwitchConfig.LEFT) {
-					targetLocation = TargetLocation.SWITCH;
-				}
-				else if(scaleAbility.getSelected()==true && scaleConfig == ScaleConfig.LEFT) {
-					targetLocation = TargetLocation.SCALE;
-				}
-				else {
-					targetLocation = TargetLocation.MOVE_ONLY;
-				}
+			else if(scaleConfig == ScaleConfig.LEFT && scaleAbility.getSelected()==true) {
+				targetLocation = TargetLocation.SCALE;
+			}
+			else if(switchConfig == SwitchConfig.LEFT && switchAbility.getSelected()==true) {
+				targetLocation = TargetLocation.SWITCH;
+			}
+			else {
+				targetLocation = TargetLocation.MOVE_ONLY;
 			}
 		}
 		
-		else if(robotLocation == RobotLocation.RIGHT) {
-			if(locationPreference.getSelected()==TargetLocation.SCALE ){
-				
-				if(scaleAbility.getSelected()==true && scaleConfig == ScaleConfig.RIGHT) {
-					targetLocation = TargetLocation.SCALE;
+		else if(robotLocation == RobotLocation.RIGHT){
+			if(scaleConfig == ScaleConfig.RIGHT && switchConfig == SwitchConfig.RIGHT) {
+				if(switchAbility.getSelected()==true && scaleAbility.getSelected()==true) {
+					targetLocation = locationPreference.getSelected();
 				}
-				else if(switchAbility.getSelected()==true && switchConfig == SwitchConfig.RIGHT) {
+				else if(switchAbility.getSelected()==true){
 					targetLocation = TargetLocation.SWITCH;
+				}
+				else if(scaleAbility.getSelected()==true){
+					targetLocation = TargetLocation.SCALE;
 				}
 				else {
 					targetLocation = TargetLocation.MOVE_ONLY;
 				}
-				
 			}
-			else if(locationPreference.getSelected()==TargetLocation.SWITCH) {
-				
-				if(switchAbility.getSelected()==true && switchConfig == SwitchConfig.RIGHT) {
-					targetLocation = TargetLocation.SWITCH;
-				}
-				else if(scaleAbility.getSelected()==true && scaleConfig == ScaleConfig.RIGHT) {
-					targetLocation = TargetLocation.SCALE;
-				}
-				else {
-					targetLocation = TargetLocation.MOVE_ONLY;
-				}
+			else if(scaleConfig == ScaleConfig.RIGHT && scaleAbility.getSelected()==true) {
+				targetLocation = TargetLocation.SCALE;
+			}
+			else if(switchConfig == SwitchConfig.RIGHT && switchAbility.getSelected()==true) {
+				targetLocation = TargetLocation.SWITCH;
+			}
+			else {
+				targetLocation = TargetLocation.MOVE_ONLY;
 			}
 		}
 		
