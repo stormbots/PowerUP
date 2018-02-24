@@ -84,7 +84,7 @@ public class RobotModule {
 		
 	}
 
-	public void disabled() {
+	public void disabledPeriodic() {
 		
 	}
 	

@@ -448,7 +448,7 @@ public class Chassis extends RobotModule {
 		SmartDashboard.putNumber("rightTarg", right345.getPos(time));
 	}
 	
-	public void disabled() {
+	public void disabledPeriodic() {
 		//braking(false);
 	}
 

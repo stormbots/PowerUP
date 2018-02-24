@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,6 +25,7 @@ public class Elevator extends RobotModule {
 	
 	 WPI_TalonSRX eMotor = new WPI_TalonSRX(8);
 	 DigitalInput LimitSwitch = new DigitalInput(1);
+	 Preferences prefs = Preferences.getInstance();
 
 	 double eVelocity = 0;
 	 double elevatorPos = 0; //Used as the position you want the elevator to go to.
@@ -39,9 +41,7 @@ public class Elevator extends RobotModule {
 	 
 	 double autoPosition = 0.0; //Where you want to go to during auto.
 	 double currentPos = 0.0;
-	 double midBP = 45000/2;
 	 
-	//FB.FB() replaces feedBack()
 	
 	public enum Mode{ 
 		MANUALVELOCITY, MANUALPOSITION, BUTTON, HOMING //Used to change how the elevator is controlled
@@ -58,11 +58,24 @@ public class Elevator extends RobotModule {
 		reset();
 	}
 	
+	
+	public void disabledPeriodic(){
+		//update constants and stuff from flash
+		maxPos = prefs.getDouble("elevatorTopLimit", 92000);
+		
+	}
+	
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) { //Only using functions1
 		double breakpoint = 0.0;
-		//practice bot currentPos = -eMotor.getSelectedSensorPosition(0);
-		currentPos = eMotor.getSelectedSensorPosition(0);
-
+		
+		if(prefs.getBoolean("compbot", false)) {
+			//comp bot
+			eMotor.getSelectedSensorPosition(0);
+		}
+		else {
+			//prac bot
+			currentPos = -eMotor.getSelectedSensorPosition(0);
+		}
 		double stickValue = -functions1.getRawAxis(3);
 
 		
@@ -88,7 +101,6 @@ public class Elevator extends RobotModule {
 		//Position setlist, currently unused
 		/*else if(mode == Mode.BUTTON) {
 			
-			//eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.02)); 
 			eVelocity = FB.FB(elevatorPos, -currentPos, 0.02);
 			//Takes an inputed position and adjusts the velocity to get there.
 			//Last value needs to be tested and adjusted.
@@ -162,7 +174,7 @@ public class Elevator extends RobotModule {
 		
 		elevatorPos=25000;
 		if(targetLocation == TargetLocation.SWITCH) {
-			autoPosition = scaleHighPos;
+			autoPosition = switchPos; // bug fix 201802222021  =scaleHighPos
 		}
 		else if(targetLocation == TargetLocation.SCALE) {
 			autoPosition = scaleHighPos;
@@ -181,11 +193,18 @@ public class Elevator extends RobotModule {
 		}
 		
 		//TODO may need to set these motor phases
-		//practice bot eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, -eMotor.getSelectedSensorPosition(0), 0.01));
-		eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.01));
-		//practice bot SmartDashboard.putNumber("ElevatorCurrentPos", -eMotor.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("ElevatorCurrentPos", eMotor.getSelectedSensorPosition(0));
-
+		
+		if(prefs.getBoolean("compbot", false)) {
+			//comp bot
+			SmartDashboard.putNumber("ElevatorCurrentPos", eMotor.getSelectedSensorPosition(0));
+			eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.01));
+		}
+		else {
+			//prac bot
+			eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, -eMotor.getSelectedSensorPosition(0), 0.01));
+			SmartDashboard.putNumber("ElevatorCurrentPos", -eMotor.getSelectedSensorPosition(0));
+		}
+			
 		SmartDashboard.putNumber("ElevatorAutoPos", autoPosition);
 		SmartDashboard.putNumber("Elevatorvelocity", eMotor.getMotorOutputPercent());
 		SmartDashboard.putNumber("ElevatorPos", elevatorPos);
