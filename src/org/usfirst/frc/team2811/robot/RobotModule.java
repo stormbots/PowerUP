@@ -40,7 +40,9 @@ import edu.wpi.first.wpilibj.Joystick;
 public class RobotModule {
 
 	//These are standard methods used by all modules
-	
+	public void robotInit() {
+	}
+
 	/**
 	 * Run during during teleopInit
 	 */
@@ -85,6 +87,19 @@ public class RobotModule {
 	}
 
 	public void disabledPeriodic() {
+		
+	}
+
+	public void testPeriodic() {
+		
+	}
+	
+	/**
+	 * Return module-dependent value for what lighting should do
+	 * @return 0 if nothing interesting, value otherwise
+	 */
+	public double getLightPattern() {
+		return 0;
 		
 	}
 	
