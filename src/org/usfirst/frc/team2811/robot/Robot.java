@@ -45,7 +45,7 @@ public class Robot extends IterativeRobot {
 	int astep = 0;
 	CXTIMER autotimer = new CXTIMER();
 
-	public static enum RobotLocation{LEFT, RIGHT,CENTER};
+	public static enum RobotLocation{LEFT, RIGHT,CENTER, AUTO};
 	public static enum TargetLocation{SWITCH, SCALE, MOVE_ONLY};
 	public static enum SwitchConfig{UNKNOWN, LEFT, RIGHT};
 	public static enum ScaleConfig{UNKNOWN, LEFT, RIGHT};
@@ -53,7 +53,7 @@ public class Robot extends IterativeRobot {
 	
 	public int step = 0;
 	
-	public static RobotLocation robotLocation = RobotLocation.CENTER; 
+	public static RobotLocation robotLocation = RobotLocation.AUTO; 
 	public static TargetLocation targetLocation = TargetLocation.SCALE;
 	public static SwitchConfig switchConfig = SwitchConfig.UNKNOWN;
 	public static ScaleConfig scaleConfig = ScaleConfig.UNKNOWN;
@@ -90,7 +90,7 @@ public class Robot extends IterativeRobot {
 		delaySelection.addObject("6", 6.0);
 		SmartDashboard.putData("Delay (sec)", delaySelection);
 		
-		startPosition.addDefault("field default", RobotLocation.LEFT);
+		startPosition.addDefault("field default", RobotLocation.AUTO);
 		startPosition.addObject("left", RobotLocation.LEFT);
 		startPosition.addObject("center", RobotLocation.CENTER);
 		startPosition.addObject("right", RobotLocation.RIGHT);
@@ -153,6 +153,15 @@ public class Robot extends IterativeRobot {
 		
 		//set our auto delay time
 		//step0timer = delaySelection.getSelected().longValue()*1000;
+		
+		robotLocation = startPosition.getSelected();
+			if(robotLocation==RobotLocation.AUTO) {
+				switch(DriverStation.getInstance().getLocation()) {
+				case 1: robotLocation = RobotLocation.LEFT;break;
+				case 2: robotLocation = RobotLocation.CENTER;break;
+				case 3: robotLocation = RobotLocation.RIGHT;break;
+				}
+			}
 
 		// Determine driver strategy
 		if(robotLocation == RobotLocation.CENTER) {
@@ -237,6 +246,11 @@ public class Robot extends IterativeRobot {
 		System.out.println(switchConfig);
 		System.out.println(scaleConfig);
 		
+		SmartDashboard.putString("FieldData", fieldData.toString());
+		SmartDashboard.putString("robotLocation", robotLocation.toString());
+		SmartDashboard.putString("targetLocation", targetLocation.toString());
+		SmartDashboard.putString("switchConfig", switchConfig.toString());
+		SmartDashboard.putString("scaleConfig", scaleConfig.toString());
 
 		/*  THIS IS WHERE THE ROBOT CODE SENDS THE DATA TO THE MODULES */
 		elevator.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
