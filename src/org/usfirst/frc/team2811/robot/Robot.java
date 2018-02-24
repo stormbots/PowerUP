@@ -218,6 +218,11 @@ public class Robot extends IterativeRobot {
 		
 		//Debug overrides, please remove
 		
+		robotLocation=RobotLocation.CENTER;
+		targetLocation=TargetLocation.SWITCH;
+		switchConfig=SwitchConfig.RIGHT;
+		scaleConfig = ScaleConfig.RIGHT;
+		
 		step1timer=7000;
 		
 		// removes unused steps from the switch
@@ -342,7 +347,10 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void disabledPeriodic() {
-		drive.disabled();
+		drive.disabledPeriodic();
+		elevator.disabledPeriodic();
+		intake.disabledPeriodic();
+		climber.disabledPeriodic();
 	}
 	
 }
