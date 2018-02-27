@@ -274,7 +274,7 @@ public class Chassis extends RobotModule {
 
 			}
 		}
-		if(robotLocation == RobotLocation.CENTER) {
+		else if(robotLocation == RobotLocation.CENTER) {
 			SmartDashboard.putString("RobotLoc", "center");
 			SmartDashboard.putString("TargLoc", "switch");
 
@@ -299,7 +299,7 @@ public class Chassis extends RobotModule {
 				right3 = -8*scaleFactorR;
 			}
 		}
-		if(robotLocation == RobotLocation.RIGHT) {
+		else if(robotLocation == RobotLocation.RIGHT) {
 			SmartDashboard.putString("RobotLoc", "right");
 
 			if(targetLocation == TargetLocation.SCALE) {

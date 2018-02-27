@@ -126,8 +126,9 @@ public class Intake extends RobotModule {
 		//possibly implement a step 3 code for opening elevator?
 		//if (step==3 && deployCube) {
 		//	
-		if(step==3) {
-			tiltBackward(true);
+		tiltBackward(false);
+		if(step==1) {
+			tiltBackward(false);
 			tiltRun=false;
 		}
 		

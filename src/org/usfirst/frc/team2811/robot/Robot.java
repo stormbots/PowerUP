@@ -33,7 +33,7 @@ public class Robot extends IterativeRobot {
 	public static RobotModule climber = new Climber();
 	Lighting lighting = new Lighting();
 		
-	private SendableChooser<Double> delaySelection =  new SendableChooser<>();
+	private SendableChooser<Integer> delaySelection =  new SendableChooser<>();
 	private SendableChooser<RobotLocation> startPosition = new SendableChooser<>();
 	private SendableChooser<Boolean> switchAbility = new SendableChooser<>();
 	private SendableChooser<Boolean> scaleAbility = new SendableChooser<>();
@@ -76,11 +76,11 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {		
 		CameraServer.getInstance().startAutomaticCapture();
 		
-		delaySelection.addDefault("0 (default)", 0.0);
-		delaySelection.addObject("1", 1.0);
-		delaySelection.addObject("2", 2.0);
-		delaySelection.addObject("4", 4.0);
-		delaySelection.addObject("6", 6.0);
+		delaySelection.addDefault("0 (default)", 0);
+		delaySelection.addObject("1", 1);
+		delaySelection.addObject("2", 2);
+		delaySelection.addObject("4", 4);
+		delaySelection.addObject("6", 6);
 		SmartDashboard.putData("Delay (sec)", delaySelection);
 		
 		startPosition.addDefault("field default", RobotLocation.AUTO);
@@ -218,19 +218,29 @@ public class Robot extends IterativeRobot {
 		
 		
 		//Debug overrides, please remove
-		
+		/*
 		robotLocation=RobotLocation.CENTER;
 		targetLocation=TargetLocation.SWITCH;
 		switchConfig=SwitchConfig.RIGHT;
 		scaleConfig = ScaleConfig.RIGHT;
 		
 		step1timer=7000;
+		*/
+		
+		step0timer = delaySelection.getSelected() *1000;
 		
 		// removes unused steps from the switch
 		if(robotLocation != RobotLocation.CENTER) {
+			step1timer = 8000;
 			step2timer = 0;
 			step3timer = 0;
 		}
+		else {
+			step1timer = 2500;
+			step2timer = 2500;
+			step3timer = 2500;
+		}
+		//else for l/r
 
 		System.out.println(fieldData);
 		System.out.println(robotLocation);
@@ -317,7 +327,7 @@ public class Robot extends IterativeRobot {
 		}
 		
 		//Handle continuous updates for various modules
-		//elevator.auto(astep, autotimer.getTimeSec());
+		elevator.auto(astep, autotimer.getTimeSec()); 
 		intake.auto(astep, autotimer.getTimeSec());
 		drive.auto(astep, autotimer.getTimeSec());
 		//climber.auto(astep, autotimer.getTimeSec());

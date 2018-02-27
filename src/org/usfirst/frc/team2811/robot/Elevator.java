@@ -32,15 +32,22 @@ public class Elevator extends RobotModule {
 	 
 	 double floorPos = 0.0;         //
 	 double portalPos = 10000;      //
-	 double switchPos = 20000;      // Set heights (estimated) for each location the elevator needs to get to.
-	 double scaleLowPos = 25000;    //
-	 double scaleHighPos = 30000;   //
+	 double switchPos = 25000;      // Set heights (estimated) for each location the elevator needs to get to.
+	 double scaleLowPos = 70000;    //
+	 double scaleHighPos = 90000;   //
 	 double maxPos = 92000;
 	 double minPos = 0;
 	 double softLimit = -2000;
+	 double autoActiveStep = 3;
+	 double autoActiveTime = 1;
 	 
 	 double autoPosition = 0.0; //Where you want to go to during auto.
 	 double currentPos = 0.0;
+	 
+	 
+	 public Elevator() {
+		 reset();
+	 }
 	 
 	
 	public enum Mode{ 
@@ -55,7 +62,7 @@ public class Elevator extends RobotModule {
 	}
 		
 	void init(){
-		reset();
+		//reset();
 	}
 	
 	
@@ -184,6 +191,16 @@ public class Elevator extends RobotModule {
 		
 	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation, SwitchConfig switchConfig, ScaleConfig scaleConfig) { //Elevator only cares about targetLocation
 		eMotor.setSelectedSensorPosition(0, 25000, 20);
+		eMotor.setSelectedSensorPosition(25000, 0, 20);// maybe just in case? Shouldn't do anything.
+		
+		if(robotLocation == RobotLocation.CENTER) {
+			autoActiveStep = 3;
+			autoActiveTime = 1;
+		}
+		else {
+			autoActiveStep = 1;
+			autoActiveTime = 5.5;
+		}
 		
 		elevatorPos=25000;
 		if(targetLocation == TargetLocation.SWITCH) {
@@ -201,7 +218,8 @@ public class Elevator extends RobotModule {
 	}
 	
 	void auto(int stepAuto, double time) {
-		if(time > 3 && stepAuto == 3) {
+		
+		if(time > autoActiveTime && stepAuto == autoActiveStep) {
 			elevatorPos = autoPosition;
 		}
 		
