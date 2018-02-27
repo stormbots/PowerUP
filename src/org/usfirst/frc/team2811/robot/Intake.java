@@ -56,10 +56,13 @@ public class Intake extends RobotModule {
 		
 		motor2.follow(motor1);
 		motor2.setInverted(true);
-		if(prefs.getBoolean("compbot", false)){
+		if(prefs.getBoolean("compbot", true)){
 			//comp bot
 			squeezeSolenoidA = new Solenoid(4); 
 			squeezeSolenoidB = new Solenoid(5);
+			SmartDashboard.putString("Seeing Solenoids", "Yes");
+			tiltInvert = false;
+			squeezeInvert = false;
 		}
 		else {
 			squeezeSolenoidA = new Solenoid(6); 
@@ -118,6 +121,7 @@ public class Intake extends RobotModule {
 	
 	/**AUTO
 	 *adds steps 4 and 5 of autonomous, the dropping the cube off in the 
+	 *
 	 *scale steps.
 	 * @param step
 	 * @param time

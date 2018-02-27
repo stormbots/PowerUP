@@ -72,7 +72,7 @@ public class Chassis extends RobotModule {
 	 *initializes the slave talons
 	 */
 	public Chassis() {
-		if(prefs.getBoolean("compbot", false)) {
+		if(prefs.getBoolean("compbot", true)) {
 			//Comp Bot
 			LeftShiftA = new Solenoid(2);
 			LeftShiftB = new Solenoid(3);
@@ -168,7 +168,7 @@ public class Chassis extends RobotModule {
 	
 	public void shiftLow() {
 		// sets the gear to low
-		if(prefs.getBoolean("compbot", false)) {
+		if(prefs.getBoolean("compbot", true)) {
 			//comp bot
 			LeftShiftA.set(true);
 			LeftShiftB.set(false);			

@@ -32,9 +32,10 @@ public class Elevator extends RobotModule {
 	 
 	 double floorPos = 0.0;         //
 	 double portalPos = 10000;      //
-	 double switchPos = 25000;      // Set heights (estimated) for each location the elevator needs to get to.
+	 double switchPos = 36000;      // Set heights (estimated) for each location the elevator needs to get to.
 	 double scaleLowPos = 70000;    //
 	 double scaleHighPos = 90000;   //
+	 double initializePos = 36000;
 	 double maxPos = 92000;
 	 double minPos = 0;
 	 double softLimit = -2000;
@@ -54,7 +55,7 @@ public class Elevator extends RobotModule {
 		MANUALVELOCITY, MANUALPOSITION, BUTTON, HOMING //Used to change how the elevator is controlled
 	}
 	
-	public Mode mode = Mode.MANUALPOSITION;
+	public Mode mode = Mode.MANUALVELOCITY;
 	private boolean homed=false; 
 	
 	public void changeMode (Mode newMode) {
@@ -68,7 +69,7 @@ public class Elevator extends RobotModule {
 	
 	public void disabledPeriodic(){
 		//update constants and stuff from flash
-		maxPos = prefs.getDouble("elevatorTopLimit", 92000);
+		maxPos = prefs.getDouble("elevatorTopLimit", 93000);
 		
 	}
 	
@@ -192,8 +193,8 @@ public class Elevator extends RobotModule {
 	}
 		
 	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation, SwitchConfig switchConfig, ScaleConfig scaleConfig) { //Elevator only cares about targetLocation
-		eMotor.setSelectedSensorPosition(0, 25000, 20);
-		eMotor.setSelectedSensorPosition(25000, 0, 20);// maybe just in case? Shouldn't do anything.
+		eMotor.setSelectedSensorPosition(0, (int) initializePos, 20);
+		eMotor.setSelectedSensorPosition((int) initializePos, 0, 20);// maybe just in case? Shouldn't do anything.
 		
 		if(robotLocation == RobotLocation.CENTER) {
 			autoActiveStep = 3;
@@ -204,7 +205,7 @@ public class Elevator extends RobotModule {
 			autoActiveTime = 5.5;
 		}
 		
-		elevatorPos=25000;
+		elevatorPos=initializePos;
 		if(targetLocation == TargetLocation.SWITCH) {
 			autoPosition = switchPos; // bug fix 201802222021  =scaleHighPos
 		}
@@ -215,7 +216,7 @@ public class Elevator extends RobotModule {
 			autoPosition = switchPos;
 		}
 		else {
-			autoPosition = 25000;		
+			autoPosition = initializePos;		
 		}
 	}
 	
