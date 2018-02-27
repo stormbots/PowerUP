@@ -76,9 +76,11 @@ public class Elevator extends RobotModule {
 		
 		double breakpoint = 0.0;
 		
+		//TODO: new joystick needs to be plugged in with slider at zero, or moved, otherwise it reads incorrectly
+		// Fix should be to make sure that the joystick input is -1 before enabling the elevator
 		if(prefs.getBoolean("compbot", false)) {
 			//comp bot
-			eMotor.getSelectedSensorPosition(0);
+			currentPos = eMotor.getSelectedSensorPosition(0);
 		}
 		else {
 			//prac bot
