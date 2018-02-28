@@ -363,6 +363,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		lighting.testPeriodic();
+		intake.tiltBackward(true);
+		intake.squeezeOpen(false);
 	}
 	
 	public void disabledPeriodic() {

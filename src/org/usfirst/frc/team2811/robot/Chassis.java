@@ -148,13 +148,14 @@ public class Chassis extends RobotModule {
 			shiftLow(); 
 		}
 		
+		double joyAdjustment = 0.75;
 		if(prefs.getBoolean("compbot", false)) {
 			//comp bot
-			driver.arcadeDrive(stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0),true);
+			driver.arcadeDrive(stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0)*joyAdjustment,true);
 		}
 		else {
 			//prac bot
-			driver.arcadeDrive(-stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0),true);
+			driver.arcadeDrive(-stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0)*joyAdjustment,true);
 		}
 
 

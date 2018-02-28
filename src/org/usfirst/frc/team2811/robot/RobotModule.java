@@ -106,4 +106,14 @@ public class RobotModule {
 	//used by chassis class, added here to avoid breakage
 	public void resetEnc() {
 	}
+
+	public void tiltBackward(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void squeezeOpen(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
 }

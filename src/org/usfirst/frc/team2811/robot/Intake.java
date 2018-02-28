@@ -36,8 +36,8 @@ public class Intake extends RobotModule {
 	Solenoid tiltSolenoidB = new Solenoid(1);
 	
 	DigitalInput redEye = new DigitalInput(0);
-	Boolean squeezing = false;
-	Boolean tiltRun = true;
+	Boolean intakeOpen = false;
+	Boolean tiltedBack = true;
 	Boolean deployCube = false;
 	Preferences prefs = Preferences.getInstance();
 	
@@ -75,9 +75,11 @@ public class Intake extends RobotModule {
 	}
 	
 	public void squeezeOpen(boolean open) {
+		intakeOpen = open;
 		if(open) {
 			squeezeSolenoidA.set(squeezeInvert);
 			squeezeSolenoidB.set(!squeezeInvert);
+			
 		}
 		else {
 			squeezeSolenoidA.set(!squeezeInvert);
@@ -86,6 +88,7 @@ public class Intake extends RobotModule {
 	}
 	
 	public void tiltBackward(boolean backward) {
+		tiltedBack = backward;
 		if(backward) {
 			tiltSolenoidA.set(tiltInvert);
 			tiltSolenoidB.set(!tiltInvert);
@@ -133,7 +136,7 @@ public class Intake extends RobotModule {
 		tiltBackward(false);
 		if(step==1) {
 			tiltBackward(false);
-			tiltRun=false;
+			tiltedBack=false;
 		}
 		
 		if (step==4 && deployCube) {
@@ -177,13 +180,13 @@ public class Intake extends RobotModule {
 				
 		//squeeze toggle 
 		if(stick.getRawButtonPressed(2)) {
-			squeezing = !squeezing;
+			intakeOpen = !intakeOpen;
 		}
-		if(squeezing) {
-			squeezeOpen(false);
+		if(intakeOpen) {
+			squeezeOpen(true);
 		}
 		else {
-			squeezeOpen(true);
+			squeezeOpen(false);
 		}
 		
 		//put cube hold into power saving 
@@ -194,13 +197,13 @@ public class Intake extends RobotModule {
 		
 		//tilt toggle
 		if(stick.getRawButtonPressed(10)) {
-			tiltRun = !tiltRun;
+			tiltedBack = !tiltedBack;
 		}
-		if(tiltRun) {
-			tiltBackward(false);
+		if(tiltedBack) {
+			tiltBackward(true);
 		}
 		else {
-			tiltBackward(true);
+			tiltBackward(false);
 		}
 		
 		//debug Y-axis control
@@ -212,8 +215,8 @@ public class Intake extends RobotModule {
 		
 		SmartDashboard.putNumber("Velocity", velocity);
 		SmartDashboard.putBoolean("RedEye", redEye.get());   
-		SmartDashboard.putBoolean("Squeeze Intake", squeezing);
-		SmartDashboard.putBoolean("Tilt Base", tiltRun);
+		SmartDashboard.putBoolean("Squeeze Intake", intakeOpen);
+		SmartDashboard.putBoolean("Tilt Base", tiltedBack);
 	}
 	
 
