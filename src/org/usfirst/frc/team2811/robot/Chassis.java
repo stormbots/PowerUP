@@ -92,6 +92,14 @@ public class Chassis extends RobotModule {
 		shiftLow();
 		bind();
 		prefs.getBoolean("compbot", false); // true if on the compbot
+		
+		double voltageRampRate = 0.075;
+		leadL.configOpenloopRamp(voltageRampRate, 30);
+		leadR.configOpenloopRamp(voltageRampRate, 30);
+		frontL.configOpenloopRamp(voltageRampRate, 30);
+		frontR.configOpenloopRamp(voltageRampRate, 30);
+		rearL.configOpenloopRamp(voltageRampRate, 30);
+		rearR.configOpenloopRamp(voltageRampRate, 30);
 	}
 	
 	/**
@@ -242,8 +250,8 @@ public class Chassis extends RobotModule {
 			if(targetLocation == TargetLocation.SCALE) {
 				SmartDashboard.putString("TargLoc", "scale");
 
-				left1 = 270.1284*scaleFactorL;
-				right1 = -260.0641*scaleFactorR;
+				left1 = 270.7794*scaleFactorL;
+				right1 = -262.4143*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -253,8 +261,8 @@ public class Chassis extends RobotModule {
 			if(targetLocation == TargetLocation.SWITCH) {
 				SmartDashboard.putString("TargLoc", "switch");
 
-				left1 = 133.6405*scaleFactorL;
-				right1 = -108.5790*scaleFactorR;
+				left1 = 139.3341*scaleFactorL;
+				right1 = -111.9587*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -281,31 +289,31 @@ public class Chassis extends RobotModule {
 
 			t1=2.5; t2=2.5;	t3=2.5;
 			if(switchConfig == switchConfig.LEFT) {
-				left1 = 29.0597*scaleFactorL;
-				right1 = -68.3296*scaleFactorR;
-				left2 = 70.3296*scaleFactorL;																																																											;
-				right2 = -29.0597*scaleFactorR;
-				left3 = 37*scaleFactorL;
-				right3 = -37*scaleFactorR;
+				left1 = 26.7035*scaleFactorL;
+				right1 = -65.9734*scaleFactorR;
+				left2 = 65.9734*scaleFactorL;																																																											;
+				right2 = -26.7035*scaleFactorR;
+				left3 = 43*scaleFactorL;
+				right3 = -43*scaleFactorR;
 				SmartDashboard.putString("SwitchConfig", "left");
 
 			}
 			else {
 				SmartDashboard.putString("SwitchConfig", "right");
-				left1 = 81.4712*scaleFactorL;
-				right1 = -41.5013*scaleFactorR;
-				left2 = 41.5013*scaleFactorL;
-				right2 = -81.4712*scaleFactorR;
-				left3 = 8*scaleFactorL;
-				right3 = -8*scaleFactorR;
+				left1 = 58.1194*scaleFactorL;
+				right1 = -18.8495*scaleFactorR;
+				left2 = 18.8495*scaleFactorL;
+				right2 = -58.1194*scaleFactorR;
+				left3 = 53*scaleFactorL;
+				right3 = -53*scaleFactorR;
 			}
 		}
 		else if(robotLocation == RobotLocation.RIGHT) {
 			SmartDashboard.putString("RobotLoc", "right");
 
 			if(targetLocation == TargetLocation.SCALE) {
-				left1 = 262.0641*scaleFactorL;
-				right1 = -270.1284*scaleFactorR;
+				left1 = 262.4143*scaleFactorL;
+				right1 = -270.7794*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -315,8 +323,8 @@ public class Chassis extends RobotModule {
 
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
-				left1 = 108.5790*scaleFactorL;
-				right1 = -133.6405*scaleFactorR;
+				left1 = 111.9587*scaleFactorL;
+				right1 = -139.3341*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;

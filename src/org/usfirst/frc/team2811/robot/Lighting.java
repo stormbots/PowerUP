@@ -17,7 +17,9 @@ import java.lang.reflect.Array;
 import org.usfirst.frc.team2811.robot.BlinkenPattern;
 
 public class Lighting {
-	Talon light = new Talon(4);
+	Talon lightElevator = new Talon(0);
+	Talon lightIntake = new Talon(1);
+
 	BlinkenPattern pattern = BlinkenPattern.C12_END_TO_END_BLEND_C1_TO_C2;
 	
 	Preferences prefs = Preferences.getInstance();
@@ -87,7 +89,8 @@ public class Lighting {
 	}
 	
 	public void auto() {
-		light.set(pattern.pwm());	
+		lightElevator.set(pattern.pwm());	
+		lightIntake.set(pattern.pwm());	
 	}
 	
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) {
@@ -99,13 +102,16 @@ public class Lighting {
 			tele = BlinkenPattern.LIME_GREEN;
 		};
 		
-		light.set(tele.pwm());
+		lightElevator.set(tele.pwm());
+		lightIntake.set(tele.pwm());
 	}
 	
 	void testPeriodic() {
 		pwmvalue = selection.getSelected().pwm();
 		SmartDashboard.putNumber("pwmcheck",pwmvalue);
-		light.set(pwmvalue);
+		lightElevator.set(pwmvalue);
+		lightIntake.set(pattern.pwm());	
+
 	}
 	
 	void disabledPeriodic() {
@@ -117,13 +123,13 @@ public class Lighting {
 		Alliance alliance = DriverStation.getInstance().getAlliance();
 		if( alliance == Alliance.Blue) {
 			//blue patterns!
-			pattern = BlinkenPattern.CODE_BLUE;
+			pattern = BlinkenPattern.SOLID_LIGHT_BLUE;
 		}
 		else if ( alliance == Alliance.Red) {
-			pattern = BlinkenPattern.CODE_RED;
+			pattern = BlinkenPattern.SOLID_RED;
 		}
 		else { //invalid
-			pattern = BlinkenPattern.CODE_BLUE;
+			pattern = BlinkenPattern.SOLID_LIGHT_BLUE;
 		}
 		
 		//Read smartdashboard option to turn it off

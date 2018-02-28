@@ -48,6 +48,8 @@ public class Elevator extends RobotModule {
 	 
 	 public Elevator() {
 		 reset();
+		 double voltageRampRate = 0.2;
+		eMotor.configOpenloopRamp(voltageRampRate, 30);
 	 }
 	 
 	
@@ -55,7 +57,7 @@ public class Elevator extends RobotModule {
 		MANUALVELOCITY, MANUALPOSITION, BUTTON, HOMING //Used to change how the elevator is controlled
 	}
 	
-	public Mode mode = Mode.MANUALVELOCITY;
+	public Mode mode = Mode.MANUALPOSITION;
 	private boolean homed=false; 
 	
 	public void changeMode (Mode newMode) {
