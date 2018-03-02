@@ -54,8 +54,8 @@ public class Intake extends RobotModule {
 	 */
 	public Intake() {
 		
-		motor2.follow(motor1);
-		motor2.setInverted(true);
+		//motor2.follow(motor1);
+		//motor2.setInverted(true);
 		if(prefs.getBoolean("compbot", true)){
 			//comp bot
 			squeezeSolenoidA = new Solenoid(4); 
@@ -146,6 +146,7 @@ public class Intake extends RobotModule {
 			velocity = 0;
 		}
 		motor1.set(ControlMode.PercentOutput, velocity);
+		motor2.set(ControlMode.PercentOutput, -velocity);
 	}
 	
 	/**TELEOP INIT
@@ -212,6 +213,7 @@ public class Intake extends RobotModule {
 		}*/
 		
 		motor1.set(ControlMode.PercentOutput,velocity);
+		motor2.set(ControlMode.PercentOutput, -velocity);
 		
 		SmartDashboard.putNumber("Velocity", velocity);
 		SmartDashboard.putBoolean("RedEye", redEye.get());   

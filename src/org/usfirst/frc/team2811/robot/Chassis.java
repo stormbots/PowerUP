@@ -7,10 +7,12 @@ import org.usfirst.frc.team2811.robot.Robot.ScaleConfig;
 import org.usfirst.frc.team2811.robot.Robot.SwitchConfig;
 import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
 
+import com.ctre.phoenix.Util;
 import com.ctre.phoenix.motorcontrol.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
@@ -42,6 +44,7 @@ public class Chassis extends RobotModule {
 	TalonSRX rearR = new TalonSRX(3);
 	DifferentialDrive driver = new DifferentialDrive(leadL, leadR);
 	Preferences prefs = Preferences.getInstance();
+	PowerDistributionPanel pdp = new PowerDistributionPanel();
 	
 	//Initialization is robot specific, done in constructor
 	Solenoid LeftShiftA;
@@ -156,14 +159,23 @@ public class Chassis extends RobotModule {
 			shiftLow(); 
 		}
 		
+		// get pdp voltage
+		// calculate a scale factor, 
+		// mod = util.lerp(voltage,8.25,6.5,1,0
+		// constrain mod to 0... 1
+		//apply to all aracade drive outputs
+		
+		double mod = Utilities.lerp(pdp.getVoltage(), 8.25, 6.5, 1.0, 0.0);
+		mod = Utilities.clamp(mod, 0, 1);
+		
 		double joyAdjustment = 0.75;
 		if(prefs.getBoolean("compbot", false)) {
 			//comp bot
-			driver.arcadeDrive(stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0)*joyAdjustment,true);
+			driver.arcadeDrive(stickDrive.getRawAxis(3)*mod, -stickDrive.getRawAxis(0)*joyAdjustment*mod,true);
 		}
 		else {
 			//prac bot
-			driver.arcadeDrive(-stickDrive.getRawAxis(3), -stickDrive.getRawAxis(0)*joyAdjustment,true);
+			driver.arcadeDrive(-stickDrive.getRawAxis(3)*mod, -stickDrive.getRawAxis(0)*joyAdjustment*mod,true);
 		}
 
 
@@ -249,9 +261,13 @@ public class Chassis extends RobotModule {
 			SmartDashboard.putString("RobotLoc", "left");
 			if(targetLocation == TargetLocation.SCALE) {
 				SmartDashboard.putString("TargLoc", "scale");
-
-				left1 = 270.7794*scaleFactorL;
-				right1 = -262.4143*scaleFactorR;
+				left1 = 209.2766*scaleFactorR;
+				right1 = -199.3585*scaleFactorL;
+				
+				//left1 = 270.1284*scaleFactorL;
+				//right1 = -260.0641*scaleFactorR;
+				//left1 = 270.7794*scaleFactorL;
+				//right1 = -262.4143*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -260,9 +276,13 @@ public class Chassis extends RobotModule {
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
 				SmartDashboard.putString("TargLoc", "switch");
-
-				left1 = 139.3341*scaleFactorL;
-				right1 = -111.9587*scaleFactorR;
+				left1 = 130.6405*scaleFactorL;
+				right1 = -114.5790*scaleFactorR;
+				
+				//left1 = 133.6405*scaleFactorL;
+				//right1 = -108.5790*scaleFactorR;
+				//left1 = 139.3341*scaleFactorL;
+				//right1 = -111.9587*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -273,8 +293,8 @@ public class Chassis extends RobotModule {
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
 				SmartDashboard.putString("TargLoc", "move");
 
-				left1 = 120*scaleFactorL;
-				right1 = -120*scaleFactorR;
+				left1 = 130*scaleFactorL;
+				right1 = -130*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -289,42 +309,68 @@ public class Chassis extends RobotModule {
 
 			t1=2.5; t2=2.5;	t3=2.5;
 			if(switchConfig == switchConfig.LEFT) {
-				left1 = 26.7035*scaleFactorL;
-				right1 = -65.9734*scaleFactorR;
-				left2 = 65.9734*scaleFactorL;																																																											;
-				right2 = -26.7035*scaleFactorR;
-				left3 = 43*scaleFactorL;
-				right3 = -43*scaleFactorR;
+				left1 = 29.0597*scaleFactorL;
+				right1 = -68.3296*scaleFactorR;
+				left2 = 68.3296*scaleFactorL;																																																											;
+				right2 = -29.0597*scaleFactorR;
+				left3 = 37*scaleFactorL;
+				right3 = -37*scaleFactorR;
+				
+//				left1 = 26.7035*scaleFactorL;
+//				right1 = -65.9734*scaleFactorR;
+//				left2 = 65.9734*scaleFactorL;																																																											;
+//				right2 = -26.7035*scaleFactorR;
+//				left3 = 43*scaleFactorL;
+//				right3 = -43*scaleFactorR;
 				SmartDashboard.putString("SwitchConfig", "left");
 
 			}
 			else {
 				SmartDashboard.putString("SwitchConfig", "right");
-				left1 = 58.1194*scaleFactorL;
-				right1 = -18.8495*scaleFactorR;
-				left2 = 18.8495*scaleFactorL;
-				right2 = -58.1194*scaleFactorR;
-				left3 = 53*scaleFactorL;
-				right3 = -53*scaleFactorR;
+				left1 = 81.4712*scaleFactorL;
+				right1 = -41.5013*scaleFactorR;
+				left2 = 41.5013*scaleFactorL;
+				right2 = -81.4712*scaleFactorR;
+				left3 = 2*scaleFactorL;
+				right3 = -2*scaleFactorR;
+				
+//				left1 = 58.1194*scaleFactorL;
+//				right1 = -18.8495*scaleFactorR;
+//				left2 = 18.8495*scaleFactorL;
+//				right2 = -58.1194*scaleFactorR;
+//				left3 = 53*scaleFactorL;
+//				right3 = -53*scaleFactorR;
 			}
 		}
 		else if(robotLocation == RobotLocation.RIGHT) {
 			SmartDashboard.putString("RobotLoc", "right");
 
 			if(targetLocation == TargetLocation.SCALE) {
-				left1 = 262.4143*scaleFactorL;
-				right1 = -270.7794*scaleFactorR;
+				left1 = 230.3585*scaleFactorL;
+				right1 = -224.2766*scaleFactorR;
+				
+				//left1 = 255.0641*scaleFactorL;
+				//right1 = -261.1284*scaleFactorR;
+				
+				//left1 = 262.0641*scaleFactorL;
+				//right1 = -270.1284*scaleFactorR;
+				
+				//left1 = 261.2217*scaleFactorL;//262.4143*scaleFactorL;
+				//right1 = -267.3818*scaleFactorR;//270.7794*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
 				right3 = 0;
-				t1=8.0;	t2=0.0;	t3=0.0;
+				t1=6.0;	t2=3.0;	t3=0.0;
 				SmartDashboard.putString("TargLoc", "scale");
 
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
-				left1 = 111.9587*scaleFactorL;
-				right1 = -139.3341*scaleFactorR;
+				left1 = 114.5790*scaleFactorL;
+				right1 = -130.6405*scaleFactorR;
+				
+				//left1 = 111.9587*scaleFactorL;
+				//right1 = -139.3341*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -336,8 +382,8 @@ public class Chassis extends RobotModule {
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
 				SmartDashboard.putString("TargLoc", "move");
 
-				left1 = 120*scaleFactorL;
-				right1 = -120*scaleFactorR;
+				left1 = 130*scaleFactorL;
+				right1 = -130*scaleFactorR;
 				left2 = 0;
 				right2 = 0;
 				left3 = 0;
@@ -431,7 +477,6 @@ public class Chassis extends RobotModule {
 				rightV = right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.018);				
 			}	
 		}
-		
 		
 		if (prefs.getBoolean("compbot", false)){
 			//comp bot
