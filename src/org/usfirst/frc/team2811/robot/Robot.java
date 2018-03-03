@@ -238,7 +238,7 @@ public class Robot extends IterativeRobot {
 		else {
 			step1timer = 2000;
 			step2timer = 2000;
-			step3timer = 1500;
+			step3timer = 1000;
 		}
 		if(targetLocation == TargetLocation.SCALE) {
 			step1timer = 8000;

@@ -308,7 +308,7 @@ public class Chassis extends RobotModule {
 			SmartDashboard.putString("RobotLoc", "center");
 			SmartDashboard.putString("TargLoc", "switch");
 
-			t1=2.0; t2=2.0;	t3=1.5;
+			t1=2.0; t2=2.0;	t3=1.0;
 			if(switchConfig == switchConfig.LEFT) {
 				left1 = 29.0597*scaleFactorL;
 				right1 = -68.3296*scaleFactorR;
