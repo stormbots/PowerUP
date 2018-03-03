@@ -99,9 +99,9 @@ public class Lighting {
 		
 		
 		//Look for do we have the switch! If so, change pattern
-		//if(Robot.intake.getLightPattern() == 1) {
-		//	tele = BlinkenPattern.LIME_GREEN;
-		//};
+		if(Robot.intake.getLightPattern() == 1) {
+			tele = BlinkenPattern.LIME_GREEN;
+		}
 		
 		lightElevator.set(tele.pwm());
 		lightIntake.set(tele.pwm());

@@ -168,7 +168,7 @@ public class Intake extends RobotModule {
 
 		
 		//get cube
-		if (stick.getRawButton(1) && redEye.get()) {
+		if (stick.getRawButton(1)) { //&& redEye.get()) {
 			velocity = 0.5;
 		}
 		//put cube
@@ -191,7 +191,7 @@ public class Intake extends RobotModule {
 		}
 		
 		//put cube hold into power saving 
-		//if(redEye.get() && squeezeRun) {
+		//if(q.get() && squeezeRun) {
 			//velocity = 0.05;		
 		//}
 		//wrong voltage on practice bot
