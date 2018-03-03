@@ -17,8 +17,8 @@ import java.lang.reflect.Array;
 import org.usfirst.frc.team2811.robot.BlinkenPattern;
 
 public class Lighting {
-	Talon lightElevator = new Talon(0);
-	Talon lightIntake = new Talon(1);
+	Talon lightElevator = new Talon(8);
+	Talon lightIntake = new Talon(9);
 
 	BlinkenPattern pattern = BlinkenPattern.C12_END_TO_END_BLEND_C1_TO_C2;
 	
@@ -29,7 +29,8 @@ public class Lighting {
 	private SendableChooser<Boolean> enableLights = new SendableChooser<>();
 
 	Lighting(){
-		selection.addDefault(BlinkenPattern.BRIGHT_DEFAULT_BLUE.toString(), BlinkenPattern.BRIGHT_DEFAULT_BLUE);	
+//		selection.addDefault(BlinkenPattern.BRIGHT_DEFAULT_BLUE.toString(), BlinkenPattern.BRIGHT_DEFAULT_BLUE);	
+		selection.addDefault(BlinkenPattern.BLUE_LARSON.toString(), BlinkenPattern.BLUE_LARSON);	
 		BlinkenPattern[] coolPatterns = {
 			  
 		//POSSIBLE BLUE ALLIANCE COLORS

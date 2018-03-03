@@ -206,6 +206,10 @@ public class Elevator extends RobotModule {
 			autoActiveStep = 1;
 			autoActiveTime = 5.5;
 		}
+		if(targetLocation == TargetLocation.SCALE) {
+			autoActiveStep = 1;
+			autoActiveTime = 3.5;
+		}
 		
 		elevatorPos=initializePos;
 		if(targetLocation == TargetLocation.SWITCH) {

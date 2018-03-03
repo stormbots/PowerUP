@@ -235,16 +235,17 @@ public class Robot extends IterativeRobot {
 			step2timer = 0;
 			step3timer = 0;
 		}
-		else if(targetLocation == TargetLocation.SCALE) {
-			step1timer = 6000;
+		else {
+			step1timer = 2000;
+			step2timer = 2000;
+			step3timer = 1500;
+		}
+		if(targetLocation == TargetLocation.SCALE) {
+			step1timer = 8000;
 			step2timer = 3000;
 			step3timer = 0;
 		}
-		else {
-			step1timer = 2500;
-			step2timer = 2500;
-			step3timer = 2500;
-		}
+
 		//else for l/r
 
 		System.out.println(fieldData);

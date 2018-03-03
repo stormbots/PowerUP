@@ -261,18 +261,19 @@ public class Chassis extends RobotModule {
 			SmartDashboard.putString("RobotLoc", "left");
 			if(targetLocation == TargetLocation.SCALE) {
 				SmartDashboard.putString("TargLoc", "scale");
-				left1 = 209.2766*scaleFactorR;
-				right1 = -199.3585*scaleFactorL;
+				left1 = 265*scaleFactorL;
+				right1 = -265*scaleFactorR;
 				
 				//left1 = 270.1284*scaleFactorL;
 				//right1 = -260.0641*scaleFactorR;
 				//left1 = 270.7794*scaleFactorL;
 				//right1 = -262.4143*scaleFactorR;
-				left2 = 0;
-				right2 = 0;
+				left2 = 24*scaleFactorL;
+				right2 = -0*scaleFactorR;
+
 				left3 = 0;
 				right3 = 0;
-				t1=8.0; t2=0; t3=0;
+				t1=8.0; t2=3; t3=0;
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
 				SmartDashboard.putString("TargLoc", "switch");
@@ -307,7 +308,7 @@ public class Chassis extends RobotModule {
 			SmartDashboard.putString("RobotLoc", "center");
 			SmartDashboard.putString("TargLoc", "switch");
 
-			t1=2.5; t2=2.5;	t3=2.5;
+			t1=2.0; t2=2.0;	t3=1.5;
 			if(switchConfig == switchConfig.LEFT) {
 				left1 = 29.0597*scaleFactorL;
 				right1 = -68.3296*scaleFactorR;
@@ -346,8 +347,8 @@ public class Chassis extends RobotModule {
 			SmartDashboard.putString("RobotLoc", "right");
 
 			if(targetLocation == TargetLocation.SCALE) {
-				left1 = 230.3585*scaleFactorL;
-				right1 = -224.2766*scaleFactorR;
+				left1 = 265*scaleFactorL;
+				right1 = -265*scaleFactorR;
 				
 				//left1 = 255.0641*scaleFactorL;
 				//right1 = -261.1284*scaleFactorR;
@@ -357,11 +358,11 @@ public class Chassis extends RobotModule {
 				
 				//left1 = 261.2217*scaleFactorL;//262.4143*scaleFactorL;
 				//right1 = -267.3818*scaleFactorR;//270.7794*scaleFactorR;
-				left2 = 0;
-				right2 = 0;
+				left2 = 0*scaleFactorL;
+				right2 = -24*scaleFactorR;
 				left3 = 0;
 				right3 = 0;
-				t1=6.0;	t2=3.0;	t3=0.0;
+				t1=8.0;	t2=3.0;	t3=0.0;
 				SmartDashboard.putString("TargLoc", "scale");
 
 			}
@@ -468,7 +469,7 @@ public class Chassis extends RobotModule {
 		if(step > 0 && step < 4 && time > 0.1) {
 			if(prefs.getBoolean("compbot", false)) {
 				//comp bot
-				leftV = left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.018);
+				leftV = left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.023);
 				rightV = -right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.018);
 			}
 			else {
