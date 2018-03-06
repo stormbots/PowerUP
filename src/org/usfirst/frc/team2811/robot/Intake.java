@@ -220,7 +220,6 @@ public class Intake extends RobotModule {
 		SmartDashboard.putBoolean("Squeeze Intake", intakeOpen);
 		SmartDashboard.putBoolean("Tilt Base", tiltedBack);
 	}
-	
 
 	/**
 	 * Return cube state

@@ -7,6 +7,9 @@
 
 package org.usfirst.frc.team2811.robot;
 
+import org.usfirst.frc.team2811.robot.Auto.AutoSequence;
+import org.usfirst.frc.team2811.robot.Auto.Example;
+
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -27,11 +30,13 @@ public class Robot extends IterativeRobot {
 	Joystick stickDrive1 = new Joystick(0);
 	Joystick stickDrive2 = new Joystick(2);
 	Joystick stickFunctions = new Joystick(3);
-	public static RobotModule elevator = new Elevator();
-	public static RobotModule intake = new Intake();
-	public static RobotModule drive = new Chassis();
-	public static RobotModule climber = new Climber();
+	public static Elevator elevator = new Elevator();
+	public static Intake intake = new Intake();
+	public static Chassis drive = new Chassis();
+	public static Climber climber = new Climber();
 	Lighting lighting = new Lighting();
+	public OI oi = new OI();
+	
 		
 	private SendableChooser<Integer> delaySelection =  new SendableChooser<>();
 	private SendableChooser<RobotLocation> startPosition = new SendableChooser<>();
@@ -47,6 +52,8 @@ public class Robot extends IterativeRobot {
 	public static enum SwitchConfig{UNKNOWN, LEFT, RIGHT};
 	public static enum ScaleConfig{UNKNOWN, LEFT, RIGHT};
 	public static enum TeamColor{RED, BLUE};
+	
+	AutoSequence bestAuto = new Example();
 	
 	public int step = 0;
 	
@@ -216,6 +223,14 @@ public class Robot extends IterativeRobot {
 			//auto select based off field
 		}
 		
+		// Inside of the targetLocation decision tree, instead of setting targetLocation, we can now 
+		// simply create a new auto, and set our variable. The bestAuto will contain the sequence
+		// and setup process for each module, so the modules no longer need to care
+		// about where the robot starts or is going. 
+		bestAuto = new Example();
+
+		
+		
 		
 		//Debug overrides, please remove
 		/*
@@ -265,6 +280,9 @@ public class Robot extends IterativeRobot {
 		intake.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		climber.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
+		
+		// After updating to the new model, we no longer need autoInit functions, or the temporary variables requied
+		// for them to operate
 	}
 
 	/**
@@ -273,6 +291,17 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		autotimer.Update();
+
+		// Run the auto we selected. It will then command the various subsystems indirectly
+		bestAuto.run();
+		
+		// the new update no longer needs to know about outside information: It is configured by the auto script,
+		// and update just goes through with whatever it was told to do.
+		//drive.newUpdate();
+
+		
+		
+		
 
 		// Handle timer and step progression
 		// Anything that runs once on a timer edge should be added here
@@ -354,8 +383,16 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		
+		// Handle all the user inputs, and apply any changes to the appropriate system
+		oi.update();
+		// Because OI now sets any configuration changes, these functions no longer care about stick inputs
+		// They just do whatever they were told if they even have anything to do at this point.
+		drive.newUpdate();
 
+		// update any timer to update all timers.
 		autotimer.Update();
+
 		elevator.update(stickDrive1,stickDrive2,stickFunctions);
 		intake.update(stickDrive1,stickDrive2,stickFunctions);
 		drive.update(stickDrive1,stickDrive2,stickFunctions);

@@ -55,7 +55,18 @@ public class Chassis extends RobotModule {
 
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
 	Motion345 right345 = new Motion345(10000, 3, 0, 200);
+	CXTIMER profileTimer = new CXTIMER();
+	enum Mode{PROFILE,TANK,ARCADE,DISABLED}
+	Mode mode = Mode.ARCADE;
+	double leftPower = 0; 
+	double rightPower = 0;
+	double scaleFactorL = 199.8; // compbot default
+	double scaleFactorR = 405.4; // compbot default
 	
+	double arcadeTurn = 0; 
+	double arcadePower = 0;
+	boolean squaredInputs = true;
+
 	boolean braking = true;
 	boolean isTank = false;
 	
@@ -505,6 +516,94 @@ public class Chassis extends RobotModule {
 	
 	public void disabledPeriodic() {
 		//braking(false);
+	}
+	
+	/** Set the Chassis operational mode
+	 * @param mode
+	 */
+	public void setMode(Mode mode) {
+		this.mode = mode;
+	}
+	
+	/** Set the target output power for Tankdrive mode
+	 * @param left
+	 * @param right
+	 */
+	public void tankMode(double left,double right,boolean squaredInputs) {
+		leftPower = left;
+		rightPower = right;
+	}
+	
+	/** Configure the chassis to perform a motion-profile squence of set distance and duration.
+	 * 
+	 * @param inchesLeft
+	 * @param inchesRight
+	 * @param time (in ms)
+	 */
+	public void setProfile(double inchesLeft,double inchesRight, double time) {
+		// create our motion profile
+		//TODO: Actually find some values for max speed and a good tolerance
+		left345 = new Motion345(10_000, time, inchesLeft*scaleFactorL, 200);
+		right345 = new Motion345(10_000, time, inchesRight*scaleFactorR, 200);
+		
+		// Reset our timer to start executing
+		profileTimer.reset();
+
+		//set our chassis mode to use the profile!
+		mode = Mode.PROFILE;
+	}
+	
+	/** Update function that handles all busywork the chassis has been 
+	 * set up to perform.
+	 */
+	public void newUpdate(){
+		//Generate a power modifier to ensure we avoid brownouts
+		double mod = Utilities.lerp(pdp.getVoltage(), 8.25, 6.5, 1.0, 0.0);
+		mod = Utilities.clamp(mod, 0, 1);
+		
+		switch(mode) {
+		case DISABLED:
+			driver.tankDrive(0,0);	
+			return;
+		case PROFILE:
+			//get next motion profile thing
+			leftPower = left345.getVelPosFb(profileTimer.getTime(), -leadL.getSelectedSensorPosition(0), 0.023);
+			rightPower = -right345.getVelPosFb(profileTimer.getTime(), -leadR.getSelectedSensorPosition(0), 0.023);
+			//NOTE: EXPECTED FALLTHROUGH TO TANK MODE
+		case TANK:
+			//Set the motor
+			if (prefs.getBoolean("compbot", false)){
+				//comp bot
+				driver.tankDrive(leftPower, rightPower);
+			}
+			else {
+				//prac bot
+				driver.tankDrive(rightPower, leftPower);	
+			}
+			break;
+		case ARCADE:
+			//Not enabled for now, pending an update for OI related stuff.
+			if(prefs.getBoolean("compbot", false)) {
+				//comp bot
+				driver.arcadeDrive(arcadePower*mod, -arcadeTurn*mod, squaredInputs);
+			}
+			else {
+				//prac bot
+				driver.arcadeDrive(-arcadePower*mod, -arcadeTurn*mod, squaredInputs);
+			}
+			break;
+		}
+	}
+	
+	/** Set the the arcadeDrive functions
+	 * @param power
+	 * @param turn
+	 * @param squared inputs (more precise for small movements)
+	 */
+	public void arcadeDrive(double power,double turn, boolean squared) {
+		arcadePower = power;
+		arcadeTurn = turn;
+		squaredInputs = squared;
 	}
 
 }

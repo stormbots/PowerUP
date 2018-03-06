@@ -20,7 +20,7 @@ public class CXTIMER {
 	private long mycurtime=(long)0;  // the current number of ticks this timer has accumulated
 ;
 
-	CXTIMER(){
+	public CXTIMER(){
 		mycurtime=0;
 	}
 	
@@ -126,4 +126,11 @@ public class CXTIMER {
 		mycurtime=0;	
 	}
 
+	/** Returns true exactly once as the clock passes the provided time
+	 * @param time
+	 * @return
+	 */
+	public boolean atTime(long time) {
+		return time > mylasttm && time <= mylasttm+mytimeticks;
+	}
 }
