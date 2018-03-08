@@ -55,7 +55,7 @@ public class Elevator extends RobotModule {
 	
 	public enum Mode{ 
 		MANUALVELOCITY, MANUALPOSITION, BUTTON, HOMING //Used to change how the elevator is controlled
-	}
+	, DISABLED}
 	
 	public Mode mode = Mode.MANUALPOSITION;
 	private boolean homed=false; 
@@ -194,7 +194,7 @@ public class Elevator extends RobotModule {
 		
 	}
 		
-	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation, SwitchConfig switchConfig, ScaleConfig scaleConfig) { //Elevator only cares about targetLocation
+/*	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation, SwitchConfig switchConfig, ScaleConfig scaleConfig) { //Elevator only cares about targetLocation
 		eMotor.setSelectedSensorPosition(0, (int) initializePos, 20);
 		eMotor.setSelectedSensorPosition((int) initializePos, 0, 20);// maybe just in case? Shouldn't do anything.
 		
@@ -248,10 +248,51 @@ public class Elevator extends RobotModule {
 		SmartDashboard.putNumber("ElevatorAutoPos", autoPosition);
 		SmartDashboard.putNumber("Elevatorvelocity", eMotor.getMotorOutputPercent());
 		SmartDashboard.putNumber("ElevatorPos", elevatorPos);
-		
+	}*/
+	
+	public void setVel(double velocity) {
+		eVelocity = velocity;
 	}
 	
-	
-	
+	/**
+	 * @param position between -1 and 1
+	 */
+	public void setPos(double position) {
+		Utilities.clamp(position,-1,1);
+		elevatorPos = Utilities.lerp(position, -1, 1, 0, maxPos);
+	}
 
+	/**
+	 * 	setPos(ElePosition.SWITCH);
+	 * @param position
+	 */
+	public void setPos(ElevatorPosition position) {
+		setPos(position.ticks());
+	}
+
+	public enum ElevatorPosition{
+		SWITCH (25_000),
+		SCALEHIGH(92_000)
+		;
+		
+		double ticks = 0;
+		ElevatorPosition(double ticks){this.ticks = ticks;}
+		double ticks() {return this.ticks;};
+	}
+	
+	void newUpdate() {
+		switch(mode) {
+		case MANUALPOSITION:
+			eVelocity = FB.FB(elevatorPos, currentPos, 0.007);			
+			//expected fallthrough to velocity mode
+		case MANUALVELOCITY:
+			eMotor.set(ControlMode.PercentOutput, eVelocity);
+			//setmotor to evelocity
+			break;
+		default: 
+			//disabled
+			break;
+		
+	}
+	}
 }

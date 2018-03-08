@@ -8,7 +8,12 @@
 package org.usfirst.frc.team2811.robot;
 
 import org.usfirst.frc.team2811.robot.Auto.AutoSequence;
+import org.usfirst.frc.team2811.robot.Auto.Center;
 import org.usfirst.frc.team2811.robot.Auto.Example;
+import org.usfirst.frc.team2811.robot.Auto.SideEscape;
+import org.usfirst.frc.team2811.robot.Auto.SideScale;
+import org.usfirst.frc.team2811.robot.Auto.SideSwitch;
+import org.usfirst.frc.team2811.robot.Elevator.ElevatorPosition;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -128,6 +133,7 @@ public class Robot extends IterativeRobot {
 		astep = 0;
 		autotimer.Update();
 		autotimer.reset();
+		AutoSequence autoChoice;
 		
 		fieldData = DriverStation.getInstance().getGameSpecificMessage();
 		SmartDashboard.putString("fieldstepup", fieldData);
@@ -165,30 +171,48 @@ public class Robot extends IterativeRobot {
 		// Determine driver strategy
 		if(robotLocation == RobotLocation.CENTER) {
 			targetLocation = TargetLocation.SWITCH;
+			if(robotLocation == RobotLocation.LEFT) {
+				autoChoice = new Center(true);
+			}
+			else {
+				autoChoice = new Center(false);
+			}
 		}
 		
 		else if(robotLocation == RobotLocation.LEFT) {
 			if(scaleConfig == ScaleConfig.LEFT && switchConfig == SwitchConfig.LEFT) {
 				if(switchAbility.getSelected()==true && scaleAbility.getSelected()==true) {
 					targetLocation = locationPreference.getSelected();
+					if(targetLocation == TargetLocation.SWITCH) {
+						autoChoice = new SideSwitch(true);
+					}
+					if(targetLocation == TargetLocation.SCALE) {
+						autoChoice = new SideScale(true);
+					}
 				}
 				else if(switchAbility.getSelected()==true){
 					targetLocation = TargetLocation.SWITCH;
+					autoChoice = new SideSwitch(true); 
 				}
 				else if(scaleAbility.getSelected()==true){
 					targetLocation = TargetLocation.SCALE;
+					autoChoice = new SideScale(true);
 				}
 				else {
 					targetLocation = TargetLocation.MOVE_ONLY;
+					autoChoice = new SideEscape();
 				}
 			}
 			else if(scaleConfig == ScaleConfig.LEFT && scaleAbility.getSelected()==true) {
 				targetLocation = TargetLocation.SCALE;
+				autoChoice = new SideScale(true);
 			}
 			else if(switchConfig == SwitchConfig.LEFT && switchAbility.getSelected()==true) {
 				targetLocation = TargetLocation.SWITCH;
+				autoChoice = new SideSwitch(true);
 			}
 			else {
+				autoChoice = new SideEscape();
 				targetLocation = TargetLocation.MOVE_ONLY;
 			}
 		}
@@ -197,25 +221,37 @@ public class Robot extends IterativeRobot {
 			if(scaleConfig == ScaleConfig.RIGHT && switchConfig == SwitchConfig.RIGHT) {
 				if(switchAbility.getSelected()==true && scaleAbility.getSelected()==true) {
 					targetLocation = locationPreference.getSelected();
+					if(targetLocation == TargetLocation.SWITCH) {
+						autoChoice = new SideSwitch(false);
+					}
+					if(targetLocation == TargetLocation.SCALE) {
+						autoChoice = new SideScale(false);
+					}
 				}
 				else if(switchAbility.getSelected()==true){
 					targetLocation = TargetLocation.SWITCH;
+					autoChoice = new SideSwitch(false);
 				}
 				else if(scaleAbility.getSelected()==true){
 					targetLocation = TargetLocation.SCALE;
+					autoChoice = new SideScale(false);
 				}
 				else {
+					autoChoice = new SideEscape();
 					targetLocation = TargetLocation.MOVE_ONLY;
 				}
 			}
 			else if(scaleConfig == ScaleConfig.RIGHT && scaleAbility.getSelected()==true) {
 				targetLocation = TargetLocation.SCALE;
+				autoChoice = new SideScale(false);
 			}
 			else if(switchConfig == SwitchConfig.RIGHT && switchAbility.getSelected()==true) {
 				targetLocation = TargetLocation.SWITCH;
+				autoChoice = new SideSwitch(false);
 			}
 			else {
 				targetLocation = TargetLocation.MOVE_ONLY;
+				autoChoice = new SideEscape();
 			}
 		}
 		
@@ -293,6 +329,8 @@ public class Robot extends IterativeRobot {
 		autotimer.Update();
 
 		// Run the auto we selected. It will then command the various subsystems indirectly
+		//shift low
+		Robot.elevator.setPos(ElevatorPosition.SWITCH);
 		bestAuto.run();
 		
 		// the new update no longer needs to know about outside information: It is configured by the auto script,

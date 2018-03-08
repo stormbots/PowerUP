@@ -243,6 +243,7 @@ public class Chassis extends RobotModule {
 		leadR.setSelectedSensorPosition(0, 0, 20);
 	}
 	
+/*
 	void autoInit(
 			RobotLocation robotLocation, 
 			TargetLocation targetLocation, 
@@ -407,14 +408,16 @@ public class Chassis extends RobotModule {
 		
 		resetEnc();
 	}
-
+*/
 	
+
 	/**
 	 * auto forward:
 	 *   uses an variable position, no pid yet
 	 * 
 	 * @param pos
 	 */
+/*
 	void auto(int step, double time) {
 		
 		double rightV = 0;
@@ -513,6 +516,7 @@ public class Chassis extends RobotModule {
 		SmartDashboard.putNumber("leftTarg", left345.getPos(time));
 		SmartDashboard.putNumber("rightTarg", right345.getPos(time));
 	}
+*/
 	
 	public void disabledPeriodic() {
 		//braking(false);
