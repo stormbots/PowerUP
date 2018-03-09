@@ -68,17 +68,17 @@ public class Chassis extends RobotModule {
 	boolean squaredInputs = true;
 
 	boolean braking = true;
-	boolean isTank = false;
+//	boolean isTank = false;
 	
-	public double left1 = 0;
-	public double left2 = 0;
-	public double left3 = 0;
-	public double right1 = 0;
-	public double right2 = 0;
-	public double right3 = 0;
-	public double t1=2.5;
-	public double t2=2.5;
-	public double t3=2.5;
+//	public double left1 = 0;
+//	public double left2 = 0;
+//	public double left3 = 0;
+//	public double right1 = 0;
+//	public double right2 = 0;
+//	public double right3 = 0;
+//	public double t1=2.5;
+//	public double t2=2.5;
+//	public double t3=2.5;
 
 
 	/**
@@ -86,6 +86,9 @@ public class Chassis extends RobotModule {
 	 *initializes the slave talons
 	 */
 	public Chassis() {
+		braking(true);
+		shiftLow();
+		resetEnc();
 		if(prefs.getBoolean("compbot", true)) {
 			//Comp Bot
 			LeftShiftA = new Solenoid(2);
@@ -405,7 +408,7 @@ public class Chassis extends RobotModule {
 
 			}
 		}
-		
+
 		resetEnc();
 	}
 */
@@ -569,7 +572,7 @@ public class Chassis extends RobotModule {
 		case DISABLED:
 			driver.tankDrive(0,0);	
 			return;
-		case PROFILE:
+		case PROFILE:			
 			//get next motion profile thing
 			leftPower = left345.getVelPosFb(profileTimer.getTime(), -leadL.getSelectedSensorPosition(0), 0.023);
 			rightPower = -right345.getVelPosFb(profileTimer.getTime(), -leadR.getSelectedSensorPosition(0), 0.023);

@@ -20,7 +20,6 @@ public class SideScale extends AutoSequence {
 	double right1;
 	double left2;
 	double right2;
-	
 
 	public SideScale(boolean isLeft) {
 		double inside1 = 265;
