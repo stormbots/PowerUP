@@ -16,13 +16,45 @@ public class OI {
 	
 	void update(){
 		//Do the drive-related stuff
+		
+		//DRIVE SYSTEM
 		Robot.drive.arcadeDrive(
 			driver.getRawAxis(3),
 			driver.getRawAxis(0)*turnScaleValue,
 			true);
 		
+		if(driver.getRawButton(8)) {
+			Robot.drive.shiftHigh();
+		}
+		else {
+			Robot.drive.shiftLow(); 
+		}
+		
+		
+		
+		//ELEVATOR
 		Robot.elevator.setPos(functions.getRawAxis(3));
 		Robot.elevator.setVel(functions.getRawAxis(3));
+		
+		if(functions.getRawButtonPressed(11)) {
+			switch(Robot.elevator.getMode()) {
+			case MANUALPOSITION:
+				Robot.elevator.setMode(Mode.MANUALVELOCITY);
+				break;
+			case MANUALVELOCITY:
+				Robot.elevator.setMode(Mode.MANUALPOSITION);
+				break;
+			default:
+				Robot.elevator.setMode(Mode.MANUALPOSITION);
+			}
+		}
+		
+		if(functions.getRawButtonPressed(3)) {
+			Robot.elevator.setMode(Mode.HOMING);
+		}
+		if(functions.getRawButtonReleased(3)) {
+			Robot.elevator.setMode(Mode.MANUALPOSITION);
+		}
 		
 //		if(Mode)
 		
@@ -41,24 +73,12 @@ public class OI {
 		}
 		
 		//Hold to shift example
-		if(driver.getRawButton(8)) {
-			Robot.drive.shiftHigh();
-		}
-		else {
-			Robot.drive.shiftLow(); 
-		}
 		
-		if(functions.getRawButtonPressed(11)) {
-			if(Robot.elevator.mode == Mode.MANUALPOSITION){
-				Robot.elevator.changeMode(Mode.MANUALVELOCITY);
-			}
-			else if(Robot.elevator.mode == Mode.MANUALVELOCITY) {
-				Robot.elevator.changeMode(Mode.MANUALPOSITION);
-			}
-			else {
-				Robot.elevator.changeMode(Mode.MANUALPOSITION);
-			}
-		}
+		
+		
+		
+		
+		
 		
 		
 	}

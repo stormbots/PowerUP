@@ -47,8 +47,8 @@ public class Elevator extends RobotModule {
 	 
 	 
 	 public Elevator() {
-		 reset();
-		 double voltageRampRate = 0.2;
+		reset();
+		double voltageRampRate = 0.2;
 		eMotor.configOpenloopRamp(voltageRampRate, 30);
 	 }
 	 
@@ -57,11 +57,14 @@ public class Elevator extends RobotModule {
 		MANUALVELOCITY, MANUALPOSITION, BUTTON, HOMING //Used to change how the elevator is controlled
 	, DISABLED}
 	
-	public Mode mode = Mode.MANUALPOSITION;
+	private Mode mode = Mode.MANUALPOSITION;
 	private boolean homed=false; 
 	
-	public void changeMode (Mode newMode) {
+	public void setMode(Mode newMode) {
 		mode = newMode;
+	}
+	public Mode getMode () {
+		return mode;
 	}
 		
 	void init(){
@@ -81,14 +84,7 @@ public class Elevator extends RobotModule {
 		
 		//TODO: new joystick needs to be plugged in with slider at zero, or moved, otherwise it reads incorrectly
 		// Fix should be to make sure that the joystick input is -1 before enabling the elevator
-		if(prefs.getBoolean("compbot", false)) {
-			//comp bot
-			currentPos = eMotor.getSelectedSensorPosition(0);
-		}
-		else {
-			//prac bot
-			currentPos = -eMotor.getSelectedSensorPosition(0);
-		}
+	
 		double stickValue = -functions1.getRawAxis(3);
 
 		if(functions1.getRawButtonPressed(11)) {
@@ -193,6 +189,12 @@ public class Elevator extends RobotModule {
 		eMotor.setSelectedSensorPosition(0, 0, 20); //First argument is desired position, second is the type of loop? (0 or 1), third is the timeout.
 		
 	}
+	
+	public void resetScaleTo(ElevatorPosition position) {
+		eMotor.setSelectedSensorPosition(0, (int) position.ticks(), 20);
+		eMotor.setSelectedSensorPosition((int) position.ticks(), 0, 20);// maybe just in case? Shouldn't do anything.
+
+	}
 		
 /*	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation, SwitchConfig switchConfig, ScaleConfig scaleConfig) { //Elevator only cares about targetLocation
 		eMotor.setSelectedSensorPosition(0, (int) initializePos, 20);
@@ -261,6 +263,17 @@ public class Elevator extends RobotModule {
 		Utilities.clamp(position,-1,1);
 		elevatorPos = Utilities.lerp(position, -1, 1, 0, maxPos);
 	}
+	
+	public void goHome() {
+		if(!LimitSwitch.get()) {
+			eVelocity = -0.5;
+		}
+		else{
+			mode = Mode.MANUALPOSITION;
+			homed = true;
+			reset();
+		}
+	}
 
 	/**
 	 * 	setPos(ElePosition.SWITCH);
@@ -272,7 +285,8 @@ public class Elevator extends RobotModule {
 
 	public enum ElevatorPosition{
 		SWITCH (25_000),
-		SCALEHIGH(92_000)
+		SCALEHIGH(92_000),
+		AUTO_STARTUP(25_000),
 		;
 		
 		double ticks = 0;
@@ -281,18 +295,56 @@ public class Elevator extends RobotModule {
 	}
 	
 	void newUpdate() {
+		
+		if(prefs.getBoolean("compbot", false)) {
+			//comp bot
+			currentPos = eMotor.getSelectedSensorPosition(0);
+		}
+		else {
+			//prac bot
+			currentPos = -eMotor.getSelectedSensorPosition(0);
+		}
+		
 		switch(mode) {
 		case MANUALPOSITION:
+			Utilities.clamp(elevatorPos, 0, maxPos);
 			eVelocity = FB.FB(elevatorPos, currentPos, 0.007);			
 			//expected fallthrough to velocity mode
 		case MANUALVELOCITY:
-			eMotor.set(ControlMode.PercentOutput, eVelocity);
-			//setmotor to evelocity
+			//no need to manipulate velocity
+			break;
+		case HOMING:
+			if(!LimitSwitch.get()) {
+				eVelocity = -0.3;
+			}
+			else {
+				eVelocity = 0;
+			}
 			break;
 		default: 
 			//disabled
 			break;
+		}
 		
-	}
+		//manipulate our velocity
+		if(LimitSwitch.get() && eVelocity <0) {
+			eVelocity = 0;
+		}
+		
+		//check for limit switch and reset if found
+		if(LimitSwitch.get()) {
+			homed = true;
+			reset();
+		}
+
+		eMotor.set(ControlMode.PercentOutput, eVelocity);
+
+		SmartDashboard.putNumber("Elevator Current Position", currentPos);
+		SmartDashboard.putNumber("Elevator Desired Position", elevatorPos);
+		SmartDashboard.putNumber("Elevator Voltage", eMotor.getOutputCurrent());
+		//SmartDashboard.putNumber("Joystick Position", functions1.getY());
+		SmartDashboard.putNumber("Elevator Velocity", eVelocity);
+		SmartDashboard.putBoolean("Limit Switch", LimitSwitch.get());
+
 	}
 }

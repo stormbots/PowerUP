@@ -312,10 +312,12 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("scaleConfig", scaleConfig.toString());
 
 		/*  THIS IS WHERE THE ROBOT CODE SENDS THE DATA TO THE MODULES */
-		elevator.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
+		//elevator.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		intake.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
-		drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
+		//drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
 		climber.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
+		
+		elevator.resetScaleTo(ElevatorPosition.AUTO_STARTUP);
 		
 		// After updating to the new model, we no longer need autoInit functions, or the temporary variables requied
 		// for them to operate
@@ -400,12 +402,16 @@ public class Robot extends IterativeRobot {
 		}
 		
 		//Handle continuous updates for various modules
-		elevator.auto(astep, autotimer.getTimeSec()); 
+		//elevator.auto(astep, autotimer.getTimeSec()); 
 		intake.auto(astep, autotimer.getTimeSec());
-		drive.auto(astep, autotimer.getTimeSec());
+		//drive.auto(astep, autotimer.getTimeSec());
 		//climber.auto(astep, autotimer.getTimeSec());
 
 		SmartDashboard.putNumber("Step", astep);
+		
+		drive.newUpdate();
+		elevator.newUpdate();
+
 	}
 	
 	public void teleopInit() {
@@ -427,12 +433,14 @@ public class Robot extends IterativeRobot {
 		// Because OI now sets any configuration changes, these functions no longer care about stick inputs
 		// They just do whatever they were told if they even have anything to do at this point.
 		drive.newUpdate();
+		elevator.newUpdate();
+
 
 		// update any timer to update all timers.
 		autotimer.Update();
 
-		elevator.update(stickDrive1,stickDrive2,stickFunctions);
-		intake.update(stickDrive1,stickDrive2,stickFunctions);
+		//elevator.update(stickDrive1,stickDrive2,stickFunctions);
+		//intake.update(stickDrive1,stickDrive2,stickFunctions);
 		drive.update(stickDrive1,stickDrive2,stickFunctions);
 		climber.update(stickDrive1,stickDrive2,stickFunctions);
 		lighting.update(stickDrive1,stickDrive2,stickFunctions);
