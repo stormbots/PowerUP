@@ -60,5 +60,11 @@ public class SideScale extends AutoSequence {
 		if(timer.atTime(8000)){
 			Robot.drive.setProfile(left2, right2, 2000);
 		}
+		if(timer.atTime(10000)) {
+			Robot.intake.ejectCube();
+		}
+		if(timer.atTime(11000)) {
+			Robot.intake.stopMotor();
+		}
 	}
 }

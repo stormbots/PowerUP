@@ -44,6 +44,12 @@ public class SideSwitch extends AutoSequence {
 			Robot.drive.setProfile(left1, right1, 6000);
 			//Robot.elevator.setPos(switch height);
 		}
+		if(timer.atTime(6000)) {
+			Robot.intake.ejectCube();
+		}
+		if(timer.atTime(7000)) {
+			Robot.intake.stopMotor();
+		}
 
 	}
 }

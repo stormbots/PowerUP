@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class OI {
 	
 	boolean intakeOpen = false;
+	boolean tiltedBack = true;
 	double turnScaleValue = 0.75;
 	Joystick driver = new Joystick(0);
 	Joystick functions = new Joystick(3);
@@ -56,21 +57,55 @@ public class OI {
 			Robot.elevator.setMode(Mode.MANUALPOSITION);
 		}
 		
-//		if(Mode)
 		
-		// TODO: Check buttons, and execute the expected action
-		// These are examples, please validate them! D:
+		
+		//CLIMBER
+		if(functions.getRawButtonPressed(5)) {
+			
+		}
+		if(functions.getRawButtonReleased(5)) {
+			
+		}
+		
+		//INTAKE
+		if(functions.getRawButton(1)) {
+			Robot.intake.grabCube();
+		}
+		else if(functions.getRawButton(4)) {
+			Robot.intake.ejectCube();
+		}
+		else {
+			Robot.intake.stopMotor();
+		}
 		
 		if(functions.getRawButtonPressed(2)) {
 			if(intakeOpen = false) {
 				Robot.intake.squeezeOpen(true); // TODO The action for this should actually toggle.
 				intakeOpen = true;
 			}
-			else {
+			else if(intakeOpen = true) {
 				Robot.intake.squeezeOpen(false); //Do we need to create a separate function for closing the intake?
 				intakeOpen = false;
 			}
 		}
+		
+		if(functions.getRawButtonPressed(10)) {
+			if(tiltedBack = true) {
+				Robot.intake.tiltBackward(false);
+				tiltedBack = false;	
+			}
+			else if(tiltedBack = false) {
+				Robot.intake.tiltBackward(true);
+				tiltedBack =  true;
+			}
+		}
+		
+//		if(Mode)
+		
+		// TODO: Check buttons, and execute the expected action
+		// These are examples, please validate them! D:
+		
+		
 		
 		//Hold to shift example
 		

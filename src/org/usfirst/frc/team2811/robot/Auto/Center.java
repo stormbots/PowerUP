@@ -60,5 +60,11 @@ public class Center extends AutoSequence {
 			Robot.drive.setProfile(left1, right1, 1000);
 			//Robot.elevator.setPos(switch height);
 		}
+		if(timer.atTime(5000)) {
+			Robot.intake.ejectCube();
+		}
+		if(timer.atTime(6000)) {
+			Robot.intake.stopMotor();
+		}
 	}
 }

@@ -74,6 +74,18 @@ public class Intake extends RobotModule {
 		tiltBackward(true);
 	}
 	
+	public void ejectCube() {
+		velocity = -0.5;
+	}
+	
+	public void grabCube() {
+		velocity = 0.5;
+	}
+	
+	public void stopMotor() {
+		velocity = 0.0;
+	}
+	
 	public void squeezeOpen(boolean open) {
 		intakeOpen = open;
 		if(open) {
@@ -105,7 +117,7 @@ public class Intake extends RobotModule {
 	 *or anything else (true) (whether we are dropping cube or not).
 	 * @param deploy
 	 */
-	void autoInit(
+/*	void autoInit(
 			RobotLocation robotLocation, 
 			TargetLocation targetLocation, 
 			SwitchConfig switchConfig, 
@@ -128,7 +140,7 @@ public class Intake extends RobotModule {
 	 *scale steps.
 	 * @param step
 	 * @param time
-	 */
+	 
 	public void auto(int step, double time) {
 		//possibly implement a step 3 code for opening elevator?
 		//if (step==3 && deployCube) {
@@ -148,7 +160,7 @@ public class Intake extends RobotModule {
 		motor1.set(ControlMode.PercentOutput, velocity);
 		motor2.set(ControlMode.PercentOutput, -velocity);
 	}
-	
+	*/
 	/**TELEOP INIT
 	 *Nothing currently.
 	 */
@@ -164,6 +176,7 @@ public class Intake extends RobotModule {
 	 * @param stick
 	 */
 	void update(Joystick driver1,Joystick driver2, Joystick stick) {
+		/*
 		velocity = 0;
 
 		

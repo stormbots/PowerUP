@@ -332,7 +332,8 @@ public class Robot extends IterativeRobot {
 
 		// Run the auto we selected. It will then command the various subsystems indirectly
 		//shift low
-		Robot.elevator.setPos(ElevatorPosition.SWITCH);
+		intake.tiltBackward(false);
+		elevator.setPos(ElevatorPosition.SWITCH);
 		bestAuto.run();
 		
 		// the new update no longer needs to know about outside information: It is configured by the auto script,
@@ -418,7 +419,6 @@ public class Robot extends IterativeRobot {
 		drive.resetEnc();
 		autotimer.Update();
 		autotimer.reset();
-		elevator.init();
 		intake.init();
 	}
 
