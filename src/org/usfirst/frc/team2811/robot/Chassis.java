@@ -76,7 +76,6 @@ public class Chassis extends RobotModule {
 	 */
 	public Chassis() {
 		braking(true);
-		shiftLow();
 		resetEnc();
 		if(prefs.getBoolean("compbot", true)) {
 			//Comp Bot

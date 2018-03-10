@@ -49,7 +49,7 @@ public class Robot extends IterativeRobot {
 	private SendableChooser<Boolean> scaleAbility = new SendableChooser<>();
 	private SendableChooser<TargetLocation> locationPreference = new SendableChooser<>();
 	
-	int astep = 0;
+	
 	CXTIMER autotimer = new CXTIMER();
 
 	public static enum RobotLocation{LEFT, RIGHT,CENTER, AUTO};
@@ -59,8 +59,6 @@ public class Robot extends IterativeRobot {
 	public static enum TeamColor{RED, BLUE};
 	
 	AutoSequence bestAuto = new Example();
-	
-	public int step = 0;
 	
 	public static RobotLocation robotLocation = RobotLocation.AUTO; 
 	public static TargetLocation targetLocation = TargetLocation.SCALE;
@@ -122,9 +120,11 @@ public class Robot extends IterativeRobot {
 
 		robotLocation = RobotLocation.CENTER;
 		targetLocation = TargetLocation.SWITCH;
-		astep = 0;
 		autotimer.Update();
 		autotimer.reset();
+		
+		elevator.resetScaleTo(ElevatorPosition.AUTO_STARTUP);
+
 		AutoSequence autoChoice = new SideEscape();
 		
 		fieldData = DriverStation.getInstance().getGameSpecificMessage();
@@ -264,7 +264,6 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("switchConfig", switchConfig.toString());
 		SmartDashboard.putString("scaleConfig", scaleConfig.toString());
 
-		elevator.resetScaleTo(ElevatorPosition.AUTO_STARTUP);
 		
 		drive.newUpdate();
 		elevator.newUpdate();
@@ -283,10 +282,11 @@ public class Robot extends IterativeRobot {
 		elevator.setPos(ElevatorPosition.SWITCH);
 		bestAuto.run();
 
-		SmartDashboard.putNumber("Step", astep);
+		//SmartDashboard.putNumber("Step", );
 		
 		drive.newUpdate();
 		elevator.newUpdate();
+		intake.newUpdate();
 	}
 	
 	public void teleopInit() {
@@ -308,6 +308,7 @@ public class Robot extends IterativeRobot {
 		// They just do whatever they were told if they even have anything to do at this point.
 		drive.newUpdate();
 		elevator.newUpdate();
+		intake.newUpdate();
 
 		// update any timer to update all timers.
 		autotimer.Update();

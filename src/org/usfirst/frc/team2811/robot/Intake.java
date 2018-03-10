@@ -117,50 +117,14 @@ public class Intake extends RobotModule {
 	 *or anything else (true) (whether we are dropping cube or not).
 	 * @param deploy
 	 */
-/*	void autoInit(
-			RobotLocation robotLocation, 
-			TargetLocation targetLocation, 
-			SwitchConfig switchConfig, 
-			ScaleConfig scaleConfig) {
-		
-		if(robotLocation==RobotLocation.LEFT && targetLocation==TargetLocation.MOVE_ONLY) {
-			deployCube = false;
-		}
-		else if(robotLocation==RobotLocation.RIGHT && targetLocation==TargetLocation.MOVE_ONLY) {
-			deployCube = false;
-		}
-		else {
-			deployCube = true;
-		}
-	}
+
 	
-	/**AUTO
-	 *adds steps 4 and 5 of autonomous, the dropping the cube off in the 
-	 *
-	 *scale steps.
-	 * @param step
-	 * @param time
-	 
-	public void auto(int step, double time) {
-		//possibly implement a step 3 code for opening elevator?
-		//if (step==3 && deployCube) {
-		//	
-		tiltBackward(false);
-		if(step==1) {
-			tiltBackward(false);
-			tiltedBack=false;
-		}
-		
-		if (step==4 && deployCube) {
-			velocity = -0.5;
-		}
-		if (step==5) {
-			velocity = 0;
-		}
-		motor1.set(ControlMode.PercentOutput, velocity);
-		motor2.set(ControlMode.PercentOutput, -velocity);
-	}
-	*/
+	
+	
+	
+	
+	
+	
 	/**TELEOP INIT
 	 *Nothing currently.
 	 */
@@ -175,55 +139,7 @@ public class Intake extends RobotModule {
 	 *down. (button 7 is for debug only). 
 	 * @param stick
 	 */
-	void update(Joystick driver1,Joystick driver2, Joystick stick) {
-		/*
-		velocity = 0;
-
-		
-		//get cube
-		if (stick.getRawButton(1)) { //&& redEye.get()) {
-			velocity = 0.5;
-		}
-		//put cube
-		else if (stick.getRawButton(4)) {
-			velocity = -0.5;
-		}
-		else {
-			velocity = 0;
-		}
-				
-		//squeeze toggle 
-		if(stick.getRawButtonPressed(2)) {
-			intakeOpen = !intakeOpen;
-		}
-		if(intakeOpen) {
-			squeezeOpen(true);
-		}
-		else {
-			squeezeOpen(false);
-		}
-		
-		//put cube hold into power saving 
-		//if(q.get() && squeezeRun) {
-			//velocity = 0.05;		
-		//}
-		//wrong voltage on practice bot
-		
-		//tilt toggle
-		if(stick.getRawButtonPressed(10)) {
-			tiltedBack = !tiltedBack;
-		}
-		if(tiltedBack) {
-			tiltBackward(true);
-		}
-		else {
-			tiltBackward(false);
-		}
-		
-		//debug Y-axis control
-		/*if(stick.getRawButton(7)) {
-			velocity = stick.getY();
-		}*/
+	void newUpdate() {
 		
 		motor1.set(ControlMode.PercentOutput,velocity);
 		motor2.set(ControlMode.PercentOutput, -velocity);
