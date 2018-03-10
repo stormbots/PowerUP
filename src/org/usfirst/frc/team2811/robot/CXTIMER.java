@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2811.robot;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Utility;
 
 
@@ -13,15 +14,23 @@ public class CXTIMER {
 	
 	
 	// this are static variables that are shared by all instances of the timer
-	private static long mylasttm=(long) 0;  // the last count from the system timer
+	private static long mylastlasttime=(long) 0;  // an even older time
+	private static long mylasttime=(long) 0;  // the last count from the system timer
 	private static long mytimeticks=(long) 0; // Number of time ticks to add this pass though the main loop
 	private static long mytimeticksrm=(long) 0; // the remainder numbers of ticks 
 	
 	private long mycurtime=(long)0;  // the current number of ticks this timer has accumulated
-;
 
+	public double lasttime = 0;
+	public double presenttime = 0;
+	Timer timer = new Timer();
+	public double creationtime = 0;
+	
 	public CXTIMER(){
 		mycurtime=0;
+		creationtime = Timer.getFPGATimestamp();
+		System.out.printf("constructor: creation(%f)0\n", creationtime);
+
 	}
 	
 	
@@ -38,6 +47,7 @@ public class CXTIMER {
 	 * become significant
 	 */
 	public void Update() {
+		mylastlasttime=mylasttime;
 		long sf=1000; // take it from microseconds to milliseconds
 		long maxsf=0x7fffffff; // mask off any sign bit because of actual unsigned count
 		long curt=Utility.getFPGATime();  // gets number of microsecond ticks in the current counter
@@ -49,10 +59,10 @@ public class CXTIMER {
 		curt=curt&maxsf; // fix for signed VS unsigned
 		
 		
-		if(curt>=mylasttm) 
-			mytimeticks=curt-mylasttm;  // not roll over just normal
+		if(curt>=mylasttime) 
+			mytimeticks=curt-mylasttime;  // not roll over just normal
 		else
-			mytimeticks=maxsf-(mylasttm-curt)+1; // handle roll over case
+			mytimeticks=maxsf-(mylasttime-curt)+1; // handle roll over case
 		// the roll over case is designed to keep with math limits and use normal operands
 		// it would be simpler to do a two complement but with the uncertainty about the 
 		// compilers actual methods a pure operator methods was used. 
@@ -67,7 +77,7 @@ public class CXTIMER {
 		// if enough fractional ticks have accumulated increase the tick count by 1
 		while (mytimeticksrm>sf) {mytimeticks++;mytimeticksrm-=sf;} // add odd time 
 		// keep this count to use as the last count in then next call
-		mylasttm=curt;
+		mylasttime=curt;
 	}
 	
 	
@@ -126,11 +136,29 @@ public class CXTIMER {
 		mycurtime=0;	
 	}
 
+	/*
+	 *  Rewrite to do a more straightforward implementation
+	 */
+	
+	
+	
+	@SuppressWarnings("deprecation")
+	public void newUpdate() {
+		lasttime=presenttime;
+		presenttime = Timer.getFPGATimestamp() - creationtime;
+//		System.out.printf("newUpdate: last(%f) present(%f)\n", lasttime,presenttime);
+	}
+		
+	
 	/** Returns true exactly once as the clock passes the provided time
-	 * @param time
+	 * @param time, in milliseconds
 	 * @return
 	 */
-	public boolean atTime(long time) {
-		return time > mylasttm && time <= mylasttm+mytimeticks;
+	public boolean atTime(long timems) {
+		double time = timems/1000.0;
+		System.out.printf("Timerstuff: last(%f) present(%f)\n", lasttime,presenttime);
+		return time >= lasttime && time < presenttime;
 	}
+	
+		
 }
