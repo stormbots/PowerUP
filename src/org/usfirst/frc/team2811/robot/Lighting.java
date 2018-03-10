@@ -99,7 +99,7 @@ public class Lighting {
 		
 		
 		//Look for do we have the switch! If so, change pattern
-		if(Robot.intake.getLightPattern() == 1) {
+		if(Robot.intake.hasCube() == 1) {
 			tele = BlinkenPattern.LIME_GREEN;
 		}
 		

@@ -222,6 +222,7 @@ public class Chassis extends RobotModule {
 		
 		// Reset our timer to start executing
 		profileTimer.reset();
+		resetEnc();
 
 		//set our chassis mode to use the profile!
 		mode = Mode.PROFILE;

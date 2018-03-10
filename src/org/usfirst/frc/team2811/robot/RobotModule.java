@@ -98,7 +98,7 @@ public class RobotModule {
 	 * Return module-dependent value for what lighting should do
 	 * @return 0 if nothing interesting, value otherwise
 	 */
-	public double getLightPattern() {
+	public double hasCube() {
 		return 0;
 		
 	}

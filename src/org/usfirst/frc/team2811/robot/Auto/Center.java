@@ -54,10 +54,10 @@ public class Center extends AutoSequence {
 			Robot.drive.setProfile(left1, right1, 2000);
 		}
 		if(timer.atTime(2000)){
-			Robot.drive.setProfile(left1, right1, 2000);
+			Robot.drive.setProfile(left2, right2, 2000);
 		}
 		if(timer.atTime(4000)){
-			Robot.drive.setProfile(left1, right1, 1000);
+			Robot.drive.setProfile(left3, right3, 1000);
 			//Robot.elevator.setPos(switch height);
 		}
 		if(timer.atTime(5000)) {

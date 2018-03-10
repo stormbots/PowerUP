@@ -18,7 +18,7 @@ public class OI {
 	void update(){
 		//Do the drive-related stuff
 		
-		//DRIVE SYSTEM
+		//DRIVE
 		Robot.drive.arcadeDrive(
 			driver.getRawAxis(3),
 			driver.getRawAxis(0)*turnScaleValue,
@@ -66,6 +66,8 @@ public class OI {
 		if(functions.getRawButtonReleased(5)) {
 			
 		}
+		
+		
 		
 		//INTAKE
 		if(functions.getRawButton(1)) {

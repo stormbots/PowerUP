@@ -71,15 +71,7 @@ public class Robot extends IterativeRobot {
 	
 	static double delayTime = 0;
 	static boolean deliverCube = true;
-	
-	long step0timer = 1000;
-	long step1timer = 2500;
-	long step2timer = 2500;
-	long step3timer = 2500;
-	long step4timer = 4000;
-	long step5timer = 2000;
-	long step6timer = 2000;
-	
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -127,13 +119,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		//TODO: Parse the field string into the appropriate values for use in auto commands
-		// robotLocation = RobotLocation.CENTER
-		// targetLocation = TargetLocation.SWITCH
+
+		robotLocation = RobotLocation.CENTER;
+		targetLocation = TargetLocation.SWITCH;
 		astep = 0;
 		autotimer.Update();
 		autotimer.reset();
-		AutoSequence autoChoice;
+		AutoSequence autoChoice = new SideEscape();
 		
 		fieldData = DriverStation.getInstance().getGameSpecificMessage();
 		SmartDashboard.putString("fieldstepup", fieldData);
@@ -154,10 +146,6 @@ public class Robot extends IterativeRobot {
 				scaleConfig = ScaleConfig.RIGHT;
 			}
 		}
-		
-		
-		//set our auto delay time
-		//step0timer = delaySelection.getSelected().longValue()*1000;
 		
 		robotLocation = startPosition.getSelected();
 			if(robotLocation==RobotLocation.AUTO) {
@@ -259,44 +247,9 @@ public class Robot extends IterativeRobot {
 			//auto select based off field
 		}
 		
-		// Inside of the targetLocation decision tree, instead of setting targetLocation, we can now 
-		// simply create a new auto, and set our variable. The bestAuto will contain the sequence
-		// and setup process for each module, so the modules no longer need to care
-		// about where the robot starts or is going. 
-		bestAuto = new Example();
+		autoChoice.run();
 
 		
-		
-		
-		//Debug overrides, please remove
-		/*
-		robotLocation=RobotLocation.CENTER;
-		targetLocation=TargetLocation.SWITCH;
-		switchConfig=SwitchConfig.RIGHT;
-		scaleConfig = ScaleConfig.RIGHT;
-		
-		step1timer=7000;
-		*/
-		
-		step0timer = delaySelection.getSelected() *1000;
-		
-		// removes unused steps from the switch
-		if(robotLocation != RobotLocation.CENTER) {
-			step1timer = 8000;
-			step2timer = 0;
-			step3timer = 0;
-		}
-		else {
-			step1timer = 2000;
-			step2timer = 2000;
-			step3timer = 1000;
-		}
-		if(targetLocation == TargetLocation.SCALE) {
-			step1timer = 8000;
-			step2timer = 3000;
-			step3timer = 0;
-		}
-
 		//else for l/r
 
 		System.out.println(fieldData);
@@ -311,16 +264,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("switchConfig", switchConfig.toString());
 		SmartDashboard.putString("scaleConfig", scaleConfig.toString());
 
-		/*  THIS IS WHERE THE ROBOT CODE SENDS THE DATA TO THE MODULES */
-		//elevator.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
-		intake.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
-		//drive.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
-		climber.autoInit(robotLocation, targetLocation, switchConfig, scaleConfig);
-		
 		elevator.resetScaleTo(ElevatorPosition.AUTO_STARTUP);
 		
-		// After updating to the new model, we no longer need autoInit functions, or the temporary variables requied
-		// for them to operate
+		drive.newUpdate();
+		elevator.newUpdate();
 	}
 
 	/**
@@ -331,88 +278,15 @@ public class Robot extends IterativeRobot {
 		autotimer.Update();
 
 		// Run the auto we selected. It will then command the various subsystems indirectly
-		//shift low
+		drive.shiftLow();
 		intake.tiltBackward(false);
 		elevator.setPos(ElevatorPosition.SWITCH);
 		bestAuto.run();
-		
-		// the new update no longer needs to know about outside information: It is configured by the auto script,
-		// and update just goes through with whatever it was told to do.
-		//drive.newUpdate();
-
-		
-		
-		
-
-		// Handle timer and step progression
-		// Anything that runs once on a timer edge should be added here
-		switch (astep) {
-		case 0:
-			if(autotimer.ckTime(true, step0timer)) {
-				astep++;
-				autotimer.reset();
-			}
-			break;
-		case 1:
-			if(autotimer.ckTime(true, step1timer)) {
-				//drive.resetEnc();
-				//if(drive.leadR.getSelectedSensorPosition(0) == 0 && drive.leadL.getSelectedSensorPosition(0) == 0) {
-					astep++;
-					autotimer.reset();
-				//}
-			}
-			break;
-		case 2:
-			if(autotimer.ckTime(true, step2timer)) {
-				//drive.resetEnc();
-				//if(drive.leadR.getSelectedSensorPosition(0) == 0 && drive.leadL.getSelectedSensorPosition(0) == 0) {
-					astep++;
-					autotimer.reset();
-				//}
-			}
-			break;
-		case 3:
-			if(autotimer.ckTime(true, step3timer)) {
-				//drive.resetEnc();
-				//if(drive.leadR.getSelectedSensorPosition(0) == 0 && drive.leadL.getSelectedSensorPosition(0) == 0) {
-					astep++;
-					autotimer.reset();
-				//}
-			}
-			break;
-		case 4:
-			if(autotimer.ckTime(true, step4timer)) {
-				astep++;
-				autotimer.reset();
-			}
-			break;
-		case 5:
-			if(autotimer.ckTime(true, step5timer)) {
-				astep++;
-				autotimer.reset();
-			}
-			break;
-		case 6:
-			if(autotimer.ckTime(true, step6timer)) {
-				astep++;
-				autotimer.reset();
-			}
-			break;
-		default:
-			break;
-		}
-		
-		//Handle continuous updates for various modules
-		//elevator.auto(astep, autotimer.getTimeSec()); 
-		intake.auto(astep, autotimer.getTimeSec());
-		//drive.auto(astep, autotimer.getTimeSec());
-		//climber.auto(astep, autotimer.getTimeSec());
 
 		SmartDashboard.putNumber("Step", astep);
 		
 		drive.newUpdate();
 		elevator.newUpdate();
-
 	}
 	
 	public void teleopInit() {
@@ -435,15 +309,8 @@ public class Robot extends IterativeRobot {
 		drive.newUpdate();
 		elevator.newUpdate();
 
-
 		// update any timer to update all timers.
 		autotimer.Update();
-
-		//elevator.update(stickDrive1,stickDrive2,stickFunctions);
-		//intake.update(stickDrive1,stickDrive2,stickFunctions);
-		drive.update(stickDrive1,stickDrive2,stickFunctions);
-		climber.update(stickDrive1,stickDrive2,stickFunctions);
-		lighting.update(stickDrive1,stickDrive2,stickFunctions);
 	}
 
 	/**
