@@ -44,8 +44,8 @@ public class Chassis {
 	//Now identical in both robots
 	Solenoid LeftShiftA = new Solenoid(2);
 	Solenoid LeftShiftB = new Solenoid(3);
-	Solenoid RightShiftA = new Solenoid(4);
-	Solenoid RightShiftB = new Solenoid(5);		
+	Solenoid RightShiftA = new Solenoid(4); // practice bot only
+	Solenoid RightShiftB = new Solenoid(5); // practice bot only
 
 
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
@@ -72,22 +72,6 @@ public class Chassis {
 	public Chassis() {
 		braking(true);
 		resetEnc();
-		if(prefs.getBoolean("compbot", false)) {
-			//Should be same in both bots now 
-			// Comp Bot
-			//LeftShiftA = new Solenoid(2);
-			//LeftShiftB = new Solenoid(3);
-			//RightShiftA = new Solenoid(6); //not actually used
-			//RightShiftB = new Solenoid(7);	//not actually used
-		}
-		else {
-			//now same on both robots
-			//practice bot
-			//LeftShiftA = new Solenoid(2);
-			//LeftShiftB = new Solenoid(3);
-			//RightShiftA = new Solenoid(4);
-			//RightShiftB = new Solenoid(5);		
-		}
 
 		//initializes the slaves and shifters
 
@@ -102,6 +86,12 @@ public class Chassis {
 		rearL.configOpenloopRamp(voltageRampRate, 30);
 		rearR.configOpenloopRamp(voltageRampRate, 30);
 	}
+	
+	/** Fetch preferences and adjust variables as needed */
+	public void disabledPeriodic() {
+		//braking(false);
+	}
+
 	
 	/**
 	 * sets braking or coasting based on input
@@ -181,10 +171,6 @@ public class Chassis {
 	public void resetEnc() {
 		leadL.setSelectedSensorPosition(0, 0, 20);
 		leadR.setSelectedSensorPosition(0, 0, 20);
-	}
-
-	public void disabledPeriodic() {
-		//braking(false);
 	}
 	
 	/** Set the Chassis operational mode

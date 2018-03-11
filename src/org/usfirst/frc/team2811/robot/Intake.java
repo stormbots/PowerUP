@@ -10,17 +10,6 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/** INTAKE CLASS
- * SUMMARY- The update method is set in the main code, and sets all the actions to each button 
- * which is called into the Robot.java. The 4 main actions are input, output, squeeze, and 
- * tilt (4 buttons). The constructor at the beginning intiates some code needed for the code to properly run.
- *  
- * INPUTS-Two Cantalons (12 and 13 for testing, 8 and 9 for competitions) (controlled by double velocity).
- * 		  Two Solenoids (1 and 2 for testing, unknown ID for competitions).
- * 		  One Infared DigitalInput (4 for testing, unknown ID for competitions).
- * OUTPUTS-Taking in Powercubes and holding it (squeeze), outputing the Powercubes, and tilting the base up and down.
- * @author StormBots
- */
 public class Intake {
 	WPI_TalonSRX motor1 = new WPI_TalonSRX(6);
 	WPI_TalonSRX motor2 = new WPI_TalonSRX(7);
@@ -35,7 +24,6 @@ public class Intake {
 	DigitalInput redEye = new DigitalInput(0);
 	Boolean intakeOpen = false;
 	Boolean tiltedBack = true;
-	Boolean deployCube = false;
 	Preferences prefs = Preferences.getInstance();
 	
 	//Invert these if the cylinders do the wrong thing
@@ -45,32 +33,23 @@ public class Intake {
 	double velocity = 0.0;
 	
 	
-	/**INTAKE CONSTRUCTOR
-	 * Constructor used to set some code up that drives the motors opposite directions
-	 * and turns Pneumatics off for saftey reasons.
-	 */
 	public Intake() {
-		
-		//motor2.follow(motor1);
-		//motor2.setInverted(true);
+		squeezeOpen(false);
+		tiltBackward(true);
+	}
+	
+	/** Fetch preferences and adjust variables as needed */
+	public void disabledPeriodic() {
 		if(prefs.getBoolean("compbot", false)){
-			// Same on both robots
-			//comp bot
-			// squeezeSolenoidA = new Solenoid(4); 
-			// squeezeSolenoidB = new Solenoid(5);
-			SmartDashboard.putString("Seeing Solenoids", "Yes");
+			//Comp bot
 			tiltInvert = false;
 			squeezeInvert = false;
 		}
 		else {
-			// Same on both robots
-			// squeezeSolenoidA = new Solenoid(6); 
-			// squeezeSolenoidB = new Solenoid(7);
+			//Practice bot
 		}
-
-		squeezeOpen(false);
-		tiltBackward(true);
 	}
+
 	
 	public void ejectCube() {
 		velocity = -0.5;
@@ -109,50 +88,24 @@ public class Intake {
 			tiltSolenoidB.set(tiltInvert);
 		}
 	}
-	
-	/**AUTO INIT METHOD
-	 *Sets deployCube to deploy depending on whether we are move only (false)
-	 *or anything else (true) (whether we are dropping cube or not).
-	 * @param deploy
-	 */
-
-	
-	
-	
-	
-	
-	
-	
-	/**TELEOP INIT
-	 *Nothing currently.
-	 */
-	public void init() {
-		tiltBackward(false);
-	}
-	
-	/**UPDATE (TELEOP PERIODIC) METHOD
-	 *Sets each "action" to a specified button that can be pulled into 
-	 *the Robot.java as Intake.update(); for teleop control. Squeeze and 
-	 *Tilt are toggle buttons while the intake and output need to be held
-	 *down. (button 7 is for debug only). 
-	 * @param stick
-	 */
-	void newUpdate() {
 		
+	void newUpdate() {
 		motor1.set(ControlMode.PercentOutput,velocity);
 		motor2.set(ControlMode.PercentOutput, -velocity);
 		
-		SmartDashboard.putNumber("Velocity", velocity);
-		SmartDashboard.putBoolean("RedEye", redEye.get());   
-		SmartDashboard.putBoolean("Squeeze Intake", intakeOpen);
-		SmartDashboard.putBoolean("Tilt Base", tiltedBack);
+		SmartDashboard.putNumber("Intake Velocity", velocity);
+		SmartDashboard.putBoolean("Intake Has Cube", hasCube());   
+		SmartDashboard.putBoolean("Intake Open", intakeOpen);
+		SmartDashboard.putBoolean("Intake Tilted Back", tiltedBack);
 	}
 
 	/**
 	 * Return cube state
-	 * @return 0 if no cube, 1 if cube
+	 * @return true if we have a cube
 	 */
 	public boolean hasCube() {
 		return !redEye.get();
 	}
+	
+
 }

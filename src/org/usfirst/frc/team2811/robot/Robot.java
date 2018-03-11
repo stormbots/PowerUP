@@ -89,11 +89,8 @@ public class Robot extends IterativeRobot {
 		intake.newUpdate();
 	}
 	
+	/** Ensure robot is ready for human operator in matches */
 	public void teleopInit() {
-		// Ensure robot is always in the drive orientation
-		drive.resetEnc();
-		intake.init();
-		
 		drive.setMode(Chassis.Mode.ARCADE);
 		elevator.setMode(Elevator.Mode.MANUALPOSITION);
 		intake.tiltBackward(false);
