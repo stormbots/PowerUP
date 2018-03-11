@@ -129,7 +129,7 @@ public class Robot extends IterativeRobot {
 		
 		drive.disabledPeriodic();
 		elevator.disabledPeriodic();
-//		intake.disabledPeriodic();
+		intake.disabledPeriodic();
 //		climber.disabledPeriodic();
 	}
 	

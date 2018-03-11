@@ -10,12 +10,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2811.robot.FB;
 
-/**
- * Class using WPI_TalonSRX to move Elevator w/ joystick and by setting a position.
- * Inputs: eMotor address
- * Outputs: eVelocity, elevatorPos 
- */
-
 public class Elevator {
 	
 	 WPI_TalonSRX eMotor = new WPI_TalonSRX(8);
@@ -62,24 +56,20 @@ public class Elevator {
 		return mode;
 	}
 	
-	
+	/** Fetch preferences and adjust variables as needed */
 	public void disabledPeriodic(){
-		//update constants and stuff from flash
 		maxPos = prefs.getDouble("elevatorTopLimit", 93000);
-		
 	}
 	
 	
 		
 	public void reset() {
 		eMotor.setSelectedSensorPosition(0, 0, 20); //First argument is desired position, second is the type of loop? (0 or 1), third is the timeout.
-		
 	}
 	
 	public void resetTo(ElevatorPosition position) {
 		eMotor.setSelectedSensorPosition(0, (int) position.ticks(), 20);
 		eMotor.setSelectedSensorPosition((int) position.ticks(), 0, 20);// maybe just in case? Shouldn't do anything.
-
 	}
 		
 
@@ -97,7 +87,7 @@ public class Elevator {
 	}
 	
 	/**
-	 * 	setPos(ElePosition.SWITCH);
+	 * 	setPos(ElevatorPosition.SWITCH);
 	 * @param position
 	 */
 	public void setPos(ElevatorPosition position) {
@@ -163,10 +153,8 @@ public class Elevator {
 
 		SmartDashboard.putNumber("Elevator Current Position", currentPos);
 		SmartDashboard.putNumber("Elevator Desired Position", elevatorPos);
-		SmartDashboard.putNumber("Elevator Voltage", eMotor.getOutputCurrent());
-		//SmartDashboard.putNumber("Joystick Position", functions1.getY());
+		SmartDashboard.putNumber("Elevator Voltage", eMotor.getMotorOutputVoltage());
 		SmartDashboard.putNumber("Elevator Velocity", eVelocity);
-		SmartDashboard.putBoolean("Limit Switch", LimitSwitch.get());
-
+		SmartDashboard.putBoolean("Elevator Limit Switch", LimitSwitch.get());
 	}
 }
