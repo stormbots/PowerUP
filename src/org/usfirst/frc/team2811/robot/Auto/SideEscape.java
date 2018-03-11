@@ -24,7 +24,6 @@ public class SideEscape extends AutoSequence {
 
 		left1 = inside1;
 		right1 = outside1;
-		System.out.println("Creating our auto class");
 	}
 	
 	/**
@@ -39,7 +38,6 @@ public class SideEscape extends AutoSequence {
 
 		//Example: Approximate movements to drop on the switch then back up
 		if(timer.atTime(0)){
-			System.out.println("Setting new profile mode in Chassis");
 			Robot.drive.setProfile(left1, right1, 8000);
 			//Robot.elevator.setPos(switch height);
 		}

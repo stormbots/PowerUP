@@ -1,10 +1,5 @@
 package org.usfirst.frc.team2811.robot;
 
-import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
-import org.usfirst.frc.team2811.robot.Robot.ScaleConfig;
-import org.usfirst.frc.team2811.robot.Robot.SwitchConfig;
-import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -21,7 +16,7 @@ import org.usfirst.frc.team2811.robot.FB;
  * Outputs: eVelocity, elevatorPos 
  */
 
-public class Elevator extends RobotModule {
+public class Elevator {
 	
 	 WPI_TalonSRX eMotor = new WPI_TalonSRX(8);
 	 DigitalInput LimitSwitch = new DigitalInput(1);

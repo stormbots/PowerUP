@@ -11,7 +11,6 @@ public class TinyTimer {
 	
 	public TinyTimer(){
 		creationtime = Timer.getFPGATimestamp();
-		System.out.printf("constructor: creation(%f)0\n", creationtime);
 	}
 	
 	

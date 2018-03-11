@@ -7,6 +7,7 @@
 
 package org.usfirst.frc.team2811.robot;
 
+import org.usfirst.frc.team2811.robot.Auto.AutoSelector;
 import org.usfirst.frc.team2811.robot.Auto.AutoSequence;
 import org.usfirst.frc.team2811.robot.Auto.Center;
 import org.usfirst.frc.team2811.robot.Auto.Example;
@@ -43,30 +44,11 @@ public class Robot extends IterativeRobot {
 	public OI oi = new OI();
 	AutoSequence autoChoice = new SideEscape();
 		
-	private SendableChooser<Integer> delaySelection =  new SendableChooser<>();
-	private SendableChooser<RobotLocation> startPosition = new SendableChooser<>();
-	private SendableChooser<Boolean> switchAbility = new SendableChooser<>();
-	private SendableChooser<Boolean> scaleAbility = new SendableChooser<>();
-	private SendableChooser<TargetLocation> locationPreference = new SendableChooser<>();
 	
 	
 	CXTIMER autotimer = new CXTIMER();
-
-	public static enum RobotLocation{LEFT, RIGHT,CENTER, AUTO};
-	public static enum TargetLocation{SWITCH, SCALE, MOVE_ONLY};
-	public static enum SwitchConfig{UNKNOWN, LEFT, RIGHT};
-	public static enum ScaleConfig{UNKNOWN, LEFT, RIGHT};
-	public static enum TeamColor{RED, BLUE};
 		
-	public static RobotLocation robotLocation = RobotLocation.AUTO; 
-	public static TargetLocation targetLocation = TargetLocation.SCALE;
-	public static SwitchConfig switchConfig = SwitchConfig.UNKNOWN;
-	public static ScaleConfig scaleConfig = ScaleConfig.UNKNOWN;
-	
-	static String fieldData = "";
-	
-	static double delayTime = 0;
-	static boolean deliverCube = true;
+	AutoSelector autoSelector = new AutoSelector();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -75,31 +57,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {		
 		CameraServer.getInstance().startAutomaticCapture();
-		
-		delaySelection.addDefault("0 (default)", 0);
-		delaySelection.addObject("1", 1);
-		delaySelection.addObject("2", 2);
-		delaySelection.addObject("4", 4);
-		delaySelection.addObject("6", 6);
-		SmartDashboard.putData("Delay (sec)", delaySelection);
-		
-		startPosition.addDefault("field default", RobotLocation.AUTO);
-		startPosition.addObject("left", RobotLocation.LEFT);
-		startPosition.addObject("center", RobotLocation.CENTER);
-		startPosition.addObject("right", RobotLocation.RIGHT);
-		SmartDashboard.putData("Robot Position", startPosition);
-		
-		switchAbility.addDefault("yes (switch)", true);
-		switchAbility.addObject("no (switch)", false);
-		SmartDashboard.putData("Switch", switchAbility);
-		
-		scaleAbility.addDefault("yes (scale)", true);
-		scaleAbility.addObject("no (scale)", false);
-		SmartDashboard.putData("Scale", scaleAbility);
-		
-		locationPreference.addDefault("scale", TargetLocation.SCALE);
-		locationPreference.addObject("switch", TargetLocation.SWITCH);
-		SmartDashboard.putData("Preference", locationPreference);
+
+		autoSelector.putSmartDashboard();
 	}
 
 	/**
@@ -114,146 +73,12 @@ public class Robot extends IterativeRobot {
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
 	@Override
-	public void autonomousInit() {
-		// NOTE: Do robot actions at the end of autoInit to keep them 
-		// together and within quick scroll range of autoPeriodic();
-		
-		robotLocation = RobotLocation.CENTER;
-		targetLocation = TargetLocation.SWITCH;
+	public void autonomousInit() {		
 		autotimer.Update();
 		autotimer.reset();
-		
-		fieldData = DriverStation.getInstance().getGameSpecificMessage();
-		SmartDashboard.putString("fieldstepup", fieldData);
-				
-		//get field data
-		if(fieldData.length()>0){
-			if(fieldData.charAt(0)=='L') {
-				switchConfig = SwitchConfig.LEFT;
-			}
-			else {
-				switchConfig = SwitchConfig.RIGHT;
-			}
-			
-			if(fieldData.charAt(1)=='L') {
-				scaleConfig = ScaleConfig.LEFT;
-			}
-			else {
-				scaleConfig = ScaleConfig.RIGHT;
-			}
-		}
-		
-		robotLocation = startPosition.getSelected();
-			if(robotLocation==RobotLocation.AUTO) {
-				switch(DriverStation.getInstance().getLocation()) {
-				case 1: robotLocation = RobotLocation.LEFT;break;
-				case 2: robotLocation = RobotLocation.CENTER;break;
-				case 3: robotLocation = RobotLocation.RIGHT;break;
-				}
-			}
-
-		// Determine driver strategy
-		if(robotLocation == RobotLocation.CENTER) {
-			targetLocation = TargetLocation.SWITCH;
-			if(robotLocation == RobotLocation.LEFT) {
-				autoChoice = new Center(true);
-			}
-			else {
-				autoChoice = new Center(false);
-			}
-		}
-		else if(robotLocation == RobotLocation.LEFT) {
-			if(scaleConfig == ScaleConfig.LEFT && switchConfig == SwitchConfig.LEFT) {
-				if(switchAbility.getSelected()==true && scaleAbility.getSelected()==true) {
-					targetLocation = locationPreference.getSelected();
-					if(targetLocation == TargetLocation.SWITCH) {
-						autoChoice = new SideSwitch(true);
-					}
-					if(targetLocation == TargetLocation.SCALE) {
-						autoChoice = new SideScale(true);
-					}
-				}
-				else if(switchAbility.getSelected()==true){
-					targetLocation = TargetLocation.SWITCH;
-					autoChoice = new SideSwitch(true); 
-				}
-				else if(scaleAbility.getSelected()==true){
-					targetLocation = TargetLocation.SCALE;
-					autoChoice = new SideScale(true);
-				}
-				else {
-					targetLocation = TargetLocation.MOVE_ONLY;
-					autoChoice = new SideEscape();
-				}
-			}
-			else if(scaleConfig == ScaleConfig.LEFT && scaleAbility.getSelected()==true) {
-				targetLocation = TargetLocation.SCALE;
-				autoChoice = new SideScale(true);
-			}
-			else if(switchConfig == SwitchConfig.LEFT && switchAbility.getSelected()==true) {
-				targetLocation = TargetLocation.SWITCH;
-				autoChoice = new SideSwitch(true);
-			}
-			else {
-				autoChoice = new SideEscape();
-				targetLocation = TargetLocation.MOVE_ONLY;
-			}
-		}
-		
-		else if(robotLocation == RobotLocation.RIGHT){
-			if(scaleConfig == ScaleConfig.RIGHT && switchConfig == SwitchConfig.RIGHT) {
-				if(switchAbility.getSelected()==true && scaleAbility.getSelected()==true) {
-					targetLocation = locationPreference.getSelected();
-					if(targetLocation == TargetLocation.SWITCH) {
-						autoChoice = new SideSwitch(false);
-					}
-					if(targetLocation == TargetLocation.SCALE) {
-						autoChoice = new SideScale(false);
-					}
-				}
-				else if(switchAbility.getSelected()==true){
-					targetLocation = TargetLocation.SWITCH;
-					autoChoice = new SideSwitch(false);
-				}
-				else if(scaleAbility.getSelected()==true){
-					targetLocation = TargetLocation.SCALE;
-					autoChoice = new SideScale(false);
-				}
-				else {
-					autoChoice = new SideEscape();
-					targetLocation = TargetLocation.MOVE_ONLY;
-				}
-			}
-			else if(scaleConfig == ScaleConfig.RIGHT && scaleAbility.getSelected()==true) {
-				targetLocation = TargetLocation.SCALE;
-				autoChoice = new SideScale(false);
-			}
-			else if(switchConfig == SwitchConfig.RIGHT && switchAbility.getSelected()==true) {
-				targetLocation = TargetLocation.SWITCH;
-				autoChoice = new SideSwitch(false);
-			}
-			else {
-				targetLocation = TargetLocation.MOVE_ONLY;
-				autoChoice = new SideEscape();
-			}
-		}
-		else {
-			//auto select based off field
-		}
-
-		SmartDashboard.putString("Selected Auto", autoChoice.getClass().getSimpleName());
-
-		System.out.println(fieldData);
-		System.out.println(robotLocation);
-		System.out.println(targetLocation);
-		System.out.println(switchConfig);
-		System.out.println(scaleConfig);
-		
-		SmartDashboard.putString("FieldData", fieldData.toString());
-		SmartDashboard.putString("robotLocation", robotLocation.toString());
-		SmartDashboard.putString("targetLocation", targetLocation.toString());
-		SmartDashboard.putString("switchConfig", switchConfig.toString());
-		SmartDashboard.putString("scaleConfig", scaleConfig.toString());
+						
+		//Figure out the optimal auto sequence to perform
+		autoChoice = autoSelector.getBestAuto();
 				
 		// Do auto mode initialization 
 		drive.shiftLow();
@@ -298,6 +123,7 @@ public class Robot extends IterativeRobot {
 		
 		// Handle all the user inputs, and apply any changes to the appropriate system
 		oi.update();
+		
 		// Because OI now sets any configuration changes, these functions no longer care about stick inputs
 		// They just do whatever they were told if they even have anything to do at this point.
 		drive.newUpdate();
@@ -319,10 +145,14 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void disabledPeriodic() {
+		// Constantly update and print our auto-selection
+		// to see the auto we'll execute before enabling
+		autoChoice=autoSelector.getBestAuto();
+		
 		drive.disabledPeriodic();
 		elevator.disabledPeriodic();
 //		intake.disabledPeriodic();
-		climber.disabledPeriodic();
+//		climber.disabledPeriodic();
 	}
 	
 }

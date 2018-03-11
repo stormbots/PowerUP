@@ -2,11 +2,6 @@ package org.usfirst.frc.team2811.robot;
 
 import com.ctre.phoenix.motorcontrol.can.*;
 
-import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
-import org.usfirst.frc.team2811.robot.Robot.ScaleConfig;
-import org.usfirst.frc.team2811.robot.Robot.SwitchConfig;
-import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
-
 import com.ctre.phoenix.Util;
 import com.ctre.phoenix.motorcontrol.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -35,7 +30,7 @@ import edu.wpi.first.wpilibj.Talon;
  * 
  */
 
-public class Chassis extends RobotModule {
+public class Chassis {
 	WPI_TalonSRX leadL = new WPI_TalonSRX(2);
 	TalonSRX frontL = new TalonSRX(1);
 	TalonSRX rearL = new TalonSRX(0);

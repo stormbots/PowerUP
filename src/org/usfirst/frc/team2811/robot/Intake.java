@@ -1,11 +1,6 @@
  
 package org.usfirst.frc.team2811.robot;
 
-import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
-import org.usfirst.frc.team2811.robot.Robot.ScaleConfig;
-import org.usfirst.frc.team2811.robot.Robot.SwitchConfig;
-import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
