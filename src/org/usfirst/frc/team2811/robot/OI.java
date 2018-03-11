@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class OI {
 	
 	boolean intakeOpen = false;
-	boolean tiltedBack = true;
+	boolean tiltedBack = false;
 	double turnScaleValue = 0.75;
 	Joystick driver = new Joystick(0);
 	Joystick functions = new Joystick(3);
@@ -82,22 +82,22 @@ public class OI {
 		}
 		
 		if(functions.getRawButtonPressed(2)) {
-			if(intakeOpen = false) {
+			if(intakeOpen == false) {
 				Robot.intake.squeezeOpen(true); // TODO The action for this should actually toggle.
 				intakeOpen = true;
 			}
-			else if(intakeOpen = true) {
+			else if(intakeOpen == true) {
 				Robot.intake.squeezeOpen(false); //Do we need to create a separate function for closing the intake?
 				intakeOpen = false;
 			}
 		}
 		
 		if(functions.getRawButtonPressed(10)) {
-			if(tiltedBack = true) {
+			if(tiltedBack == true) {
 				Robot.intake.tiltBackward(false);
 				tiltedBack = false;	
 			}
-			else if(tiltedBack = false) {
+			else if(tiltedBack == false) {
 				Robot.intake.tiltBackward(true);
 				tiltedBack =  true;
 			}

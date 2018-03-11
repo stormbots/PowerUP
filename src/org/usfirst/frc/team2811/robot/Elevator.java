@@ -98,7 +98,7 @@ public class Elevator extends RobotModule {
 	 */
 	public void setPos(double position) {
 		Utilities.clamp(position,-1,1);
-		elevatorPos = Utilities.lerp(position, -1, 1, 0, maxPos);
+		elevatorPos = Utilities.lerp(position, 1, -1, 0, maxPos);
 	}
 	
 	/**
@@ -153,12 +153,12 @@ public class Elevator extends RobotModule {
 		}
 		
 		//manipulate our velocity
-		if(LimitSwitch.get() && eVelocity <0) {
+		if(!LimitSwitch.get() && eVelocity <0) {
 			eVelocity = 0;
 		}
 		
 		//check for limit switch and reset if found
-		if(LimitSwitch.get()) {
+		if(!LimitSwitch.get()) {
 			homed = true;
 			reset();
 		}

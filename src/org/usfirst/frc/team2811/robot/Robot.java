@@ -41,7 +41,7 @@ public class Robot extends IterativeRobot {
 	public static Climber climber = new Climber();
 	Lighting lighting = new Lighting();
 	public OI oi = new OI();
-	
+	AutoSequence autoChoice = new SideEscape();
 		
 	private SendableChooser<Integer> delaySelection =  new SendableChooser<>();
 	private SendableChooser<RobotLocation> startPosition = new SendableChooser<>();
@@ -57,9 +57,7 @@ public class Robot extends IterativeRobot {
 	public static enum SwitchConfig{UNKNOWN, LEFT, RIGHT};
 	public static enum ScaleConfig{UNKNOWN, LEFT, RIGHT};
 	public static enum TeamColor{RED, BLUE};
-	
-	AutoSequence bestAuto = new Example();
-	
+		
 	public static RobotLocation robotLocation = RobotLocation.AUTO; 
 	public static TargetLocation targetLocation = TargetLocation.SCALE;
 	public static SwitchConfig switchConfig = SwitchConfig.UNKNOWN;
@@ -117,15 +115,15 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		drive.setMode(Chassis.Mode.PROFILE);
 
 		robotLocation = RobotLocation.CENTER;
 		targetLocation = TargetLocation.SWITCH;
 		autotimer.Update();
 		autotimer.reset();
 		
-		elevator.resetScaleTo(ElevatorPosition.AUTO_STARTUP);
+		//elevator.resetScaleTo(ElevatorPosition.AUTO_STARTUP);
 
-		AutoSequence autoChoice = new SideEscape();
 		
 		fieldData = DriverStation.getInstance().getGameSpecificMessage();
 		SmartDashboard.putString("fieldstepup", fieldData);
@@ -266,7 +264,8 @@ public class Robot extends IterativeRobot {
 
 		
 		drive.newUpdate();
-		elevator.newUpdate();
+		intake.newUpdate();
+		//elevator.newUpdate();
 	}
 
 	/**
@@ -279,13 +278,13 @@ public class Robot extends IterativeRobot {
 		// Run the auto we selected. It will then command the various subsystems indirectly
 		drive.shiftLow();
 		intake.tiltBackward(false);
-		elevator.setPos(ElevatorPosition.SWITCH);
-		bestAuto.run();
+		//elevator.setPos(ElevatorPosition.SWITCH);
+		autoChoice.run();
 
 		//SmartDashboard.putNumber("Step", );
 		
 		drive.newUpdate();
-		elevator.newUpdate();
+		//elevator.newUpdate();
 		intake.newUpdate();
 	}
 	
@@ -294,6 +293,7 @@ public class Robot extends IterativeRobot {
 		autotimer.Update();
 		autotimer.reset();
 		intake.init();
+		drive.setMode(Chassis.Mode.ARCADE);
 	}
 
 	/**
@@ -327,7 +327,7 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		drive.disabledPeriodic();
 		elevator.disabledPeriodic();
-		intake.disabledPeriodic();
+//		intake.disabledPeriodic();
 		climber.disabledPeriodic();
 	}
 	

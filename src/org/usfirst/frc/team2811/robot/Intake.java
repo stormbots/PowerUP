@@ -26,12 +26,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * OUTPUTS-Taking in Powercubes and holding it (squeeze), outputing the Powercubes, and tilting the base up and down.
  * @author StormBots
  */
-public class Intake extends RobotModule {
+public class Intake {
 	WPI_TalonSRX motor1 = new WPI_TalonSRX(6);
 	WPI_TalonSRX motor2 = new WPI_TalonSRX(7);
 	
-	Solenoid squeezeSolenoidA;
-	Solenoid squeezeSolenoidB;	
+	//Now same on both robots! :D
+	Solenoid squeezeSolenoidA = new Solenoid(6); 
+	Solenoid squeezeSolenoidB = new Solenoid(7);
+
 	Solenoid tiltSolenoidA = new Solenoid(0);
 	Solenoid tiltSolenoidB = new Solenoid(1);
 	
@@ -56,18 +58,19 @@ public class Intake extends RobotModule {
 		
 		//motor2.follow(motor1);
 		//motor2.setInverted(true);
-		if(prefs.getBoolean("compbot", true)){
+		if(prefs.getBoolean("compbot", false)){
+			// Same on both robots
 			//comp bot
-			squeezeSolenoidA = new Solenoid(4); 
-			squeezeSolenoidB = new Solenoid(5);
+			// squeezeSolenoidA = new Solenoid(4); 
+			// squeezeSolenoidB = new Solenoid(5);
 			SmartDashboard.putString("Seeing Solenoids", "Yes");
 			tiltInvert = false;
 			squeezeInvert = false;
 		}
 		else {
-			squeezeSolenoidA = new Solenoid(6); 
-			squeezeSolenoidB = new Solenoid(7);
-
+			// Same on both robots
+			// squeezeSolenoidA = new Solenoid(6); 
+			// squeezeSolenoidB = new Solenoid(7);
 		}
 
 		squeezeOpen(false);
@@ -154,8 +157,7 @@ public class Intake extends RobotModule {
 	 * Return cube state
 	 * @return 0 if no cube, 1 if cube
 	 */
-	public double hasCube() {
-		if(redEye.get() ) return 1;
-		return 0;
+	public boolean hasCube() {
+		return !redEye.get();
 	}
 }

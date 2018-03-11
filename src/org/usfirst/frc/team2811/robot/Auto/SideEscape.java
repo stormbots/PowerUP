@@ -4,6 +4,8 @@ import org.usfirst.frc.team2811.robot.CXTIMER;
 import org.usfirst.frc.team2811.robot.Motion345;
 import org.usfirst.frc.team2811.robot.Robot;
 
+import edu.wpi.first.wpilibj.Timer;
+
 /**
  * Example Auto command doing a basic thing. 
  * Copy and rename this file to write a new auto command
@@ -22,6 +24,7 @@ public class SideEscape extends AutoSequence {
 
 		left1 = inside1;
 		right1 = outside1;
+		System.out.println("Creating our auto class");
 	}
 	
 	/**
@@ -32,12 +35,16 @@ public class SideEscape extends AutoSequence {
 	 * eg, if(have-cube) then intake.close() then elevator.move_pos(switch) then drive.setProfile(24,24,1000)
 	 */
 	public void run() {
-		
+		System.out.println("RUNNINGAUTO");
+
 		//Example: Approximate movements to drop on the switch then back up
 		if(timer.atTime(0)){
+			System.out.println("Setting new profile mode in Chassis");
 			Robot.drive.setProfile(left1, right1, 8000);
 			//Robot.elevator.setPos(switch height);
 		}
-
+		
+		timer.newUpdate();
+		
 	}
 }

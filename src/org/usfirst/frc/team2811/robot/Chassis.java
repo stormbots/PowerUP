@@ -46,12 +46,12 @@ public class Chassis extends RobotModule {
 	Preferences prefs = Preferences.getInstance();
 	PowerDistributionPanel pdp = new PowerDistributionPanel();
 	
-	//Initialization is robot specific, done in constructor
-	Solenoid LeftShiftA;
-	Solenoid LeftShiftB;
-	Solenoid RightShiftA;
-	Solenoid RightShiftB;
-	
+	//Now identical in both robots
+	Solenoid LeftShiftA = new Solenoid(2);
+	Solenoid LeftShiftB = new Solenoid(3);
+	Solenoid RightShiftA = new Solenoid(4);
+	Solenoid RightShiftB = new Solenoid(5);		
+
 
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
 	Motion345 right345 = new Motion345(10000, 3, 0, 200);
@@ -77,26 +77,27 @@ public class Chassis extends RobotModule {
 	public Chassis() {
 		braking(true);
 		resetEnc();
-		if(prefs.getBoolean("compbot", true)) {
-			//Comp Bot
-			LeftShiftA = new Solenoid(2);
-			LeftShiftB = new Solenoid(3);
-			RightShiftA = new Solenoid(6); //not actually used
-			RightShiftB = new Solenoid(7);	//not actually used
+		if(prefs.getBoolean("compbot", false)) {
+			//Should be same in both bots now 
+			// Comp Bot
+			//LeftShiftA = new Solenoid(2);
+			//LeftShiftB = new Solenoid(3);
+			//RightShiftA = new Solenoid(6); //not actually used
+			//RightShiftB = new Solenoid(7);	//not actually used
 		}
 		else {
+			//now same on both robots
 			//practice bot
-			LeftShiftA = new Solenoid(2);
-			LeftShiftB = new Solenoid(3);
-			RightShiftA = new Solenoid(4);
-			RightShiftB = new Solenoid(5);		
+			//LeftShiftA = new Solenoid(2);
+			//LeftShiftB = new Solenoid(3);
+			//RightShiftA = new Solenoid(4);
+			//RightShiftB = new Solenoid(5);		
 		}
 
 		//initializes the slaves and shifters
 
 		shiftLow();
 		bind();
-		prefs.getBoolean("compbot", false); // true if on the compbot
 		
 		double voltageRampRate = 0.075;
 		leadL.configOpenloopRamp(voltageRampRate, 30);
@@ -194,8 +195,8 @@ public class Chassis extends RobotModule {
 	/** Set the Chassis operational mode
 	 * @param mode
 	 */
-	public void setMode(Mode mode) {
-		this.mode = mode;
+	public void setMode(Mode newmode) {
+		mode = newmode;
 	}
 	
 	/** Set the target output power for Tankdrive mode
@@ -214,13 +215,15 @@ public class Chassis extends RobotModule {
 	 * @param time (in ms)
 	 */
 	public void setProfile(double inchesLeft,double inchesRight, double time) {
+		System.out.printf("Creating auto [ %f , %f ] over %f s\n",inchesLeft,inchesRight,time);
 		// create our motion profile
 		//TODO: Actually find some values for max speed and a good tolerance
-		left345 = new Motion345(10_000, time, inchesLeft*scaleFactorL, 200);
-		right345 = new Motion345(10_000, time, inchesRight*scaleFactorR, 200);
+		left345.setMove(10_000, time, inchesLeft*scaleFactorL, 200);
+		left345.setMove(10_000, time, inchesRight*scaleFactorR, 200);
 		
 		// Reset our timer to start executing
 		profileTimer.reset();
+		profileTimer.newReset();
 		resetEnc();
 
 		//set our chassis mode to use the profile!
@@ -234,15 +237,25 @@ public class Chassis extends RobotModule {
 		//Generate a power modifier to ensure we avoid brownouts
 		double mod = Utilities.lerp(pdp.getVoltage(), 8.25, 6.5, 1.0, 0.0);
 		mod = Utilities.clamp(mod, 0, 1);
+		System.out.println(mode.toString());
 		
 		switch(mode) {
 		case DISABLED:
 			driver.tankDrive(0,0);	
 			return;
-		case PROFILE:			
+		case PROFILE:	
+			profileTimer.newUpdate();
+			System.out.print("profiletimer");
+			System.out.println(profileTimer.getNewTimeSec());
 			//get next motion profile thing
-			leftPower = left345.getVelPosFb(profileTimer.getTime(), -leadL.getSelectedSensorPosition(0), 0.023);
-			rightPower = -right345.getVelPosFb(profileTimer.getTime(), -leadR.getSelectedSensorPosition(0), 0.023);
+			leftPower = left345.getVelPosFb(profileTimer.getNewTimeSec(), -leadL.getSelectedSensorPosition(0), 0.023);
+			rightPower = -right345.getVelPosFb(profileTimer.getNewTimeSec(), -leadR.getSelectedSensorPosition(0), 0.023);
+			
+			System.out.print("L");
+			System.out.print(leftPower);
+			System.out.print("  R");
+			System.out.print(rightPower);
+			
 			//NOTE: EXPECTED FALLTHROUGH TO TANK MODE
 		case TANK:
 			//Set the motor

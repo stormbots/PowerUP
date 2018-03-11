@@ -149,6 +149,9 @@ public class CXTIMER {
 //		System.out.printf("newUpdate: last(%f) present(%f)\n", lasttime,presenttime);
 	}
 		
+	public double getNewTimeSec() {
+		return presenttime;
+	}
 	
 	/** Returns true exactly once as the clock passes the provided time
 	 * @param time, in milliseconds
@@ -156,8 +159,13 @@ public class CXTIMER {
 	 */
 	public boolean atTime(long timems) {
 		double time = timems/1000.0;
-		System.out.printf("Timerstuff: last(%f) present(%f)\n", lasttime,presenttime);
+//		System.out.printf("Timerstuff: last(%f) present(%f)\n", lasttime,presenttime);
 		return time >= lasttime && time < presenttime;
+	}
+
+
+	public void newReset() {
+		creationtime = Timer.getFPGATimestamp();		
 	}
 	
 		
