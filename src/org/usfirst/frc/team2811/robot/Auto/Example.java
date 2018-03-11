@@ -1,6 +1,5 @@
 package org.usfirst.frc.team2811.robot.Auto;
 
-import org.usfirst.frc.team2811.robot.CXTIMER;
 import org.usfirst.frc.team2811.robot.Chassis;
 import org.usfirst.frc.team2811.robot.Elevator.ElevatorPosition;
 import org.usfirst.frc.team2811.robot.Elevator.Mode;

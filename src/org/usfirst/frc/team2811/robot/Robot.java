@@ -44,10 +44,6 @@ public class Robot extends IterativeRobot {
 	public OI oi = new OI();
 	AutoSequence autoChoice = new SideEscape();
 		
-	
-	
-	CXTIMER autotimer = new CXTIMER();
-		
 	AutoSelector autoSelector = new AutoSelector();
 
 	/**
@@ -74,9 +70,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {		
-		autotimer.Update();
-		autotimer.reset();
-						
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
 				
@@ -92,8 +85,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		autotimer.Update();
-
 		// Run the auto we selected. It will then command the various subsystems indirectly
 		autoChoice.run();
 		
@@ -106,8 +97,6 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		// Ensure robot is always in the drive orientation
 		drive.resetEnc();
-		autotimer.Update();
-		autotimer.reset();
 		intake.init();
 		
 		drive.setMode(Chassis.Mode.ARCADE);
@@ -129,9 +118,6 @@ public class Robot extends IterativeRobot {
 		drive.newUpdate();
 		elevator.newUpdate();
 		intake.newUpdate();
-
-		// update any timer to update all timers.
-		autotimer.Update();
 	}
 
 	/**
