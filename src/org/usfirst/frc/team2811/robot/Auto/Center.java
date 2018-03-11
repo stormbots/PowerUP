@@ -4,6 +4,7 @@ import org.usfirst.frc.team2811.robot.CXTIMER;
 import org.usfirst.frc.team2811.robot.Elevator.ElevatorPosition;
 import org.usfirst.frc.team2811.robot.Motion345;
 import org.usfirst.frc.team2811.robot.Robot;
+import org.usfirst.frc.team2811.robot.TinyTimer;
 
 /**
  * Example Auto command doing a basic thing. 
@@ -13,7 +14,7 @@ import org.usfirst.frc.team2811.robot.Robot;
  */
 public class Center extends AutoSequence {
 
-	CXTIMER timer = new CXTIMER();
+	TinyTimer timer = new TinyTimer();
 	double left1;
 	double right1;
 	double left2;
@@ -66,5 +67,7 @@ public class Center extends AutoSequence {
 		if(timer.atTime(6000)) {
 			Robot.intake.stopMotor();
 		}
+		
+		timer.update();
 	}
 }

@@ -59,7 +59,7 @@ public class Motion345 {
 		 * @param t current time
 		 * @param pactual current position, as measured by sensor
 		 * @param k gain constant (identical to FB function)
-		 * @return
+		 * @return output power to acheive the desired rate
 		 */
 		public double getVelPosFb(double t, double pactual,double k) {
 			double pideal=getPos(t);			

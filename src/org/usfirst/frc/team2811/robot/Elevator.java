@@ -81,7 +81,7 @@ public class Elevator extends RobotModule {
 		
 	}
 	
-	public void resetScaleTo(ElevatorPosition position) {
+	public void resetTo(ElevatorPosition position) {
 		eMotor.setSelectedSensorPosition(0, (int) position.ticks(), 20);
 		eMotor.setSelectedSensorPosition((int) position.ticks(), 0, 20);// maybe just in case? Shouldn't do anything.
 
@@ -110,6 +110,7 @@ public class Elevator extends RobotModule {
 	}
 
 	public enum ElevatorPosition{
+		FLOOR(0),
 		SWITCH (25_000),
 		SCALEHIGH(92_000),
 		AUTO_STARTUP(25_000),

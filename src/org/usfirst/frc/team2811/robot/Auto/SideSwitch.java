@@ -3,6 +3,7 @@ package org.usfirst.frc.team2811.robot.Auto;
 import org.usfirst.frc.team2811.robot.CXTIMER;
 import org.usfirst.frc.team2811.robot.Motion345;
 import org.usfirst.frc.team2811.robot.Robot;
+import org.usfirst.frc.team2811.robot.TinyTimer;
 
 /**
  * Example Auto command doing a basic thing. 
@@ -12,7 +13,7 @@ import org.usfirst.frc.team2811.robot.Robot;
  */
 public class SideSwitch extends AutoSequence {
 
-	CXTIMER timer = new CXTIMER();
+	TinyTimer timer = new TinyTimer();
 	double left1;
 	double right1;
 	
@@ -50,6 +51,8 @@ public class SideSwitch extends AutoSequence {
 		if(timer.atTime(7000)) {
 			Robot.intake.stopMotor();
 		}
+		
+		timer.update();
 
 	}
 }

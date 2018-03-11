@@ -1,6 +1,6 @@
 package org.usfirst.frc.team2811.robot.Auto;
 
-import org.usfirst.frc.team2811.robot.CXTIMER;
+import org.usfirst.frc.team2811.robot.TinyTimer;
 import org.usfirst.frc.team2811.robot.Motion345;
 import org.usfirst.frc.team2811.robot.Robot;
 
@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class SideEscape extends AutoSequence {
 
-	CXTIMER timer = new CXTIMER();
+	TinyTimer timer = new TinyTimer();
 	double left1;
 	double right1;
 	
@@ -44,7 +44,7 @@ public class SideEscape extends AutoSequence {
 			//Robot.elevator.setPos(switch height);
 		}
 		
-		timer.newUpdate();
+		timer.update();
 		
 	}
 }

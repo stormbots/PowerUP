@@ -55,8 +55,8 @@ public class Chassis extends RobotModule {
 
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
 	Motion345 right345 = new Motion345(10000, 3, 0, 200);
-	CXTIMER profileTimer = new CXTIMER();
-	enum Mode{PROFILE,TANK,ARCADE,DISABLED}
+	TinyTimer profileTimer = new TinyTimer();
+	public enum Mode{PROFILE,TANK,ARCADE,DISABLED}
 	Mode mode = Mode.ARCADE;
 	double leftPower = 0; 
 	double rightPower = 0;
@@ -165,7 +165,7 @@ public class Chassis extends RobotModule {
 
 	public void shiftHigh() {
 		// sets the gear to high
-		if(prefs.getBoolean("compbot", false)) {
+		if(prefs.getBoolean("compbot", true)) {
 			//comp bot
 			LeftShiftA.set(false);
 			LeftShiftB.set(true);			
@@ -215,15 +215,18 @@ public class Chassis extends RobotModule {
 	 * @param time (in ms)
 	 */
 	public void setProfile(double inchesLeft,double inchesRight, double time) {
+		//Convert our input time from ms to seconds
+		time  = time / 1000; 
+
 		System.out.printf("Creating auto [ %f , %f ] over %f s\n",inchesLeft,inchesRight,time);
+
 		// create our motion profile
-		//TODO: Actually find some values for max speed and a good tolerance
 		left345.setMove(10_000, time, inchesLeft*scaleFactorL, 200);
-		left345.setMove(10_000, time, inchesRight*scaleFactorR, 200);
+		right345.setMove(10_000, time, inchesRight*scaleFactorR, 200);
+		//TODO: Actually find some values for max speed and a good tolerance
 		
 		// Reset our timer to start executing
 		profileTimer.reset();
-		profileTimer.newReset();
 		resetEnc();
 
 		//set our chassis mode to use the profile!
@@ -237,25 +240,26 @@ public class Chassis extends RobotModule {
 		//Generate a power modifier to ensure we avoid brownouts
 		double mod = Utilities.lerp(pdp.getVoltage(), 8.25, 6.5, 1.0, 0.0);
 		mod = Utilities.clamp(mod, 0, 1);
-		System.out.println(mode.toString());
+
+		SmartDashboard.putString("Chassis Mode", mode.toString());
 		
 		switch(mode) {
 		case DISABLED:
 			driver.tankDrive(0,0);	
 			return;
 		case PROFILE:	
-			profileTimer.newUpdate();
-			System.out.print("profiletimer");
-			System.out.println(profileTimer.getNewTimeSec());
-			//get next motion profile thing
-			leftPower = left345.getVelPosFb(profileTimer.getNewTimeSec(), -leadL.getSelectedSensorPosition(0), 0.023);
-			rightPower = -right345.getVelPosFb(profileTimer.getNewTimeSec(), -leadR.getSelectedSensorPosition(0), 0.023);
+			profileTimer.update();
 			
-			System.out.print("L");
-			System.out.print(leftPower);
-			System.out.print("  R");
-			System.out.print(rightPower);
-			
+			//get next motion profile thing			
+			leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.023);
+			rightPower = -right345.getVelPosFb(profileTimer.getSeconds(), -leadR.getSelectedSensorPosition(0), 0.023);
+
+			// TODO : Potential practicebot difference omitted: 
+			// Practicebot had leftpower = -left345() ; rightpower = right345)
+
+			SmartDashboard.putNumber("Chassis Profile Left", leftPower);
+			SmartDashboard.putNumber("Chassis Profile Right", rightPower);
+						
 			//NOTE: EXPECTED FALLTHROUGH TO TANK MODE
 		case TANK:
 			//Set the motor

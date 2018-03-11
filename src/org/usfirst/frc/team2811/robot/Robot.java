@@ -115,15 +115,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		drive.setMode(Chassis.Mode.PROFILE);
-
+		// NOTE: Do robot actions at the end of autoInit to keep them 
+		// together and within quick scroll range of autoPeriodic();
+		
 		robotLocation = RobotLocation.CENTER;
 		targetLocation = TargetLocation.SWITCH;
 		autotimer.Update();
 		autotimer.reset();
-		
-		//elevator.resetScaleTo(ElevatorPosition.AUTO_STARTUP);
-
 		
 		fieldData = DriverStation.getInstance().getGameSpecificMessage();
 		SmartDashboard.putString("fieldstepup", fieldData);
@@ -164,7 +162,6 @@ public class Robot extends IterativeRobot {
 				autoChoice = new Center(false);
 			}
 		}
-		
 		else if(robotLocation == RobotLocation.LEFT) {
 			if(scaleConfig == ScaleConfig.LEFT && switchConfig == SwitchConfig.LEFT) {
 				if(switchAbility.getSelected()==true && scaleAbility.getSelected()==true) {
@@ -240,15 +237,11 @@ public class Robot extends IterativeRobot {
 				autoChoice = new SideEscape();
 			}
 		}
-		
 		else {
 			//auto select based off field
 		}
-		
-		autoChoice.run();
 
-		
-		//else for l/r
+		SmartDashboard.putString("Selected Auto", autoChoice.getClass().getSimpleName());
 
 		System.out.println(fieldData);
 		System.out.println(robotLocation);
@@ -261,11 +254,12 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("targetLocation", targetLocation.toString());
 		SmartDashboard.putString("switchConfig", switchConfig.toString());
 		SmartDashboard.putString("scaleConfig", scaleConfig.toString());
-
-		
-		drive.newUpdate();
-		intake.newUpdate();
-		//elevator.newUpdate();
+				
+		// Do auto mode initialization 
+		drive.shiftLow();
+		intake.tiltBackward(false);
+		elevator.resetTo(ElevatorPosition.AUTO_STARTUP);
+		elevator.setPos(ElevatorPosition.SWITCH);
 	}
 
 	/**
@@ -276,24 +270,24 @@ public class Robot extends IterativeRobot {
 		autotimer.Update();
 
 		// Run the auto we selected. It will then command the various subsystems indirectly
-		drive.shiftLow();
-		intake.tiltBackward(false);
-		//elevator.setPos(ElevatorPosition.SWITCH);
 		autoChoice.run();
-
-		//SmartDashboard.putNumber("Step", );
 		
+		// Run our subsystem update sequences
 		drive.newUpdate();
 		//elevator.newUpdate();
 		intake.newUpdate();
 	}
 	
 	public void teleopInit() {
+		// Ensure robot is always in the drive orientation
 		drive.resetEnc();
 		autotimer.Update();
 		autotimer.reset();
 		intake.init();
+		
 		drive.setMode(Chassis.Mode.ARCADE);
+		elevator.setMode(Elevator.Mode.MANUALPOSITION);
+		intake.tiltBackward(false);
 	}
 
 	/**
