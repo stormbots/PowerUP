@@ -101,23 +101,7 @@ public class OI {
 				Robot.intake.tiltBackward(true);
 				tiltedBack =  true;
 			}
-		}
-		
-//		if(Mode)
-		
-		// TODO: Check buttons, and execute the expected action
-		// These are examples, please validate them! D:
-		
-		
-		
-		//Hold to shift example
-		
-		
-		
-		
-		
-		
-		
+		}		
 		
 	}
 }

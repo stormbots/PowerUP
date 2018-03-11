@@ -32,18 +32,14 @@ import edu.wpi.first.wpilibj.Joystick;
  * project.
  */
 public class Robot extends IterativeRobot {
-	
-	Joystick stickDrive1 = new Joystick(0);
-	Joystick stickDrive2 = new Joystick(2);
-	Joystick stickFunctions = new Joystick(3);
 	public static Elevator elevator = new Elevator();
 	public static Intake intake = new Intake();
 	public static Chassis drive = new Chassis();
 	public static Climber climber = new Climber();
 	Lighting lighting = new Lighting();
 	public OI oi = new OI();
+	
 	AutoSequence autoChoice = new SideEscape();
-		
 	AutoSelector autoSelector = new AutoSelector();
 
 	/**
@@ -53,7 +49,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {		
 		CameraServer.getInstance().startAutomaticCapture();
-
 		autoSelector.putSmartDashboard();
 	}
 
