@@ -152,10 +152,10 @@ public class Chassis extends RobotModule {
 	void update(Joystick stickDrive, Joystick stickL, Joystick functions) {
 		//updates the lead talons, then updates the slave talons
 
-		if(stickDrive.getRawButton(8)) {
+		if(stickDrive.getRawButtonPressed(8)) {
 			shiftHigh();
 		}
-		else {
+		if(stickDrive.getRawButtonReleased(8)) {
 			shiftLow(); 
 		}
 		
@@ -165,7 +165,7 @@ public class Chassis extends RobotModule {
 		// constrain mod to 0... 1
 		//apply to all aracade drive outputs
 		
-		double mod = Utilities.lerp(pdp.getVoltage(), 8.25, 6.5, 1.0, 0.0);
+		double mod = Utilities.lerp(pdp.getVoltage(), 8.7, 6.5, 1.0, 0.0);
 		mod = Utilities.clamp(mod, 0, 1);
 		
 		double joyAdjustment = 0.75;
@@ -191,8 +191,8 @@ public class Chassis extends RobotModule {
 		// sets the gear to low
 		if(prefs.getBoolean("compbot", true)) {
 			//comp bot
-			LeftShiftA.set(true);
-			LeftShiftB.set(false);			
+			LeftShiftA.set(false);
+			LeftShiftB.set(true);			
 		}
 		else {
 			//prac bot
@@ -206,10 +206,10 @@ public class Chassis extends RobotModule {
 
 	public void shiftHigh() {
 		// sets the gear to high
-		if(prefs.getBoolean("compbot", false)) {
+		if(prefs.getBoolean("compbot", true)) {
 			//comp bot
-			LeftShiftA.set(false);
-			LeftShiftB.set(true);			
+			LeftShiftA.set(true);
+			LeftShiftB.set(false);			
 		}
 		else {
 			//prac bot

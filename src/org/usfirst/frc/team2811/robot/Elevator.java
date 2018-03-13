@@ -42,7 +42,7 @@ public class Elevator extends RobotModule {
 	 double autoActiveStep = 3;
 	 double autoActiveTime = 1;
 	 
-	 double autoPosition = 0.0; //Where you want to go to during auto.
+	 double autoPosition = 36000; //Where you want to go to during auto. Was initialized to 0.0, changing it to 36000
 	 double currentPos = 0.0;
 	 
 	 
@@ -81,7 +81,7 @@ public class Elevator extends RobotModule {
 		
 		//TODO: new joystick needs to be plugged in with slider at zero, or moved, otherwise it reads incorrectly
 		// Fix should be to make sure that the joystick input is -1 before enabling the elevator
-		if(prefs.getBoolean("compbot", false)) {
+		if(prefs.getBoolean("compbot", true)) {
 			//comp bot
 			currentPos = eMotor.getSelectedSensorPosition(0);
 		}
@@ -178,7 +178,7 @@ public class Elevator extends RobotModule {
 		//eVelocity = -eVelocity;
 		
 		
-		eMotor.set(ControlMode.PercentOutput, eVelocity);
+		eMotor.set(ControlMode.PercentOutput, -eVelocity);
 		SmartDashboard.putNumber("Elevator Current Position", currentPos);
 		SmartDashboard.putNumber("Breakpoint", breakpoint);
 		SmartDashboard.putNumber("Desired Position", elevatorPos);
@@ -234,7 +234,7 @@ public class Elevator extends RobotModule {
 		
 		//TODO may need to set these motor phases
 		
-		if(prefs.getBoolean("compbot", false)) {
+		if(prefs.getBoolean("compbot", true)) {
 			//comp bot
 			SmartDashboard.putNumber("ElevatorCurrentPos", -eMotor.getSelectedSensorPosition(0));
 			eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, -eMotor.getSelectedSensorPosition(0), 0.01));
