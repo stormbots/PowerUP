@@ -279,9 +279,9 @@ public class Chassis {
 			break;
 		case ARCADE:
 			//Not enabled for now, pending an update for OI related stuff.
-			if(prefs.getBoolean("compbot", false)) {
+			if(prefs.getBoolean("compbot", true)) {
 				//comp bot
-				driver.arcadeDrive(arcadePower*mod, -arcadeTurn*mod, squaredInputs);
+				driver.arcadeDrive(-arcadePower*mod, -arcadeTurn*mod, squaredInputs);
 			}
 			else {
 				//prac bot
