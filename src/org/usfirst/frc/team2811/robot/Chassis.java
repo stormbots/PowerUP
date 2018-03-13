@@ -55,6 +55,8 @@ public class Chassis {
 	Mode mode = Mode.ARCADE;
 	double leftPower = 0; 
 	double rightPower = 0;
+	
+	//Drive configuration values. Will be overwritten by disabledperiodic
 	double scaleFactorL = 199.8; // compbot default
 	double scaleFactorR = 405.4; // compbot default
 	
@@ -89,6 +91,17 @@ public class Chassis {
 	
 	/** Fetch preferences and adjust variables as needed */
 	public void disabledPeriodic() {
+		if(prefs.getBoolean("compbot", true)) {
+			//compbot
+			
+			//One encoder a 128 instead of a 256
+			scaleFactorL = 199.8; 
+			scaleFactorR = 405.4;
+		}else {
+			//practice bot
+			scaleFactorL = 405.4; 
+			scaleFactorR = 405.4;
+		}
 		//braking(false);
 	}
 
@@ -231,12 +244,16 @@ public class Chassis {
 		case PROFILE:	
 			profileTimer.update();
 			
-			//get next motion profile thing			
-			leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.023);
-			rightPower = -right345.getVelPosFb(profileTimer.getSeconds(), -leadR.getSelectedSensorPosition(0), 0.023);
-
-			// TODO : Potential practicebot difference omitted: 
-			// Practicebot had leftpower = -left345() ; rightpower = right345)
+			if(prefs.getBoolean("compbot", true)) {
+				//compbot
+				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.023);
+				rightPower = -right345.getVelPosFb(profileTimer.getSeconds(), -leadR.getSelectedSensorPosition(0), 0.023);				
+			}
+			else {
+				//practice bot
+				leftPower = -left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.023);
+				rightPower = -right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.023);
+			}
 
 			SmartDashboard.putNumber("Chassis Profile Left", leftPower);
 			SmartDashboard.putNumber("Chassis Profile Right", rightPower);
