@@ -236,8 +236,8 @@ public class Elevator extends RobotModule {
 		
 		if(prefs.getBoolean("compbot", false)) {
 			//comp bot
-			SmartDashboard.putNumber("ElevatorCurrentPos", eMotor.getSelectedSensorPosition(0));
-			eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.01));
+			SmartDashboard.putNumber("ElevatorCurrentPos", -eMotor.getSelectedSensorPosition(0));
+			eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, -eMotor.getSelectedSensorPosition(0), 0.01));
 		}
 		else {
 			//prac bot

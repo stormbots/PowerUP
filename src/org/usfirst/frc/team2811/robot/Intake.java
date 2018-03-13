@@ -56,17 +56,20 @@ public class Intake extends RobotModule {
 		
 		//motor2.follow(motor1);
 		//motor2.setInverted(true);
-		if(prefs.getBoolean("compbot", true)){
+		squeezeSolenoidA = new Solenoid(6);  // Should be same on both bots
+		squeezeSolenoidB = new Solenoid(7);
+
+		if(prefs.getBoolean("compbot", false)){
 			//comp bot
-			squeezeSolenoidA = new Solenoid(4); 
-			squeezeSolenoidB = new Solenoid(5);
+//			squeezeSolenoidA = new Solenoid(4); 
+//			squeezeSolenoidB = new Solenoid(5);
 			SmartDashboard.putString("Seeing Solenoids", "Yes");
 			tiltInvert = false;
 			squeezeInvert = false;
 		}
 		else {
-			squeezeSolenoidA = new Solenoid(6); 
-			squeezeSolenoidB = new Solenoid(7);
+//			squeezeSolenoidA = new Solenoid(6); 
+//			squeezeSolenoidB = new Solenoid(7);
 
 		}
 

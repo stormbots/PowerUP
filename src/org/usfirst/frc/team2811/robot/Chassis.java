@@ -79,8 +79,8 @@ public class Chassis extends RobotModule {
 			//Comp Bot
 			LeftShiftA = new Solenoid(2);
 			LeftShiftB = new Solenoid(3);
-			RightShiftA = new Solenoid(6); //not actually used
-			RightShiftB = new Solenoid(7);	//not actually used
+			RightShiftA = new Solenoid(4); //not actually used
+			RightShiftB = new Solenoid(5);	//not actually used
 		}
 		else {
 			//practice bot
