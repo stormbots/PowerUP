@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2811.robot.Auto;
 
 import org.usfirst.frc.team2811.robot.Elevator.ElevatorPosition;
+import org.usfirst.frc.team2811.robot.Chassis;
 import org.usfirst.frc.team2811.robot.Motion345;
 import org.usfirst.frc.team2811.robot.Robot;
 import org.usfirst.frc.team2811.robot.TinyTimer;
@@ -61,11 +62,13 @@ public class Center extends AutoSequence {
 			//Robot.elevator.setPos(switch height);
 		}
 		if(timer.atTime(5000)) {
+			Robot.drive.setMode(Chassis.Mode.ARCADE);
 			Robot.intake.ejectCube();
 		}
 		if(timer.atTime(6000)) {
 			Robot.intake.stopMotor();
 		}
+
 		
 		timer.update();
 	}

@@ -15,6 +15,7 @@ import org.usfirst.frc.team2811.robot.Auto.SideEscape;
 import org.usfirst.frc.team2811.robot.Auto.SideScale;
 import org.usfirst.frc.team2811.robot.Auto.SideSwitch;
 import org.usfirst.frc.team2811.robot.Elevator.ElevatorPosition;
+import org.usfirst.frc.team2811.robot.Chassis.Mode;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -92,6 +93,7 @@ public class Robot extends IterativeRobot {
 	/** Ensure robot is ready for human operator in matches */
 	public void teleopInit() {
 		drive.setMode(Chassis.Mode.ARCADE);
+		drive.setMode(Mode.ARCADE);
 		elevator.setMode(Elevator.Mode.MANUALPOSITION);
 		intake.tiltBackward(false);
 	}

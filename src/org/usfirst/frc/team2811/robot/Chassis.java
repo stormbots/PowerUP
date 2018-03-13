@@ -99,8 +99,8 @@ public class Chassis {
 			scaleFactorR = 405.4;
 		}else {
 			//practice bot
-			scaleFactorL = 405.4; 
-			scaleFactorR = 405.4;
+			scaleFactorL = 291; 
+			scaleFactorR = 291;
 		}
 		//braking(false);
 	}
@@ -111,10 +111,6 @@ public class Chassis {
 	 * @param brake
 	 */
 	public void braking(boolean brake) {
-		NeutralMode mode = NeutralMode.Brake;
-		if(brake == false) {
-			mode = NeutralMode.Coast;
-		}
 		
 		// need to fix for coast on disable
 		leadL.setNeutralMode(NeutralMode.Brake);
@@ -148,8 +144,8 @@ public class Chassis {
 		// sets the gear to low
 		if(prefs.getBoolean("compbot", true)) {
 			//comp bot
-			LeftShiftA.set(true);
-			LeftShiftB.set(false);			
+			LeftShiftA.set(false);
+			LeftShiftB.set(true);			
 		}
 		else {
 			//prac bot
@@ -165,8 +161,8 @@ public class Chassis {
 		// sets the gear to high
 		if(prefs.getBoolean("compbot", true)) {
 			//comp bot
-			LeftShiftA.set(false);
-			LeftShiftB.set(true);			
+			LeftShiftA.set(true);
+			LeftShiftB.set(false);			
 		}
 		else {
 			//prac bot
@@ -246,8 +242,15 @@ public class Chassis {
 			
 			if(prefs.getBoolean("compbot", true)) {
 				//compbot
-				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.023);
-				rightPower = -right345.getVelPosFb(profileTimer.getSeconds(), -leadR.getSelectedSensorPosition(0), 0.023);				
+				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.008);
+				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.008);				
+		
+
+				SmartDashboard.putNumber("Chassis Profile Left",         leftPower);
+				SmartDashboard.putNumber("Chassis Profile Right",        rightPower);
+				SmartDashboard.putNumber("Chassis Profile Left Sensor",  leadL.getSelectedSensorPosition(0));
+				SmartDashboard.putNumber("Chassis Profile Sensor",       leadR.getSelectedSensorPosition(0));
+			
 			}
 			else {
 				//practice bot
@@ -255,13 +258,17 @@ public class Chassis {
 				rightPower = -right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.023);
 			}
 
-			SmartDashboard.putNumber("Chassis Profile Left", leftPower);
-			SmartDashboard.putNumber("Chassis Profile Right", rightPower);
+//			SmartDashboard.putNumber("Chassis Profile Left",         leftPower);
+//			SmartDashboard.putNumber("Chassis Profile Right",        rightPower);
+//			SmartDashboard.putNumber("Chassis Profile Left Sensor",  leadL.getSelectedSensorPosition(0));
+//			SmartDashboard.putNumber("Chassis Profile Sensor",       leadR.getSelectedSensorPosition(0));
+			
+			
 						
 			//NOTE: EXPECTED FALLTHROUGH TO TANK MODE
 		case TANK:
 			//Set the motor
-			if (prefs.getBoolean("compbot", false)){
+			if (prefs.getBoolean("compbot", true)){
 				//comp bot
 				driver.tankDrive(leftPower, rightPower);
 			}

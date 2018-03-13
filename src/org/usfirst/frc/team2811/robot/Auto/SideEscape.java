@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2811.robot.Auto;
 
 import org.usfirst.frc.team2811.robot.TinyTimer;
+import org.usfirst.frc.team2811.robot.Chassis;
 import org.usfirst.frc.team2811.robot.Motion345;
 import org.usfirst.frc.team2811.robot.Robot;
 
@@ -40,6 +41,9 @@ public class SideEscape extends AutoSequence {
 		if(timer.atTime(0)){
 			Robot.drive.setProfile(left1, right1, 8000);
 			//Robot.elevator.setPos(switch height);
+		}
+		if(timer.atTime(8000)) {
+			Robot.drive.setMode(Chassis.Mode.ARCADE);
 		}
 		
 		timer.update();

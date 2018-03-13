@@ -21,7 +21,7 @@ public class OI {
 		
 		//DRIVE
 		Robot.drive.arcadeDrive(
-			driver.getRawAxis(3),
+			driver.getRawAxis(3)*-1,
 			driver.getRawAxis(0)*turnScaleValue,
 			true);
 		

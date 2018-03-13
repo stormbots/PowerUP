@@ -58,7 +58,7 @@ public class Elevator {
 	
 	/** Fetch preferences and adjust variables as needed */
 	public void disabledPeriodic(){
-		maxPos = prefs.getDouble("elevatorTopLimit", 93000);
+		maxPos = prefs.getDouble("elevatorTopLimit", 92000);
 	}
 	
 	
@@ -108,9 +108,9 @@ public class Elevator {
 	
 	void newUpdate() {
 		
-		if(prefs.getBoolean("compbot", false)) {
+		if(prefs.getBoolean("compbot", true)) {
 			//comp bot
-			currentPos = eMotor.getSelectedSensorPosition(0);
+			currentPos = -eMotor.getSelectedSensorPosition(0);
 		}
 		else {
 			//prac bot
@@ -127,10 +127,10 @@ public class Elevator {
 			break;
 		case HOMING:
 			if(!LimitSwitch.get()) {
-				eVelocity = -0.3;
+				eVelocity = 0;
 			}
 			else {
-				eVelocity = 0;
+				eVelocity = -0.3;
 			}
 			break;
 		default: 
@@ -155,6 +155,6 @@ public class Elevator {
 		SmartDashboard.putNumber("Elevator Desired Position", elevatorPos);
 		SmartDashboard.putNumber("Elevator Voltage", eMotor.getMotorOutputVoltage());
 		SmartDashboard.putNumber("Elevator Velocity", eVelocity);
-		SmartDashboard.putBoolean("Elevator Limit Switch", LimitSwitch.get());
+		SmartDashboard.putBoolean("Elevator Limit Switch is pressed", !LimitSwitch.get());
 	}
 }
