@@ -73,6 +73,8 @@ public class Elevator extends RobotModule {
 		//update constants and stuff from flash
 		maxPos = prefs.getDouble("elevatorTopLimit", 93000);
 		
+		SmartDashboard.putNumber("Elevator Encoder pos (disabled)", eMotor.getSelectedSensorPosition(0));
+		
 	}
 	
 	void update(Joystick driver1,Joystick driver2, Joystick functions1) { //Only using functions1
@@ -87,9 +89,9 @@ public class Elevator extends RobotModule {
 		}
 		else {
 			//prac bot
-			currentPos = -eMotor.getSelectedSensorPosition(0);
+			currentPos = eMotor.getSelectedSensorPosition(0);
 		}
-		double stickValue = -functions1.getRawAxis(3);
+		double stickValue = functions1.getRawAxis(3);
 
 		if(functions1.getRawButtonPressed(11)) {
 			if(mode == Mode.MANUALPOSITION) {
@@ -103,52 +105,15 @@ public class Elevator extends RobotModule {
 				mode = Mode.MANUALPOSITION;
 			}
 		}
-		
-		if(mode == Mode.HOMING) {
-			if(!LimitSwitch.get()) {
-				eVelocity = 0.1;
-			}
-			else{
-				mode = Mode.MANUALPOSITION;
-				homed = true;
-				reset();
-			}
-		}
-		
+				
 		else if(mode == Mode.MANUALVELOCITY) {
-			
 			eVelocity = stickValue;
-
-			
-			
-		
 		}
-		//Position setlist, currently unused
-		/*else if(mode == Mode.BUTTON) {
-			
-			eVelocity = FB.FB(elevatorPos, -currentPos, 0.02);
-			//Takes an inputed position and adjusts the velocity to get there.
-			//Last value needs to be tested and adjusted.
-			
-		}*/
 		
 		else if(mode == Mode.MANUALPOSITION) {
 			
 			
-			elevatorPos = ( (stickValue-(-1)) / (1-(-1)) * (maxPos-minPos) + minPos ); //Maps controller y-axis to elevator position.
-			
-			//Not applicable to practice robot, not used
-			/*if(elevatorPos < midBP && currentPos > midBP) {
-				breakpoint = midBP;
-			}
-			else if(elevatorPos > midBP && currentPos < midBP) {
-				breakpoint = midBP;
-			}
-			else {
-				breakpoint = elevatorPos;
-				
-			}*/
-			
+			elevatorPos = Utilities.lerp(stickValue, 1, -1, 0, maxPos);			
 			eVelocity = FB.FB(elevatorPos, currentPos, 0.007);			
 			
 		}
@@ -179,13 +144,13 @@ public class Elevator extends RobotModule {
 		
 		
 		eMotor.set(ControlMode.PercentOutput, -eVelocity);
-		SmartDashboard.putNumber("Elevator Current Position", currentPos);
-		SmartDashboard.putNumber("Breakpoint", breakpoint);
-		SmartDashboard.putNumber("Desired Position", elevatorPos);
-		SmartDashboard.putNumber("Voltage", eMotor.getOutputCurrent());
-		SmartDashboard.putNumber("Joystick Position", functions1.getY());
-		SmartDashboard.putNumber("elevatorVelocity", eVelocity);
-		SmartDashboard.putBoolean("LimitSwitch", LimitSwitch.get());
+//		SmartDashboard.putNumber("Elevator Current Position", currentPos);
+//		SmartDashboard.putNumber("Breakpoint", breakpoint);
+//		SmartDashboard.putNumber("Desired Position", elevatorPos);
+//		SmartDashboard.putNumber("Voltage", eMotor.getOutputCurrent());
+//		SmartDashboard.putNumber("Joystick Position", functions1.getY());
+//		SmartDashboard.putNumber("elevatorVelocity", eVelocity);
+//		SmartDashboard.putBoolean("LimitSwitch", LimitSwitch.get());
 		
 	}
 		
@@ -224,9 +189,18 @@ public class Elevator extends RobotModule {
 		else {
 			autoPosition = initializePos;		
 		}
+		
+		//DEBUG
+		//elevatorPos =0.0;
+		//autoPosition = 2000.0;
+		//eMotor.setSelectedSensorPosition(0, (int) 0, 20);
+
 	}
 	
 	void auto(int stepAuto, double time) {
+		
+		//eMotor.set(ControlMode.PercentOutput, +0.3);
+		//if(true)return;
 		
 		if(time > autoActiveTime && stepAuto == autoActiveStep) {
 			elevatorPos = autoPosition;
@@ -241,13 +215,14 @@ public class Elevator extends RobotModule {
 		}
 		else {
 			//prac bot
-			eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, -eMotor.getSelectedSensorPosition(0), 0.01));
-			SmartDashboard.putNumber("ElevatorCurrentPos", -eMotor.getSelectedSensorPosition(0));
+			double output = -FB.FB(elevatorPos, eMotor.getSelectedSensorPosition(0),0.01);
+			eMotor.set(ControlMode.PercentOutput, output);
+			SmartDashboard.putNumber("elevator motor output", output);
+			SmartDashboard.putNumber("Elevator Current Pos (running)", eMotor.getSelectedSensorPosition(0));
 		}
 			
-		SmartDashboard.putNumber("ElevatorAutoPos", autoPosition);
-		SmartDashboard.putNumber("Elevatorvelocity", eMotor.getMotorOutputPercent());
-		SmartDashboard.putNumber("ElevatorPos", elevatorPos);
+		SmartDashboard.putNumber("Elevator Target Pos", autoPosition);
+		SmartDashboard.putNumber("elevatorPos", elevatorPos);
 		
 	}
 	
