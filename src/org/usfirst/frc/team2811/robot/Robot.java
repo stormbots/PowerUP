@@ -60,13 +60,14 @@ public class Robot extends IterativeRobot {
 	static double delayTime = 0;
 	static boolean deliverCube = true;
 	
-	long step0timer = 1000;
+	long step0timer = 0;
 	long step1timer = 2500;
 	long step2timer = 2500;
 	long step3timer = 2500;
-	long step4timer = 4000;
-	long step5timer = 2000;
-	long step6timer = 2000;
+	long step4timer = 1000;
+	long step5timer = 300;
+	long step6timer = 4000;
+	long step7timer = 8000;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -324,6 +325,12 @@ public class Robot extends IterativeRobot {
 			break;
 		case 6:
 			if(autotimer.ckTime(true, step6timer)) {
+				astep++;
+				autotimer.reset();
+			}
+			break;
+		case 7:
+			if(autotimer.ckTime(true, step7timer)) {
 				astep++;
 				autotimer.reset();
 			}

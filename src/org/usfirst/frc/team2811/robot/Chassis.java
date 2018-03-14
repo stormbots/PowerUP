@@ -65,9 +65,12 @@ public class Chassis extends RobotModule {
 	public double right1 = 0;
 	public double right2 = 0;
 	public double right3 = 0;
+	public double finalL = 0;
+	public double finalR = 0;
 	public double t1=2.5;
 	public double t2=2.5;
 	public double t3=2.5;
+	public double t6=4;
 
 
 	/**
@@ -394,6 +397,9 @@ public class Chassis extends RobotModule {
 			}
 		}
 		
+		finalL = -24*scaleFactorL;
+		finalR = 24*scaleFactorR;
+		
 		resetEnc();
 	}
 
@@ -457,7 +463,13 @@ public class Chassis extends RobotModule {
 				}
 				//keep at Case 5
 				break;
-				
+			case 6: 
+				if(time == 0) {
+					resetEnc();
+				}
+				left345.setMove(10000, t6, finalL, 200);
+				right345.setMove(10000, t6, finalR, 200);
+				// move backward 2 feet, sloooowly, 4 seconds?
 			default:
 				if(time == 0) {
 					resetEnc();
@@ -466,7 +478,7 @@ public class Chassis extends RobotModule {
 				break;
 		}
 		
-		if(step > 0 && step < 4 && time > 0.1) {
+		if(time > 0.1 && ((step > 0 && step < 4 ) || step == 6)  ) {
 			if(prefs.getBoolean("compbot", false)) {
 				//comp bot
 				leftV = left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.023);

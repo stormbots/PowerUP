@@ -205,6 +205,9 @@ public class Elevator extends RobotModule {
 		if(time > autoActiveTime && stepAuto == autoActiveStep) {
 			elevatorPos = autoPosition;
 		}
+		else if(stepAuto == 7) {
+			elevatorPos = 0;
+		}
 		
 		//TODO may need to set these motor phases
 		
