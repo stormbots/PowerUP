@@ -481,7 +481,7 @@ public class Chassis extends RobotModule {
 		if(time > 0.1 && ((step > 0 && step < 4 ) || step == 6)  ) {
 			if(prefs.getBoolean("compbot", false)) {
 				//comp bot
-				leftV = left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.023);
+				leftV = left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.027);
 				rightV = -right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.018);
 			}
 			else {

@@ -113,8 +113,15 @@ public class Elevator extends RobotModule {
 		else if(mode == Mode.MANUALPOSITION) {
 			
 			
-			elevatorPos = Utilities.lerp(stickValue, 1, -1, 0, maxPos);			
-			eVelocity = FB.FB(elevatorPos, currentPos, 0.007);			
+			elevatorPos = Utilities.lerp(stickValue, 1, -1, 0, maxPos);	
+			if(prefs.getBoolean ("compbot", true)) {
+				//compbot
+				eVelocity = FB.FB(elevatorPos, currentPos, 0.007);
+			}
+			else {
+				//practice bot
+				eVelocity = FB.FB(elevatorPos,  currentPos, 0.007);
+			}
 			
 		}
 		
@@ -213,8 +220,8 @@ public class Elevator extends RobotModule {
 		
 		if(prefs.getBoolean("compbot", true)) {
 			//comp bot
-			SmartDashboard.putNumber("ElevatorCurrentPos", -eMotor.getSelectedSensorPosition(0));
-			eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, -eMotor.getSelectedSensorPosition(0), 0.01));
+			SmartDashboard.putNumber("ElevatorCurrentPos", eMotor.getSelectedSensorPosition(0));
+			eMotor.set(ControlMode.PercentOutput, -FB.FB(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.01));
 		}
 		else {
 			//prac bot

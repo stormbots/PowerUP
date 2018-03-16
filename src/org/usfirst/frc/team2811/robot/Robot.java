@@ -340,8 +340,8 @@ public class Robot extends IterativeRobot {
 		}
 		
 		//Handle continuous updates for various modules
-		//elevator.auto(astep, autotimer.getTimeSec()); 
-		//intake.auto(astep, autotimer.getTimeSec());
+		elevator.auto(astep, autotimer.getTimeSec()); 
+		intake.auto(astep, autotimer.getTimeSec());
 		drive.auto(astep, autotimer.getTimeSec());
 		//climber.auto(astep, autotimer.getTimeSec());
 

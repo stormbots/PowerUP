@@ -230,7 +230,7 @@ public class Intake extends RobotModule {
 	 * @return 0 if no cube, 1 if cube
 	 */
 	public double getLightPattern() {
-		if(redEye.get() ) return 1;
+		if(!redEye.get() ) return 1;
 		return 0;
 	}
 }
