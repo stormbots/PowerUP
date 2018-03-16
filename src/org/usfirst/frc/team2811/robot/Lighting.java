@@ -73,8 +73,6 @@ public class Lighting {
 		  selection.addObject(pattern.toString(), pattern);
 	  }
 
-	  SmartDashboard.putData("Best light", selection);
-	  
 	  enableLights.addDefault("Enable lights", true);
 	  enableLights.addObject("Disable lights", false);
 	  SmartDashboard.putData("enablelights",enableLights);

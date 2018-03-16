@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2811.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -19,8 +20,11 @@ public class Climber extends RobotModule {
 			mtr1.set(ControlMode.PercentOutput, 0);
 			mtr2.set(ControlMode.PercentOutput, 0);
 		}
-		SmartDashboard.putNumber("ClimberCurrent", mtr1.getOutputCurrent());
-		SmartDashboard.putNumber( "ClimberCurrent", mtr2.getOutputCurrent());
 		
+		SmartDashboard.putNumber("ClimberPosition1", mtr1.getSelectedSensorPosition(0));
+	}
+	
+	public void disabledPeriodic(){
+		SmartDashboard.putNumber("Climber Position (disabled)", mtr1.getSelectedSensorPosition(0));
 	}
 }

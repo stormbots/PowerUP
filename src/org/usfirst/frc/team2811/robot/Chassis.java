@@ -280,15 +280,21 @@ public class Chassis extends RobotModule {
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
 				SmartDashboard.putString("TargLoc", "switch");
-				left1 = 130.6405*scaleFactorL;
-				right1 = -114.5790*scaleFactorR;
+//				left1 = 130.6405*scaleFactorL;
+//				right1 = -114.5790*scaleFactorR;
+				
+				left1 = 142*scaleFactorL;
+				right1 = -142*scaleFactorR;
+				left2 = 46*scaleFactorL;
+				right2 = -6*scaleFactorR;
 				
 				//left1 = 133.6405*scaleFactorL;
 				//right1 = -108.5790*scaleFactorR;
 				//left1 = 139.3341*scaleFactorL;
 				//right1 = -111.9587*scaleFactorR;
-				left2 = 0;
-				right2 = 0;
+//				left2 = 0;
+//				right2 = 0;
+				
 				left3 = 0;
 				right3 = 0;
 				t1=8.0; t2=0; t3=0;
@@ -370,13 +376,19 @@ public class Chassis extends RobotModule {
 
 			}
 			if(targetLocation == TargetLocation.SWITCH) {
-				left1 = 114.5790*scaleFactorL;
-				right1 = -130.6405*scaleFactorR;
+//				left1 = 114.5790*scaleFactorL;
+//				right1 = -130.6405*scaleFactorR;
+				
+				left1 = 142*scaleFactorL;
+				right1 = -142*scaleFactorR;
+				left2 = 6*scaleFactorL;
+				right2 = -46*scaleFactorR;
 				
 				//left1 = 111.9587*scaleFactorL;
 				//right1 = -139.3341*scaleFactorR;
-				left2 = 0;
-				right2 = 0;
+//				left2 = 0;
+//				right2 = 0;
+				
 				left3 = 0;
 				right3 = 0;
 				t1=8.0;	t2=0.0;	t3=0.0;

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** INTAKE CLASS
@@ -222,6 +223,12 @@ public class Intake extends RobotModule {
 		SmartDashboard.putBoolean("RedEye", redEye.get());   
 		SmartDashboard.putBoolean("Squeeze Intake", intakeOpen);
 		SmartDashboard.putBoolean("Tilt Base", tiltedBack);
+		
+		if(Timer.getMatchTime() <= 1 && Timer.getMatchTime() >= 0) {
+			tiltBackward(true);
+			squeezeOpen(false);
+		}
+		
 	}
 	
 
