@@ -297,7 +297,7 @@ public class Chassis extends RobotModule {
 				
 				left3 = 0;
 				right3 = 0;
-				t1=8.0; t2=0; t3=0;
+				t1=6.0; t2=0; t3=0;
 
 			}
 			if(targetLocation == TargetLocation.MOVE_ONLY) {
@@ -391,7 +391,7 @@ public class Chassis extends RobotModule {
 				
 				left3 = 0;
 				right3 = 0;
-				t1=8.0;	t2=0.0;	t3=0.0;
+				t1=6.0;	t2=0.0;	t3=0.0;
 				SmartDashboard.putString("TargLoc", "switch");
 
 			}

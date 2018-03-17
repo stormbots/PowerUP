@@ -92,6 +92,14 @@ public class Elevator extends RobotModule {
 			currentPos = eMotor.getSelectedSensorPosition(0);
 		}
 		double stickValue = functions1.getRawAxis(3);
+		//move stickvalue lerp from the big case statement to right here
+		
+		
+		//if in climber mode
+		//read climber relative position 
+		// Go to that position,
+		// elevatorpos = lerp(climbpos,-1,1,0,elevator_position_for_climbing)
+		//????? We want the elevator to go down before we really start climbing?
 
 		if(functions1.getRawButtonPressed(11)) {
 			if(mode == Mode.MANUALPOSITION) {
@@ -144,7 +152,7 @@ public class Elevator extends RobotModule {
 		}
 		else {
 		}
-		
+				
 	
 		//Set Motor phase, currently not needed 
 		//eVelocity = -eVelocity;

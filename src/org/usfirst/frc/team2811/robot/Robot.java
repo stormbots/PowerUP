@@ -232,8 +232,8 @@ public class Robot extends IterativeRobot {
 		
 		// removes unused steps from the switch
 		if(robotLocation != RobotLocation.CENTER) {
-			step1timer = 8000;
-			step2timer = 0;
+			step1timer = 6000;
+			step2timer = 2000;
 			step3timer = 0;
 		}
 		else {

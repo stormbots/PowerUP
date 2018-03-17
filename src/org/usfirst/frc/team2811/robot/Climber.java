@@ -10,6 +10,8 @@ public class Climber extends RobotModule {
 	
 	WPI_TalonSRX mtr1 = new WPI_TalonSRX(9);
 	WPI_TalonSRX mtr2 = new WPI_TalonSRX(10);
+	
+	//bool climbingmode = true;
 		
 	void update(Joystick driver1,Joystick driver2, Joystick stick) {
 		if(stick.getRawButton(5)) { //updated for new controller
@@ -21,10 +23,35 @@ public class Climber extends RobotModule {
 			mtr2.set(ControlMode.PercentOutput, 0);
 		}
 		
+		//Look for button
+		// if climbingmode == false, 
+			//detach
+//			climbingmode = true
+		//while button pressed
+			//target = maxposition
+		// else 
+//			target = current position
+		
+		//fb to selected position
+		
 		SmartDashboard.putNumber("ClimberPosition1", mtr1.getSelectedSensorPosition(0));
 	}
 	
 	public void disabledPeriodic(){
 		SmartDashboard.putNumber("Climber Position (disabled)", mtr1.getSelectedSensorPosition(0));
 	}
+	
+//	public void getClimberPosition() {
+	//-1..1
+	//lerp (read sensor, 0, maxclimbheijght,-1,1)
+//	}
+	
+//	public void setPosition(pos) {
+	//-1..1
+	//lerp (pos, -1,1,0,maxheight)
+//	}
+
+//	public void detach() {
+	// setSelectedSensorPositon(-30);
+//	}
 }
