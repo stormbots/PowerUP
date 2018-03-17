@@ -23,13 +23,25 @@ public class Climber extends RobotModule {
 	
 	public void update(Joystick driver1,Joystick driver2, Joystick stick) {
 		if(stick.getRawButton(5)) { //updated for new controller
-			mtr1.set(ControlMode.PercentOutput, stick.getY()); //replace getY with fixed value on robot
-			mtr2.set(ControlMode.PercentOutput, stick.getY());
+			mtr1.set(ControlMode.PercentOutput, -stick.getRawAxis(1)); //replace getY with fixed value on robot
+			mtr2.set(ControlMode.PercentOutput, stick.getRawAxis(1));
+//			SmartDashboard.putNumber("Climber motor power", stick.getRawAxis(1));
 		}
 		else {
 			mtr1.set(ControlMode.PercentOutput, 0);
 			mtr2.set(ControlMode.PercentOutput, 0);
 		}
+		
+		//NOTES
+		//winding direction: inside of rope is under, same as elevator
+		// up sensor direction: +
+		// start = 0, 
+		//height at proper hook = +101926
+		
+		// up motor direction : 
+		//mtr1 - value is up
+		//mtr2 + value is up
+		
 		
 		//Look for button
 		// if climbingmode == false, 

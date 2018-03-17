@@ -149,11 +149,12 @@ public class Robot extends IterativeRobot {
 		
 		robotLocation = startPosition.getSelected();
 			if(robotLocation==RobotLocation.AUTO) {
-				switch(DriverStation.getInstance().getLocation()) {
-				case 1: robotLocation = RobotLocation.LEFT;break;
-				case 2: robotLocation = RobotLocation.CENTER;break;
-				case 3: robotLocation = RobotLocation.RIGHT;break;
-				}
+				robotLocation = RobotLocation.RIGHT;
+//				switch(DriverStation.getInstance().getLocation()) {
+//				case 1: robotLocation = RobotLocation.LEFT;break;
+//				case 2: robotLocation = RobotLocation.CENTER;break;
+//				case 3: robotLocation = RobotLocation.RIGHT;break;
+//				}
 			}
 
 		// Determine driver strategy
