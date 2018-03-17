@@ -12,8 +12,16 @@ public class Climber extends RobotModule {
 	WPI_TalonSRX mtr2 = new WPI_TalonSRX(10);
 	
 	//bool climbingmode = true;
-		
-	void update(Joystick driver1,Joystick driver2, Joystick stick) {
+	
+	public void init() {
+		resetEnc();
+	}
+	
+	public void resetEnc() {
+		mtr1.setSelectedSensorPosition(0, 0, 20);
+	}
+	
+	public void update(Joystick driver1,Joystick driver2, Joystick stick) {
 		if(stick.getRawButton(5)) { //updated for new controller
 			mtr1.set(ControlMode.PercentOutput, stick.getY()); //replace getY with fixed value on robot
 			mtr2.set(ControlMode.PercentOutput, stick.getY());

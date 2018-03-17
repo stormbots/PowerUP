@@ -354,6 +354,8 @@ public class Robot extends IterativeRobot {
 		autotimer.reset();
 		elevator.init();
 		intake.init();
+		climber.init();
+		
 	}
 
 	/**
