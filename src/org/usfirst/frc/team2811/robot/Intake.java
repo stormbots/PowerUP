@@ -8,11 +8,12 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake {
-	WPI_TalonSRX motor1 = new WPI_TalonSRX(6);
-	WPI_TalonSRX motor2 = new WPI_TalonSRX(7);
+	WPI_TalonSRX motorL = new WPI_TalonSRX(6);
+	WPI_TalonSRX motorR = new WPI_TalonSRX(7);
 	
 	//Now same on both robots! :D
 	Solenoid squeezeSolenoidA = new Solenoid(6); 
@@ -90,8 +91,13 @@ public class Intake {
 	}
 		
 	void newUpdate() {
-		motor1.set(ControlMode.PercentOutput,velocity);
-		motor2.set(ControlMode.PercentOutput, -velocity);
+		motorL.set(ControlMode.PercentOutput, -velocity);
+		motorR.set(ControlMode.PercentOutput, -velocity);
+		
+		if(Timer.getMatchTime() <= 1 && Timer.getMatchTime() >= 0) {
+			tiltBackward(true);
+			squeezeOpen(false);
+		}
 		
 		SmartDashboard.putNumber("Intake Velocity", velocity);
 		SmartDashboard.putBoolean("Intake Has Cube", hasCube());   

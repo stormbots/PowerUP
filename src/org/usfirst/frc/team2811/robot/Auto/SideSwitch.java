@@ -1,8 +1,10 @@
 package org.usfirst.frc.team2811.robot.Auto;
 
+import org.usfirst.frc.team2811.robot.Chassis;
 import org.usfirst.frc.team2811.robot.Motion345;
 import org.usfirst.frc.team2811.robot.Robot;
 import org.usfirst.frc.team2811.robot.TinyTimer;
+import org.usfirst.frc.team2811.robot.Elevator.ElevatorPosition;
 
 /**
  * Example Auto command doing a basic thing. 
@@ -17,6 +19,7 @@ public class SideSwitch extends AutoSequence {
 	double right1;
 	double left2;
 	double right2;
+	double backward = -24;
 	
 	public SideSwitch(boolean isLeft) {
 		//double inside1 = 114.5790;
@@ -52,7 +55,7 @@ public class SideSwitch extends AutoSequence {
 		//Example: Approximate movements to drop on the switch then back up
 		if(timer.atTime(0)){
 			Robot.drive.setProfile(left1, right1, 5000);
-			//Robot.elevator.setPos(switch height);
+			Robot.elevator.setPos(ElevatorPosition.SWITCH);
 		}
 		if(timer.atTime(5000)) {
 			Robot.drive.setProfile(left2, right2, 1000);
@@ -60,8 +63,15 @@ public class SideSwitch extends AutoSequence {
 		if(timer.atTime(6000)) {
 			Robot.intake.squeezeOpen(true);
 		}
+		if(timer.atTime(6500)) {
+			Robot.drive.setProfile(backward, backward, 2000);
+		}
 		if(timer.atTime(7000)) {
 			Robot.intake.stopMotor();
+			Robot.elevator.setPos(ElevatorPosition.FLOOR);
+		}
+		if(timer.atTime(8500)) {
+			Robot.drive.setMode(Chassis.Mode.ARCADE);
 		}
 		
 		timer.update();

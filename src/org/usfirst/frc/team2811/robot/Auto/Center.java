@@ -21,6 +21,7 @@ public class Center extends AutoSequence {
 	double right2;
 	double left3;
 	double right3;
+	double backward = -24;
 	
 	public Center(boolean toLeft) {
 		if(toLeft) {
@@ -53,6 +54,7 @@ public class Center extends AutoSequence {
 		//Example: Approximate movements to drop on the switch then back up
 		if(timer.atTime(0000)){
 			Robot.drive.setProfile(left1, right1, 2000);
+			Robot.elevator.setPos(ElevatorPosition.SWITCH);
 		}
 		if(timer.atTime(2000)){
 			Robot.drive.setProfile(left2, right2, 2000);
@@ -62,12 +64,20 @@ public class Center extends AutoSequence {
 			//Robot.elevator.setPos(switch height);
 		}
 		if(timer.atTime(5000)) {
-			Robot.drive.setMode(Chassis.Mode.ARCADE);
+
 			Robot.intake.ejectCube();
+		}
+		if(timer.atTime(5500)) {
+			Robot.drive.setProfile(backward, backward, 2000);
 		}
 		if(timer.atTime(6000)) {
 			Robot.intake.stopMotor();
+			Robot.elevator.setPos(ElevatorPosition.FLOOR);
 		}
+		if(timer.atTime(7500)) {
+			Robot.drive.setMode(Chassis.Mode.ARCADE);
+		}
+
 
 		
 		timer.update();

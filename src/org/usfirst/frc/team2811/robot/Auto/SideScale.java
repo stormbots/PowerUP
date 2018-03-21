@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2811.robot.Auto;
 
 import org.usfirst.frc.team2811.robot.Elevator.ElevatorPosition;
+import org.usfirst.frc.team2811.robot.Chassis;
 import org.usfirst.frc.team2811.robot.Motion345;
 import org.usfirst.frc.team2811.robot.Robot;
 import org.usfirst.frc.team2811.robot.TinyTimer;
@@ -20,6 +21,7 @@ public class SideScale extends AutoSequence {
 	double right1;
 	double left2;
 	double right2;
+	double backward = -24;
 
 	public SideScale(boolean isLeft) {
 		double inside1 = 265;
@@ -63,8 +65,15 @@ public class SideScale extends AutoSequence {
 		if(timer.atTime(10000)) {
 			Robot.intake.ejectCube();
 		}
+		if(timer.atTime(10500)) {
+			Robot.drive.setProfile(backward, backward, 2000);
+		}
 		if(timer.atTime(11000)) {
 			Robot.intake.stopMotor();
+			Robot.elevator.setPos(ElevatorPosition.FLOOR);
+		}
+		if(timer.atTime(12500)) {
+			Robot.drive.setMode(Chassis.Mode.ARCADE);
 		}
 		
 		timer.update();

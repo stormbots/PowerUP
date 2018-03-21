@@ -285,7 +285,7 @@ public class Chassis {
 			}
 			else {
 				//prac bot
-				driver.arcadeDrive(-arcadePower*mod, -arcadeTurn*mod, squaredInputs);
+				driver.arcadeDrive(arcadePower*mod, -arcadeTurn*mod, squaredInputs);
 			}
 			break;
 		}

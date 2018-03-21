@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2811.robot.Auto;
 
 import org.usfirst.frc.team2811.robot.TinyTimer;
+import org.usfirst.frc.team2811.robot.Elevator.ElevatorPosition;
 import org.usfirst.frc.team2811.robot.Chassis;
 import org.usfirst.frc.team2811.robot.Motion345;
 import org.usfirst.frc.team2811.robot.Robot;
@@ -18,7 +19,7 @@ public class SideEscape extends AutoSequence {
 	TinyTimer timer = new TinyTimer();
 	double left1;
 	double right1;
-	
+
 	public SideEscape() {
 		double inside1 = 130;
 		double outside1 = 130;
@@ -40,9 +41,10 @@ public class SideEscape extends AutoSequence {
 		//Example: Approximate movements to drop on the switch then back up
 		if(timer.atTime(0)){
 			Robot.drive.setProfile(left1, right1, 8000);
-			//Robot.elevator.setPos(switch height);
+			Robot.elevator.setPos(ElevatorPosition.SWITCH);
 		}
 		if(timer.atTime(8000)) {
+			Robot.elevator.setPos(ElevatorPosition.FLOOR);
 			Robot.drive.setMode(Chassis.Mode.ARCADE);
 		}
 		
