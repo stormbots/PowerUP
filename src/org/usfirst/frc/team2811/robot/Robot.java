@@ -27,10 +27,10 @@ public class Robot extends IterativeRobot {
 	Joystick stickDrive1 = new Joystick(0);
 	Joystick stickDrive2 = new Joystick(2);
 	Joystick stickFunctions = new Joystick(3);
-	public static RobotModule elevator = new Elevator();
+	public static RobotModule elevator = new RobotModule();
 	public static RobotModule intake = new Intake();
-	public static RobotModule drive = new Chassis();
-	public static RobotModule climber = new Climber();
+	public static RobotModule drive = new RobotModule();
+	public static RobotModule climber = new RobotModule();
 	Lighting lighting = new Lighting();
 		
 	private SendableChooser<Integer> delaySelection =  new SendableChooser<>();
