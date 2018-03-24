@@ -70,7 +70,7 @@ public class SideScale extends AutoSequence {
 		}
 		if(timer.atTime(11000)) {
 			Robot.intake.stopMotor();
-			Robot.elevator.setPos(ElevatorPosition.FLOOR);
+			Robot.elevator.setPos(ElevatorPosition.SWITCH);
 		}
 		if(timer.atTime(12500)) {
 			Robot.drive.setMode(Chassis.Mode.ARCADE);

@@ -7,8 +7,11 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
 
+enum ClimberMode{ENABLED, DISABLED}
+
 public class OI {
 	
+	ClimberMode climberMode = ClimberMode.DISABLED;
 	boolean intakeOpen = false;
 	boolean tiltedBack = false;
 	double turnScaleValue = 0.75;
@@ -19,9 +22,8 @@ public class OI {
 
 	}
 	
-	void update(){
-		
-		
+	
+	void update() {
 		
 		//DRIVE
 		Robot.drive.arcadeDrive(
@@ -39,8 +41,9 @@ public class OI {
 		
 		
 		//ELEVATOR
-		Robot.elevator.setPos(functions.getRawAxis(3));
-		Robot.elevator.setVel(functions.getRawAxis(3));
+		//note this slider is +1 at bottom -1 at top
+		Robot.elevator.setPos(-functions.getRawAxis(3));
+		Robot.elevator.setVel(-functions.getRawAxis(3));
 		
 		if(functions.getRawButtonPressed(11)) {
 			switch(Robot.elevator.getMode()) {
@@ -62,11 +65,11 @@ public class OI {
 			Robot.elevator.setMode(Mode.MANUALPOSITION);
 		}
 		
-		
+
 		
 		//CLIMBER
 		if(functions.getRawButtonPressed(5)) {
-			//enable climber mode
+			// enable climber mode
 		}
 		if(functions.getRawButtonReleased(5)) {
 			// disable climber mode or go to climber mode stage 2? 
@@ -77,6 +80,26 @@ public class OI {
 			Robot.climber.setPower(functions.getRawAxis(1));
 		}
 			
+		//hit a button to enable climber mode
+		if(functions.getRawButton(8)) {
+			Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.CLIMB);
+			Robot.climber.setMode(Climber.Mode.CLOSEDLOOP);
+			Robot.climber.setPosition(1);
+			climberMode = ClimberMode.ENABLED;
+		}
+		else if(functions.getRawButton(12)) {
+			Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.SCALEHIGH);
+			Robot.climber.setMode(Climber.Mode.DISABLED);
+			climberMode = ClimberMode.DISABLED;
+		}
+		
+		if(climberMode == ClimberMode.ENABLED) {
+			double height = Robot.climber.getClimberPosition();
+			Robot.elevator.setPos(height);
+		}
+		else {
+			//probably do nothing here.
+		}
 		
 		//INTAKE
 		if(functions.getRawButton(1)) {

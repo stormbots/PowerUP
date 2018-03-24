@@ -25,16 +25,26 @@ public class Climber {
 		}
 	}
 	
-	enum Mode{INITIALCLIMB, ENDINGCLIMB, DISABLED, MANUAL}
+	enum Mode{CLOSEDLOOP, DISABLED, MANUAL}
 	Mode mode = Mode.DISABLED;
 	private double power = 0;
+	private double maxClimbHeight = 101926;
+	
+	
+	public void bind() {
+		mtr2.follow(mtr1);
+	}
+	
 	public void setMode(Mode newMode) {
 		mode = newMode;
 	}
-	public Mode getMode () {
+	public Mode setMode () {
 		return mode;
 	}
-			
+	
+	public void resetEnc() {
+		mtr1.setSelectedSensorPosition(0, 0, 20);
+	}
 	
 	public void setPower(double power) {
 		this.power = power;
@@ -45,14 +55,13 @@ public class Climber {
 		
 		switch(mode) {
 		
-		case INITIALCLIMB:
+		case CLOSEDLOOP:
 			
+			//positive motor output generates negative direction on climber
+			power = FB.FB(101926, mtr1.getSelectedSensorPosition(0), 0.02);
 			break;
-		
-		case ENDINGCLIMB:
-			
-			break;
-			
+	
+	
 		case MANUAL:
 			
 			break;
@@ -62,13 +71,49 @@ public class Climber {
 			return;
 
 		default:
-			
 			break;
 		}
 		
-		
-
+		//Make a positive power everywhere else correspond to the "up" direction
+		if(prefs.getBoolean("compbot", false)) {
+		}
+		else {
+			power = -power ; 
+		}
+			
 		mtr1.set(ControlMode.PercentOutput, power); //replace getY with fixed value on robot
+		
+		if(prefs.getBoolean("compbot", false)) {
+			bind();
+		}else {}
+		
 		SmartDashboard.putNumber("ClimberPower", power);
+		SmartDashboard.putNumber("ClimberPosition", mtr1.getSelectedSensorPosition(0));
 	}
+	
+	public void disabledPeriodic(){
+		SmartDashboard.putNumber("Climber Position (disabled)", mtr1.getSelectedSensorPosition(0));
+	}
+	
+	
+	
+ 	public double getClimberPosition() {
+		//-1..1
+ 		return Utilities.lerp(mtr1.getSelectedSensorPosition(0), 0, maxClimbHeight,-1,1);
+	}
+	
+ 	/** 
+ 	 * Accepts value between -1..1 representing all the way up and down
+ 	 * @param position
+ 	 */
+	public void setPosition(double position) {
+		Utilities.clamp(position,-1,1);
+		Utilities.lerp(position, -1,1,0,maxClimbHeight );
+	}
+
+	public void detach() {
+		//TODO: May need to reverse first and second arguments?
+		mtr1.setSelectedSensorPosition(0, -4000, 20);
+	}
+
 }

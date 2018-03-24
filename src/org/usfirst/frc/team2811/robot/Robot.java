@@ -14,6 +14,7 @@ import org.usfirst.frc.team2811.robot.Auto.Example;
 import org.usfirst.frc.team2811.robot.Auto.SideEscape;
 import org.usfirst.frc.team2811.robot.Auto.SideScale;
 import org.usfirst.frc.team2811.robot.Auto.SideSwitch;
+import org.usfirst.frc.team2811.robot.Auto.Testing1;
 import org.usfirst.frc.team2811.robot.Elevator.ElevatorPosition;
 import org.usfirst.frc.team2811.robot.Chassis.Mode;
 
@@ -48,7 +49,10 @@ public class Robot extends IterativeRobot {
 	 * used for any initialization code.
 	 */
 	@Override
-	public void robotInit() {		
+	public void robotInit() {
+		drive.resetEnc();
+		elevator.reset();
+		climber.resetEnc();
 		CameraServer.getInstance().startAutomaticCapture();
 		autoSelector.putSmartDashboard();
 	}
@@ -68,11 +72,13 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {		
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
-				
+		//autoChoice = new Testing1();
+		
 		// Do auto mode initialization 
 		drive.shiftLow();
 		intake.tiltBackward(false);
-		elevator.resetTo(ElevatorPosition.AUTO_STARTUP);
+		elevator.setMode(Elevator.Mode.MANUALPOSITION);
+		// elevator.resetTo(ElevatorPosition.AUTO_STARTUP);
 		elevator.setPos(ElevatorPosition.SWITCH);
 	}
 
@@ -86,7 +92,7 @@ public class Robot extends IterativeRobot {
 		
 		// Run our subsystem update sequences
 		drive.newUpdate();
-		//elevator.newUpdate();
+		elevator.newUpdate();
 		intake.newUpdate();
 	}
 	

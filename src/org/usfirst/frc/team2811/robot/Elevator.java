@@ -65,12 +65,15 @@ public class Elevator {
 	}
 	
 	/** Fetch preferences and adjust variables as needed */
-	public void disabledPeriodic(){
+	public void disabledPeriodic() {
 		maxPos = prefs.getDouble("elevatorTopLimit", 92000);
+		SmartDashboard.putNumber("ElevatorPos (Disabled)", eMotorA.getSelectedSensorPosition(0));
 	}
 	
 	public void bind() {
 		eMotorB.follow(eMotorA);
+		// Investigate whther this makes the thing follow forever like expected
+		// eMotorB.set(ControlMode.Follower, 8);
 	}
 		
 	public void reset() {
@@ -82,7 +85,9 @@ public class Elevator {
 		eMotorA.setSelectedSensorPosition((int) position.ticks(), 0, 20);// maybe just in case? Shouldn't do anything.
 	}
 		
-
+	public void setMaxHeight(ElevatorPosition newMaxPos) {
+		maxPos = newMaxPos.ticks;
+	}
 	
 	public void setVel(double velocity) {
 		eVelocity = velocity;
@@ -93,7 +98,8 @@ public class Elevator {
 	 */
 	public void setPos(double position) {
 		Utilities.clamp(position,-1,1);
-		elevatorPos = Utilities.lerp(position, 1, -1, 0, maxPos);
+		elevatorPos = Utilities.lerp(position, -1, 1, 0, maxPos);
+		elevatorPos = Utilities.clamp(elevatorPos, 0, maxPos);
 	}
 	
 	/**
@@ -101,7 +107,8 @@ public class Elevator {
 	 * @param position
 	 */
 	public void setPos(ElevatorPosition position) {
-		setPos(position.ticks());
+		double pos = Utilities.lerp(position.ticks(),0,maxPos,-1,1);
+		setPos(pos);
 	}
 
 	public enum ElevatorPosition{
@@ -109,6 +116,7 @@ public class Elevator {
 		SWITCH (25_000),
 		SCALEHIGH(92_000),
 		AUTO_STARTUP(25_000),
+		CLIMB(50_000)
 		;
 		
 		double ticks = 0;
@@ -117,7 +125,7 @@ public class Elevator {
 	}
 	
 	void newUpdate() {
-		
+
 		if(prefs.getBoolean("compbot", false)) {
 			//comp bot
 			currentPos = -eMotorA.getSelectedSensorPosition(0);
@@ -130,7 +138,7 @@ public class Elevator {
 		switch(mode) {
 		case MANUALPOSITION:
 			Utilities.clamp(elevatorPos, 0, maxPos);
-			eVelocity = FB.FB(elevatorPos, currentPos, 0.007);			
+			eVelocity = FB.FB(elevatorPos, currentPos, 0.005);			
 			//expected fallthrough to velocity mode
 		case MANUALVELOCITY:
 			//no need to manipulate velocity
@@ -156,16 +164,18 @@ public class Elevator {
 		//check for limit switch and reset if found
 		if(!LimitSwitch.get()) {
 			homed = true;
-			reset();
+//			reset();
 		}
 
-		eMotorA.set(ControlMode.PercentOutput, eVelocity);
 		if(prefs.getBoolean("compbot", false)) {
 			// nothing is done in here
+			//eVelocity = -eVelocity; //maybE?
 		}
 		else {
-			bind();
 		}
+		
+		eMotorA.set(ControlMode.PercentOutput, eVelocity);
+		bind();
 
 		SmartDashboard.putNumber("Elevator Current Position", currentPos);
 		SmartDashboard.putNumber("Elevator Desired Position", elevatorPos);
