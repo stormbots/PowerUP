@@ -96,6 +96,7 @@ public class Robot extends IterativeRobot {
 		drive.setMode(Mode.ARCADE);
 		elevator.setMode(Elevator.Mode.MANUALPOSITION);
 		intake.tiltBackward(false);
+		climber.setMode(Climber.Mode.MANUAL);
 	}
 
 	/**
@@ -112,6 +113,7 @@ public class Robot extends IterativeRobot {
 		drive.newUpdate();
 		elevator.newUpdate();
 		intake.newUpdate();
+		climber.newUpdate();
 	}
 
 	/**

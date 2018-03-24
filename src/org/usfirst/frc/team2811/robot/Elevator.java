@@ -37,21 +37,18 @@ public class Elevator {
 	 
 	 
 	 public Elevator() {
-		if(prefs.getBoolean("compbot", true)) {
+		if(prefs.getBoolean("compbot", false)) {
 			eMotorA = new WPI_TalonSRX(8);
-			eMotorB = new WPI_TalonSRX(20); // does not exist
 		}
 		else {
-			eMotorA = new WPI_TalonSRX(9);
-			eMotorB = new WPI_TalonSRX(10);
-			eMotorB.follow(eMotorA);
+			eMotorA = new WPI_TalonSRX(8);
+			eMotorB = new WPI_TalonSRX(9);
 		}
-		 
+		
 		reset();
 		double voltageRampRate = 0.2;
 		eMotorA.configOpenloopRamp(voltageRampRate, 30);
 	 }
-	 
 	
 	public enum Mode{ 
 		MANUALVELOCITY, MANUALPOSITION, BUTTON, HOMING //Used to change how the elevator is controlled
@@ -72,7 +69,9 @@ public class Elevator {
 		maxPos = prefs.getDouble("elevatorTopLimit", 92000);
 	}
 	
-	
+	public void bind() {
+		eMotorB.follow(eMotorA);
+	}
 		
 	public void reset() {
 		eMotorA.setSelectedSensorPosition(0, 0, 20); //First argument is desired position, second is the type of loop? (0 or 1), third is the timeout.
@@ -119,13 +118,13 @@ public class Elevator {
 	
 	void newUpdate() {
 		
-		if(prefs.getBoolean("compbot", true)) {
+		if(prefs.getBoolean("compbot", false)) {
 			//comp bot
 			currentPos = -eMotorA.getSelectedSensorPosition(0);
 		}
 		else {
 			//prac bot
-			currentPos = -eMotorA.getSelectedSensorPosition(0);
+			currentPos = eMotorA.getSelectedSensorPosition(0);
 		}
 		
 		switch(mode) {
@@ -161,6 +160,12 @@ public class Elevator {
 		}
 
 		eMotorA.set(ControlMode.PercentOutput, eVelocity);
+		if(prefs.getBoolean("compbot", false)) {
+			// nothing is done in here
+		}
+		else {
+			bind();
+		}
 
 		SmartDashboard.putNumber("Elevator Current Position", currentPos);
 		SmartDashboard.putNumber("Elevator Desired Position", elevatorPos);

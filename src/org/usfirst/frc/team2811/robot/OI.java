@@ -2,7 +2,10 @@ package org.usfirst.frc.team2811.robot;
 
 import org.usfirst.frc.team2811.robot.Elevator.Mode;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Preferences;
 
 public class OI {
 	
@@ -11,6 +14,7 @@ public class OI {
 	double turnScaleValue = 0.75;
 	Joystick driver = new Joystick(0);
 	Joystick functions = new Joystick(3);
+	Preferences prefs = Preferences.getInstance();
 	OI(){
 
 	}
@@ -62,13 +66,17 @@ public class OI {
 		
 		//CLIMBER
 		if(functions.getRawButtonPressed(5)) {
-			
+			//enable climber mode
 		}
 		if(functions.getRawButtonReleased(5)) {
-			
+			// disable climber mode or go to climber mode stage 2? 
 		}
 		
-		
+		//DEBUG FOR HOLDING
+		if(functions.getRawButton(5)) {
+			Robot.climber.setPower(functions.getRawAxis(1));
+		}
+			
 		
 		//INTAKE
 		if(functions.getRawButton(1)) {

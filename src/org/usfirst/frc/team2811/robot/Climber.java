@@ -16,31 +16,32 @@ public class Climber {
 	Preferences prefs = Preferences.getInstance();
 	
 	public Climber() {
-		if(prefs.getBoolean("compbot", true)) {
-			mtr1 = new WPI_TalonSRX(9);
-			mtr2 = new WPI_TalonSRX(10);
-			mtr2.follow(mtr1);
+		if(prefs.getBoolean("compbot", false)) {
+			mtr1 = new WPI_TalonSRX(10);
+			mtr2 = new WPI_TalonSRX(9);
 		}
 		else {
-			mtr1 = new WPI_TalonSRX(8);
-			mtr2 = new WPI_TalonSRX(20); // does not exist
+			mtr1 = new WPI_TalonSRX(10);
 		}
 	}
 	
-	enum Mode{INITIALCLIMB,ENDINGCLIMB,DISABLED}
+	enum Mode{INITIALCLIMB, ENDINGCLIMB, DISABLED, MANUAL}
 	Mode mode = Mode.DISABLED;
+	private double power = 0;
 	public void setMode(Mode newMode) {
 		mode = newMode;
 	}
 	public Mode getMode () {
 		return mode;
 	}
+			
 	
-	public void bind() {
-		
+	public void setPower(double power) {
+		this.power = power;
 	}
-		
-	void newUpdate(Joystick driver1,Joystick driver2, Joystick stick) {
+	
+	void newUpdate() {
+//		void newUpdate(Joystick driver1,Joystick driver2, Joystick stick) {
 		
 		switch(mode) {
 		
@@ -52,25 +53,22 @@ public class Climber {
 			
 			break;
 			
-		case DISABLED:
+		case MANUAL:
 			
 			break;
-			
+		
+		case DISABLED:
+			mtr1.set(ControlMode.PercentOutput, 0);
+			return;
+
 		default:
 			
 			break;
 		}
 		
-		/*if(stick.getRawButton(5)) { //updated for new controller
-			mtr1.set(ControlMode.PercentOutput, stick.getY()); //replace getY with fixed value on robot
-			mtr2.set(ControlMode.PercentOutput, stick.getY());
-		}
-		else {
-			mtr1.set(ControlMode.PercentOutput, 0);
-			mtr2.set(ControlMode.PercentOutput, 0);
-		}*/
-		SmartDashboard.putNumber("ClimberCurrent", mtr1.getOutputCurrent());
-		SmartDashboard.putNumber( "ClimberCurrent", mtr2.getOutputCurrent());
 		
+
+		mtr1.set(ControlMode.PercentOutput, power); //replace getY with fixed value on robot
+		SmartDashboard.putNumber("ClimberPower", power);
 	}
 }
