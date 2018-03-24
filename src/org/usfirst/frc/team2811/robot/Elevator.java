@@ -12,7 +12,8 @@ import org.usfirst.frc.team2811.robot.FB;
 
 public class Elevator {
 	
-	 WPI_TalonSRX eMotor = new WPI_TalonSRX(8);
+	 WPI_TalonSRX eMotorA;
+	 WPI_TalonSRX eMotorB;
 	 DigitalInput LimitSwitch = new DigitalInput(1);
 	 Preferences prefs = Preferences.getInstance();
 
@@ -36,9 +37,19 @@ public class Elevator {
 	 
 	 
 	 public Elevator() {
+		if(prefs.getBoolean("compbot", true)) {
+			eMotorA = new WPI_TalonSRX(8);
+			eMotorB = new WPI_TalonSRX(20); // does not exist
+		}
+		else {
+			eMotorA = new WPI_TalonSRX(9);
+			eMotorB = new WPI_TalonSRX(10);
+			eMotorB.follow(eMotorA);
+		}
+		 
 		reset();
 		double voltageRampRate = 0.2;
-		eMotor.configOpenloopRamp(voltageRampRate, 30);
+		eMotorA.configOpenloopRamp(voltageRampRate, 30);
 	 }
 	 
 	
@@ -64,12 +75,12 @@ public class Elevator {
 	
 		
 	public void reset() {
-		eMotor.setSelectedSensorPosition(0, 0, 20); //First argument is desired position, second is the type of loop? (0 or 1), third is the timeout.
+		eMotorA.setSelectedSensorPosition(0, 0, 20); //First argument is desired position, second is the type of loop? (0 or 1), third is the timeout.
 	}
 	
 	public void resetTo(ElevatorPosition position) {
-		eMotor.setSelectedSensorPosition(0, (int) position.ticks(), 20);
-		eMotor.setSelectedSensorPosition((int) position.ticks(), 0, 20);// maybe just in case? Shouldn't do anything.
+		eMotorA.setSelectedSensorPosition(0, (int) position.ticks(), 20);
+		eMotorA.setSelectedSensorPosition((int) position.ticks(), 0, 20);// maybe just in case? Shouldn't do anything.
 	}
 		
 
@@ -110,11 +121,11 @@ public class Elevator {
 		
 		if(prefs.getBoolean("compbot", true)) {
 			//comp bot
-			currentPos = -eMotor.getSelectedSensorPosition(0);
+			currentPos = -eMotorA.getSelectedSensorPosition(0);
 		}
 		else {
 			//prac bot
-			currentPos = -eMotor.getSelectedSensorPosition(0);
+			currentPos = -eMotorA.getSelectedSensorPosition(0);
 		}
 		
 		switch(mode) {
@@ -149,11 +160,11 @@ public class Elevator {
 			reset();
 		}
 
-		eMotor.set(ControlMode.PercentOutput, eVelocity);
+		eMotorA.set(ControlMode.PercentOutput, eVelocity);
 
 		SmartDashboard.putNumber("Elevator Current Position", currentPos);
 		SmartDashboard.putNumber("Elevator Desired Position", elevatorPos);
-		SmartDashboard.putNumber("Elevator Voltage", eMotor.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Elevator Voltage", eMotorA.getMotorOutputVoltage());
 		SmartDashboard.putNumber("Elevator Velocity", eVelocity);
 		SmartDashboard.putBoolean("Elevator Limit Switch is pressed", !LimitSwitch.get());
 	}

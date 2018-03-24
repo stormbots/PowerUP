@@ -78,8 +78,6 @@ public class Center extends AutoSequence {
 			Robot.drive.setMode(Chassis.Mode.ARCADE);
 		}
 
-
-		
 		timer.update();
 	}
 }

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2811.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team2811.robot.Elevator.Mode;
@@ -10,8 +11,21 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Climber {
 	
-	WPI_TalonSRX mtr1 = new WPI_TalonSRX(9);
-	WPI_TalonSRX mtr2 = new WPI_TalonSRX(10);
+	WPI_TalonSRX mtr1;
+	WPI_TalonSRX mtr2;
+	Preferences prefs = Preferences.getInstance();
+	
+	public Climber() {
+		if(prefs.getBoolean("compbot", true)) {
+			mtr1 = new WPI_TalonSRX(9);
+			mtr2 = new WPI_TalonSRX(10);
+			mtr2.follow(mtr1);
+		}
+		else {
+			mtr1 = new WPI_TalonSRX(8);
+			mtr2 = new WPI_TalonSRX(20); // does not exist
+		}
+	}
 	
 	enum Mode{INITIALCLIMB,ENDINGCLIMB,DISABLED}
 	Mode mode = Mode.DISABLED;
@@ -20,6 +34,10 @@ public class Climber {
 	}
 	public Mode getMode () {
 		return mode;
+	}
+	
+	public void bind() {
+		
 	}
 		
 	void newUpdate(Joystick driver1,Joystick driver2, Joystick stick) {
