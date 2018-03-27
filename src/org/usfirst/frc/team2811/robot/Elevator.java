@@ -71,7 +71,7 @@ public class Elevator {
 	}
 	
 	public void bind() {
-		eMotorB.follow(eMotorA);
+		//eMotorB.follow(eMotorA);
 		// Investigate whther this makes the thing follow forever like expected
 		// eMotorB.set(ControlMode.Follower, 8);
 	}
@@ -129,7 +129,7 @@ public class Elevator {
 		
 		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			//comp bot
-			currentPos = -eMotorA.getSelectedSensorPosition(0);
+			currentPos = eMotorA.getSelectedSensorPosition(0);
 		}
 		else {
 			//prac bot
@@ -165,7 +165,7 @@ public class Elevator {
 		//check for limit switch and reset if found
 		if(!LimitSwitch.get()) {
 			homed = true;
-//			reset();
+			reset();
 		}
 
 		if(prefs.getBoolean("compbot", Robot.compbot)) {

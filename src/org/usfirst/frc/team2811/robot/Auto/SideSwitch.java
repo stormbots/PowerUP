@@ -61,7 +61,7 @@ public class SideSwitch extends AutoSequence {
 			Robot.drive.setProfile(left2, right2, 1000);
 		}
 		if(timer.atTime(6000)) {
-			Robot.intake.squeezeOpen(true);
+			Robot.intake.ejectCube();
 		}
 		if(timer.atTime(6500)) {
 			Robot.drive.setProfile(backward, backward, 2000);

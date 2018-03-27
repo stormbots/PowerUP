@@ -37,8 +37,8 @@ public class Center extends AutoSequence {
 			right1 = 41.5013;
 			left2 = 41.5013;
 			right2 = 81.4712;
-			left3 = 2;
-			right3 = 2;
+			left3 = 12;
+			right3 = 12;
 		}
 	}
 	
@@ -53,28 +53,27 @@ public class Center extends AutoSequence {
 		
 		//Example: Approximate movements to drop on the switch then back up
 		if(timer.atTime(0000)){
-			Robot.drive.setProfile(left1, right1, 2000);
+			Robot.drive.setProfile(left1, right1, 2500);
 			Robot.elevator.setPos(ElevatorPosition.SWITCH);
 		}
-		if(timer.atTime(2000)){
-			Robot.drive.setProfile(left2, right2, 2000);
+		if(timer.atTime(2500)){
+			Robot.drive.setProfile(left2, right2, 2500);
 		}
-		if(timer.atTime(4000)){
+		if(timer.atTime(5000)){
 			Robot.drive.setProfile(left3, right3, 1000);
-			//Robot.elevator.setPos(switch height);
 		}
-		if(timer.atTime(5000)) {
+		if(timer.atTime(6000)) {
 
 			Robot.intake.ejectCube();
 		}
-		if(timer.atTime(5500)) {
+		if(timer.atTime(6500)) {
 			Robot.drive.setProfile(backward, backward, 2000);
 		}
-		if(timer.atTime(6000)) {
+		if(timer.atTime(8000)) {
 			Robot.intake.stopMotor();
 			Robot.elevator.setPos(ElevatorPosition.SWITCH);
 		}
-		if(timer.atTime(7500)) {
+		if(timer.atTime(8000)) {
 			Robot.drive.setMode(Chassis.Mode.ARCADE);
 		}
 

@@ -79,8 +79,9 @@ public class Robot extends IterativeRobot {
 		drive.shiftLow();
 		intake.tiltBackward(false);
 		elevator.setMode(Elevator.Mode.MANUALPOSITION);
-		// elevator.resetTo(ElevatorPosition.AUTO_STARTUP);
+		//elevator.resetTo(ElevatorPosition.AUTO_STARTUP);
 		elevator.setPos(ElevatorPosition.SWITCH);
+		intake.squeezeOpen(false);
 	}
 
 	/**
@@ -118,7 +119,7 @@ public class Robot extends IterativeRobot {
 		// Because OI now sets any configuration changes, these functions no longer care about stick inputs
 		// They just do whatever they were told if they even have anything to do at this point.
 		drive.newUpdate();
-		//elevator.newUpdate();
+		elevator.newUpdate();
 		intake.newUpdate();
 		climber.newUpdate();
 	}
