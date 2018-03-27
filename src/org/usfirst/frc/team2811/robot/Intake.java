@@ -57,7 +57,7 @@ public class Intake {
 	}
 	
 	public void grabCube() {
-		velocity = 0.5;
+		velocity = 0.75;
 	}
 	
 	public void stopMotor() {

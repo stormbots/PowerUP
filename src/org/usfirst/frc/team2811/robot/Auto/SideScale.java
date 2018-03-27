@@ -53,22 +53,22 @@ public class SideScale extends AutoSequence {
 	public void run() {
 		//Example: Approximate movements to drop on the switch then back up
 		if(timer.atTime(0000)){
-			Robot.drive.setProfile(left1, right1, 8000);
+			Robot.drive.setProfile(left1, right1, 7500);
 			//Robot.elevator.setPos(switch height);
 		}
 		if(timer.atTime(3500)) {
 			Robot.elevator.setPos(ElevatorPosition.SCALEHIGH);
 		}
-		if(timer.atTime(8000)){
-			Robot.drive.setProfile(left2, right2, 2000);
+		if(timer.atTime(7500)){
+			Robot.drive.setProfile(left2, right2, 1000);
 		}
-		if(timer.atTime(10000)) {
+		if(timer.atTime(8500)) {
 			Robot.intake.ejectCube();
 		}
-		if(timer.atTime(10500)) {
+		if(timer.atTime(9000)) {
 			Robot.drive.setProfile(backward, backward, 2000);
 		}
-		if(timer.atTime(11000)) {
+		if(timer.atTime(10000)) {
 			Robot.intake.stopMotor();
 			Robot.elevator.setPos(ElevatorPosition.SWITCH);
 		}

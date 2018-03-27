@@ -243,7 +243,7 @@ public class Chassis {
 			if(prefs.getBoolean("compbot", Robot.compbot)) {
 				//compbot
 				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.027);
-				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.018);				
+				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.020);				
 		
 
 				SmartDashboard.putNumber("Chassis Profile Left",         leftPower);
@@ -258,10 +258,10 @@ public class Chassis {
 				rightPower = -right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.023);
 			}
 
-//			SmartDashboard.putNumber("Chassis Profile Left",         leftPower);
-//			SmartDashboard.putNumber("Chassis Profile Right",        rightPower);
-//			SmartDashboard.putNumber("Chassis Profile Left Sensor",  leadL.getSelectedSensorPosition(0));
-//			SmartDashboard.putNumber("Chassis Profile Sensor",       leadR.getSelectedSensorPosition(0));
+			SmartDashboard.putNumber("Chassis Profile Left",         leftPower);
+			SmartDashboard.putNumber("Chassis Profile Right",        rightPower);
+			SmartDashboard.putNumber("Chassis Profile Left Sensor",  leadL.getSelectedSensorPosition(0));
+			SmartDashboard.putNumber("Chassis Profile Sensor",       leadR.getSelectedSensorPosition(0));
 			
 			
 						
