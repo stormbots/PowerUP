@@ -40,6 +40,7 @@ public class Robot extends IterativeRobot {
 	public static Climber climber = new Climber();
 	Lighting lighting = new Lighting();
 	public OI oi = new OI();
+	static boolean compbot = true;
 	
 	AutoSequence autoChoice = new SideEscape();
 	AutoSelector autoSelector = new AutoSelector();
@@ -117,7 +118,7 @@ public class Robot extends IterativeRobot {
 		// Because OI now sets any configuration changes, these functions no longer care about stick inputs
 		// They just do whatever they were told if they even have anything to do at this point.
 		drive.newUpdate();
-		elevator.newUpdate();
+		//elevator.newUpdate();
 		intake.newUpdate();
 		climber.newUpdate();
 	}

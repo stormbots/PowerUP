@@ -41,7 +41,7 @@ public class Intake {
 	
 	/** Fetch preferences and adjust variables as needed */
 	public void disabledPeriodic() {
-		if(prefs.getBoolean("compbot", false)){
+		if(prefs.getBoolean("compbot", Robot.compbot)){
 			//Comp bot
 			tiltInvert = false;
 			squeezeInvert = false;
@@ -67,31 +67,31 @@ public class Intake {
 	public void squeezeOpen(boolean open) {
 		intakeOpen = open;
 		if(open) {
-			squeezeSolenoidA.set(squeezeInvert);
-			squeezeSolenoidB.set(!squeezeInvert);
+			squeezeSolenoidA.set(!squeezeInvert);
+			squeezeSolenoidB.set(squeezeInvert);
 			
 		}
 		else {
-			squeezeSolenoidA.set(!squeezeInvert);
-			squeezeSolenoidB.set(squeezeInvert);
+			squeezeSolenoidA.set(squeezeInvert);
+			squeezeSolenoidB.set(!squeezeInvert);
 		}
 	}
 	
 	public void tiltBackward(boolean backward) {
 		tiltedBack = backward;
 		if(backward) {
-			tiltSolenoidA.set(tiltInvert);
-			tiltSolenoidB.set(!tiltInvert);
+			tiltSolenoidA.set(!tiltInvert);
+			tiltSolenoidB.set(tiltInvert);
 
 		}
 		else {
-			tiltSolenoidA.set(!tiltInvert);
-			tiltSolenoidB.set(tiltInvert);
+			tiltSolenoidA.set(tiltInvert);
+			tiltSolenoidB.set(!tiltInvert);
 		}
 	}
 		
 	void newUpdate() {
-		motorL.set(ControlMode.PercentOutput, -velocity);
+		motorL.set(ControlMode.PercentOutput, velocity);
 		motorR.set(ControlMode.PercentOutput, -velocity);
 		
 		if(Timer.getMatchTime() <= 1 && Timer.getMatchTime() >= 0) {

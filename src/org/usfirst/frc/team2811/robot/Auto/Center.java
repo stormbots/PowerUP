@@ -72,7 +72,7 @@ public class Center extends AutoSequence {
 		}
 		if(timer.atTime(6000)) {
 			Robot.intake.stopMotor();
-			Robot.elevator.setPos(ElevatorPosition.FLOOR);
+			Robot.elevator.setPos(ElevatorPosition.SWITCH);
 		}
 		if(timer.atTime(7500)) {
 			Robot.drive.setMode(Chassis.Mode.ARCADE);

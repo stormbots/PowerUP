@@ -91,7 +91,7 @@ public class Chassis {
 	
 	/** Fetch preferences and adjust variables as needed */
 	public void disabledPeriodic() {
-		if(prefs.getBoolean("compbot", true)) {
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			//compbot
 			
 			//One encoder a 128 instead of a 256
@@ -142,7 +142,7 @@ public class Chassis {
 	
 	public void shiftLow() {
 		// sets the gear to low
-		if(prefs.getBoolean("compbot", true)) {
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			//comp bot
 			LeftShiftA.set(false);
 			LeftShiftB.set(true);			
@@ -159,7 +159,7 @@ public class Chassis {
 
 	public void shiftHigh() {
 		// sets the gear to high
-		if(prefs.getBoolean("compbot", true)) {
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			//comp bot
 			LeftShiftA.set(true);
 			LeftShiftB.set(false);			
@@ -240,7 +240,7 @@ public class Chassis {
 		case PROFILE:	
 			profileTimer.update();
 			
-			if(prefs.getBoolean("compbot", true)) {
+			if(prefs.getBoolean("compbot", Robot.compbot)) {
 				//compbot
 				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.008);
 				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.008);				
@@ -268,7 +268,7 @@ public class Chassis {
 			//NOTE: EXPECTED FALLTHROUGH TO TANK MODE
 		case TANK:
 			//Set the motor
-			if (prefs.getBoolean("compbot", true)){
+			if (prefs.getBoolean("compbot", Robot.compbot)){
 				//comp bot
 				driver.tankDrive(leftPower, rightPower);
 			}
@@ -279,7 +279,7 @@ public class Chassis {
 			break;
 		case ARCADE:
 			//Not enabled for now, pending an update for OI related stuff.
-			if(prefs.getBoolean("compbot", true)) {
+			if(prefs.getBoolean("compbot", Robot.compbot)) {
 				//comp bot
 				driver.arcadeDrive(-arcadePower*mod, -arcadeTurn*mod, squaredInputs);
 			}

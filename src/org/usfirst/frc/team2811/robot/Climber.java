@@ -16,12 +16,13 @@ public class Climber {
 	Preferences prefs = Preferences.getInstance();
 	
 	public Climber() {
-		if(prefs.getBoolean("compbot", false)) {
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			mtr1 = new WPI_TalonSRX(10);
 			mtr2 = new WPI_TalonSRX(9);
 		}
 		else {
 			mtr1 = new WPI_TalonSRX(10);
+			mtr2 = new WPI_TalonSRX(15);
 		}
 	}
 	
@@ -75,7 +76,7 @@ public class Climber {
 		}
 		
 		//Make a positive power everywhere else correspond to the "up" direction
-		if(prefs.getBoolean("compbot", false)) {
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
 		}
 		else {
 			power = -power ; 
@@ -83,9 +84,9 @@ public class Climber {
 			
 		mtr1.set(ControlMode.PercentOutput, power); //replace getY with fixed value on robot
 		
-		if(prefs.getBoolean("compbot", false)) {
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			bind();
-		}else {}
+		}
 		
 		SmartDashboard.putNumber("ClimberPower", power);
 		SmartDashboard.putNumber("ClimberPosition", mtr1.getSelectedSensorPosition(0));

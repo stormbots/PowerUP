@@ -37,7 +37,7 @@ public class Elevator {
 	 
 	 
 	 public Elevator() {
-		if(prefs.getBoolean("compbot", false)) {
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			eMotorA = new WPI_TalonSRX(8);
 		}
 		else {
@@ -126,7 +126,8 @@ public class Elevator {
 	
 	void newUpdate() {
 
-		if(prefs.getBoolean("compbot", false)) {
+		
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			//comp bot
 			currentPos = -eMotorA.getSelectedSensorPosition(0);
 		}
@@ -167,14 +168,14 @@ public class Elevator {
 //			reset();
 		}
 
-		if(prefs.getBoolean("compbot", false)) {
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			// nothing is done in here
 			//eVelocity = -eVelocity; //maybE?
 		}
 		else {
 		}
 		
-		eMotorA.set(ControlMode.PercentOutput, eVelocity);
+		eMotorA.set(ControlMode.PercentOutput, -eVelocity);
 		bind();
 
 		SmartDashboard.putNumber("Elevator Current Position", currentPos);

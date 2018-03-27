@@ -44,7 +44,7 @@ public class SideEscape extends AutoSequence {
 			Robot.elevator.setPos(ElevatorPosition.SWITCH);
 		}
 		if(timer.atTime(8000)) {
-			Robot.elevator.setPos(ElevatorPosition.FLOOR);
+			Robot.elevator.setPos(ElevatorPosition.SWITCH);
 			Robot.drive.setMode(Chassis.Mode.ARCADE);
 		}
 		

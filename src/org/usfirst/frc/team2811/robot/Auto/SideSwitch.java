@@ -68,7 +68,7 @@ public class SideSwitch extends AutoSequence {
 		}
 		if(timer.atTime(7000)) {
 			Robot.intake.stopMotor();
-			Robot.elevator.setPos(ElevatorPosition.FLOOR);
+			Robot.elevator.setPos(ElevatorPosition.SWITCH);
 		}
 		if(timer.atTime(8500)) {
 			Robot.drive.setMode(Chassis.Mode.ARCADE);
