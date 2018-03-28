@@ -71,7 +71,7 @@ public class Elevator {
 	}
 	
 	public void bind() {
-		//eMotorB.follow(eMotorA);
+		eMotorB.follow(eMotorA);
 		// Investigate whther this makes the thing follow forever like expected
 		// eMotorB.set(ControlMode.Follower, 8);
 	}
@@ -175,7 +175,13 @@ public class Elevator {
 		else {
 		}
 		
-		eMotorA.set(ControlMode.PercentOutput, -eVelocity);
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
+			eVelocity *= -1;			
+		}
+		else {
+		}
+		
+		eMotorA.set(ControlMode.PercentOutput, eVelocity);
 		bind();
 
 		SmartDashboard.putNumber("Elevator Current Position", currentPos);

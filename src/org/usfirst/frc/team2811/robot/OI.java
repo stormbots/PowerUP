@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.Timer;
 
 enum ClimberMode{ENABLED, DISABLED}
 
@@ -36,6 +37,13 @@ public class OI {
 		}
 		else {
 			Robot.drive.shiftLow(); 
+		}
+		
+		if(driver.getRawButton(7)) { //check and make sure that this button is the left trigger, or changed for what Lily wants
+			turnScaleValue = 1;
+		}
+		else {
+			turnScaleValue = 0.75;
 		}
 		
 		
@@ -132,7 +140,11 @@ public class OI {
 				Robot.intake.tiltBackward(true);
 				tiltedBack =  true;
 			}
-		}		
+		}
 		
+		if(Timer.getMatchTime() <= 1 && Timer.getMatchTime() >= 0) {
+			Robot.intake.tiltBackward(true);
+			Robot.intake.squeezeOpen(false);
+		}
 	}
 }

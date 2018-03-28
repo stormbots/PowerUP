@@ -11,6 +11,7 @@ import org.usfirst.frc.team2811.robot.Auto.AutoSelector;
 import org.usfirst.frc.team2811.robot.Auto.AutoSequence;
 import org.usfirst.frc.team2811.robot.Auto.Center;
 import org.usfirst.frc.team2811.robot.Auto.Example;
+import org.usfirst.frc.team2811.robot.Auto.SideCrossScale;
 import org.usfirst.frc.team2811.robot.Auto.SideEscape;
 import org.usfirst.frc.team2811.robot.Auto.SideScale;
 import org.usfirst.frc.team2811.robot.Auto.SideSwitch;
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Preferences;
 
 
 /**
@@ -40,7 +42,7 @@ public class Robot extends IterativeRobot {
 	public static Climber climber = new Climber();
 	Lighting lighting = new Lighting();
 	public OI oi = new OI();
-	static boolean compbot = true;
+	static boolean compbot = false;
 	
 	AutoSequence autoChoice = new SideEscape();
 	AutoSelector autoSelector = new AutoSelector();
@@ -73,7 +75,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {		
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
-		//autoChoice = new Testing1();
+		//autoChoice = new SideCrossScale(false);
 		
 		// Do auto mode initialization 
 		drive.shiftLow();
@@ -122,6 +124,7 @@ public class Robot extends IterativeRobot {
 		elevator.newUpdate();
 		intake.newUpdate();
 		climber.newUpdate();
+		
 	}
 
 	/**
@@ -143,6 +146,8 @@ public class Robot extends IterativeRobot {
 		elevator.disabledPeriodic();
 		intake.disabledPeriodic();
 //		climber.disabledPeriodic();
+		
+		SmartDashboard.putBoolean("Am I Compbot?", Preferences.getInstance().getBoolean("compbot", Robot.compbot));
 	}
 	
 }

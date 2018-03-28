@@ -48,6 +48,8 @@ public class Intake {
 		}
 		else {
 			//Practice bot
+			tiltInvert = false;
+			squeezeInvert = false;
 		}
 	}
 
@@ -93,11 +95,6 @@ public class Intake {
 	void newUpdate() {
 		motorL.set(ControlMode.PercentOutput, velocity);
 		motorR.set(ControlMode.PercentOutput, -velocity);
-		
-		if(Timer.getMatchTime() <= 1 && Timer.getMatchTime() >= 0) {
-			tiltBackward(true);
-			squeezeOpen(false);
-		}
 		
 		SmartDashboard.putNumber("Intake Velocity", velocity);
 		SmartDashboard.putBoolean("Intake Has Cube", hasCube());   
