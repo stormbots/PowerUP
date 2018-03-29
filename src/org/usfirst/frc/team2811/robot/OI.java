@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 enum ClimberMode{ENABLED, DISABLED}
 
@@ -87,13 +88,16 @@ public class OI {
 		if(functions.getRawButton(5)) {
 			Robot.climber.setPower(functions.getRawAxis(1));
 		}
-			
+		SmartDashboard.putNumber("climber velocity", functions.getRawAxis(1));
+		
 		//hit a button to enable climber mode
-		if(functions.getRawButton(8)) {
-			Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.CLIMB);
+		if(functions.getRawButton(8)) { // note: a negative motor will make a posotive increase in position ticks
+			Robot.climber.setPosition(0.1);
+			
+//			Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.CLIMB);
 			Robot.climber.setMode(Climber.Mode.CLOSEDLOOP);
-			Robot.climber.setPosition(1);
-			climberMode = ClimberMode.ENABLED;
+//			Robot.climber.setPosition(1);
+//			climberMode = ClimberMode.ENABLED;
 		}
 		else if(functions.getRawButton(12)) {
 			Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.SCALEHIGH);
@@ -121,6 +125,7 @@ public class OI {
 		}
 		
 		if(functions.getRawButtonPressed(2)) {
+			System.out.println("Pressed the button for intake!");
 			if(intakeOpen == false) {
 				Robot.intake.squeezeOpen(true); // TODO The action for this should actually toggle.
 				intakeOpen = true;

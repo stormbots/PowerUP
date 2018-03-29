@@ -39,6 +39,7 @@ public class Elevator {
 	 public Elevator() {
 		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			eMotorA = new WPI_TalonSRX(8);
+			eMotorB = new WPI_TalonSRX(9);
 		}
 		else {
 			eMotorA = new WPI_TalonSRX(8);
@@ -176,7 +177,7 @@ public class Elevator {
 		}
 		
 		if(prefs.getBoolean("compbot", Robot.compbot)) {
-			eVelocity *= -1;			
+			eVelocity *= 1;			
 		}
 		else {
 		}
@@ -187,7 +188,7 @@ public class Elevator {
 		SmartDashboard.putNumber("Elevator Current Position", currentPos);
 		SmartDashboard.putNumber("Elevator Desired Position", elevatorPos);
 		SmartDashboard.putNumber("Elevator Voltage", eMotorA.getMotorOutputVoltage());
-		SmartDashboard.putNumber("Elevator Velocity", eVelocity);
+		SmartDashboard.putNumber("Elevator Velocity", -eVelocity);
 		SmartDashboard.putBoolean("Elevator Limit Switch is pressed", !LimitSwitch.get());
 	}
 }

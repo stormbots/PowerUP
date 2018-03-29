@@ -12,17 +12,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 public class Climber {
 	
 	WPI_TalonSRX mtr1;
-	WPI_TalonSRX mtr2;
 	Preferences prefs = Preferences.getInstance();
 	
 	public Climber() {
 		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			mtr1 = new WPI_TalonSRX(10);
-			mtr2 = new WPI_TalonSRX(9);
 		}
 		else {
 			mtr1 = new WPI_TalonSRX(10);
-			mtr2 = new WPI_TalonSRX(15);
 		}
 	}
 	
@@ -30,12 +27,7 @@ public class Climber {
 	Mode mode = Mode.DISABLED;
 	private double power = 0;
 	private double maxClimbHeight = 101926;
-	
-	
-	public void bind() {
-		mtr2.follow(mtr1);
-	}
-	
+		
 	public void setMode(Mode newMode) {
 		mode = newMode;
 	}
@@ -59,7 +51,7 @@ public class Climber {
 		case CLOSEDLOOP:
 			
 			//positive motor output generates negative direction on climber
-			power = FB.FB(101926, mtr1.getSelectedSensorPosition(0), 0.02);
+			power = -FB.FB(101926, mtr1.getSelectedSensorPosition(0), 0.005);
 			break;
 	
 	
@@ -77,17 +69,14 @@ public class Climber {
 		
 		//Make a positive power everywhere else correspond to the "up" direction
 		if(prefs.getBoolean("compbot", Robot.compbot)) {
+			power = power ; 
 		}
 		else {
 			power = -power ; 
 		}
 			
 		mtr1.set(ControlMode.PercentOutput, power); //replace getY with fixed value on robot
-		
-		if(prefs.getBoolean("compbot", Robot.compbot)) {
-			bind();
-		}
-		
+				
 		SmartDashboard.putNumber("ClimberPower", power);
 		SmartDashboard.putNumber("ClimberPosition", mtr1.getSelectedSensorPosition(0));
 	}

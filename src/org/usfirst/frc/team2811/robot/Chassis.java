@@ -242,7 +242,7 @@ public class Chassis {
 			
 			if(prefs.getBoolean("compbot", Robot.compbot)) {
 				//compbot
-				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.027);
+				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.024);
 				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.020);				
 		
 

@@ -31,25 +31,28 @@ public class SideCrossScale extends AutoSequence {
 	
 	long t0 = 0000;
 	long t1 = 7500;
-	long t2 = 750;
+	long t2 = 1100;
 	long t3 = 4000;
-	long t4 = 750;
+	long t4 = 1100;
 	long t5 = 1000;
 	long t6 = 1000;
 
 
 
 	public SideCrossScale(boolean isLeft) {
-		double inside1 = 185;
-		double outside1 = 185;
-		double inside2 = 3.9270; // not full 90 degree turn
-		double outside2 = 43.1969;
-		double inside3 = 110; // distance to the end of the scale = 131.84; // this current is too far
-		double outside3 = 110;
-		double inside4 = 43.1969; // turn is really not tested
-		double outside4 = 3.9270;
-		double inside5 = 60; // increase time?  going too fast
-		double outside5 = 60;
+		
+		
+		
+		double inside1 = 205;
+		double outside1 = 205;
+		double inside2 = -20;
+		double outside2 = 20;
+		double inside3 = 174; // distance to the end of the scale = 131.84; // this current is too far
+		double outside3 = 174;
+		double inside4 = 20; // turn is really not tested
+		double outside4 = -20;
+		double inside5 = 15; // increase time?  going too fast
+		double outside5 = 15;
 		
 		if(isLeft) {
 			left1 = outside1;
@@ -85,24 +88,25 @@ public class SideCrossScale extends AutoSequence {
 	 * eg, if(have-cube) then intake.close() then elevator.move_pos(switch) then drive.setProfile(24,24,1000)
 	 */
 	public void run() {
+		
 		//Example: Approximate movements to drop on the switch then back up
 		if(timer.atTime(t0)){
-			Robot.drive.setProfile(left1, right1, 7500);
+			Robot.drive.setProfile(left1, right1, t1);
 		}
 		if(timer.atTime(t1)){
-			Robot.drive.setProfile(left2, right2, 750);
+			Robot.drive.setProfile(left2, right2, t2);
 		}
 		if(timer.atTime(t2+t1)) {
-			Robot.drive.setProfile(left3, right3, 4000);
+			Robot.drive.setProfile(left3, right3, t3);
 		}
 		if(timer.atTime(t3+t2+t1)) {
-			Robot.drive.setProfile(left4, right4, 750);
+			Robot.drive.setProfile(left4, right4, t4);
 		}
 		if(timer.atTime(t4+t3+t2+t1)) {
-			Robot.drive.setProfile(left5, left5, 1000);
+			Robot.drive.setProfile(left5, left5, t5);
 		}
 		if(timer.atTime(t5+t4+t3+t2+t1)) {
-			Robot.drive.setProfile(backward, backward, 1000);
+			Robot.drive.setProfile(backward, backward, t6);
 		}
 		
 		if(timer.atTime(t0)) {
@@ -110,6 +114,9 @@ public class SideCrossScale extends AutoSequence {
 		}
 		if(timer.atTime(t4+t3+t2+t1)) {
 			Robot.elevator.setPos(ElevatorPosition.SCALEHIGH);
+		}
+		if(timer.atTime(t5+t4+t3+t2+t1)) {
+			Robot.intake.ejectCube();
 		}
 		if(timer.atTime(t6+t5+t4+t3+t2+t1)) {
 			Robot.intake.stopMotor();

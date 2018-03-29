@@ -10,6 +10,7 @@ package org.usfirst.frc.team2811.robot;
 import org.usfirst.frc.team2811.robot.Auto.AutoSelector;
 import org.usfirst.frc.team2811.robot.Auto.AutoSequence;
 import org.usfirst.frc.team2811.robot.Auto.Center;
+import org.usfirst.frc.team2811.robot.Auto.CenterNewVer;
 import org.usfirst.frc.team2811.robot.Auto.Example;
 import org.usfirst.frc.team2811.robot.Auto.SideCrossScale;
 import org.usfirst.frc.team2811.robot.Auto.SideEscape;
@@ -42,7 +43,7 @@ public class Robot extends IterativeRobot {
 	public static Climber climber = new Climber();
 	Lighting lighting = new Lighting();
 	public OI oi = new OI();
-	static boolean compbot = false;
+	static boolean compbot = true;
 	
 	AutoSequence autoChoice = new SideEscape();
 	AutoSelector autoSelector = new AutoSelector();
@@ -75,7 +76,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {		
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
-		//autoChoice = new SideCrossScale(false);
+		autoChoice = new CenterNewVer(false);
 		
 		// Do auto mode initialization 
 		drive.shiftLow();
