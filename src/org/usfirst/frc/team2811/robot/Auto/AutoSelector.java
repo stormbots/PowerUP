@@ -105,10 +105,10 @@ public class AutoSelector {
 		if(robotLocation == RobotLocation.CENTER) {
 			targetLocation = TargetLocation.SWITCH;
 			if(robotLocation == RobotLocation.LEFT) {
-				return new Center(true);
+				return new CenterNewVer(true);
 			}
 			else {
-				return new Center(false);
+				return new CenterNewVer(false);
 			}
 		}
 		else if(robotLocation == RobotLocation.LEFT) {

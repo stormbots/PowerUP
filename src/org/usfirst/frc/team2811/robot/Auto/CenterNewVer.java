@@ -35,44 +35,37 @@ public class CenterNewVer extends AutoSequence {
 	double right9;
 	double backward = -24;
 	
-	double t0;
-	double t1;
-	double t2;
-	double t3;
-	double t4;
-	double t5;
-	double t6;
-	double t7;
-	double t8;
-	double t9;
+	long t0 = 0000;
+	long t1 = 1000;
+	long t2 = 3000;
+	long t3 = 2000;
+	long t4 = 1000;
+	long t5 = 750;
+	long t6 = 750;
+	long t7 = 1000;
+	long t8 = 2000;
 	
 	public CenterNewVer(boolean toLeft) {
-		if(toLeft) {
-			left1 = 29.0597;
-			right1 = 68.3296;
-			left2 = 68.3296;																																																											;
-			right2 = 29.0597;
-			left3 = 37;
-			right3 = 37;
+		if(toLeft) {			
+			left1 = 0;
+			right1 = 14;
+			left2 = 102;
+			right2 = 102;
+			left3 = -32;
+			right3 = -32;
+			left4 = 20;
+			right4 = -20;
+			left5 = 10;
+			right5 = 10;
+			left6 = -10;
+			right6 = -10;
+			left7 = -20;
+			right7 = 20;
+			left8 = 32;
+			right8 = 32;
+			left9 = 0;
+			right9 = 0;
 		}
-		
-		
-		/*
-		 * robot center is 4 inches toward the switch, 157.69 from the wall
-		 * switch outer edge is 85.25 inches from the wall, use 80 inches from the wall
-		 * we need a 77.96 inch lateral distance
-		 * over a 101 inch vertical distance
-		 * 6 inches forward + turn
-		 * tan(0) = 77.96/101 = angle
-		 * 37.6639
-		 * 
-		 * ______
-		 * |    /
-		 * |   /
-		 * |  /
-		 * | /
-		 * |/
-		 */
 		else {
 			left1 = 17;
 			right1 = 0;
@@ -104,17 +97,6 @@ public class CenterNewVer extends AutoSequence {
 	 * eg, if(have-cube) then intake.close() then elevator.move_pos(switch) then drive.setProfile(24,24,1000)
 	 */
 	public void run() {
-		
-		long t0 = 0000;
-		long t1 = 1000;
-		long t2 = 3000;
-		long t3 = 2000;
-		long t4 = 1000;
-		long t5 = 750;
-		long t6 = 750;
-		long t7 = 1000;
-		long t8 = 2000;
-		long t9;
 		
 		//Example: Approximate movements to drop on the switch then back up
 		if(timer.atTime(t0)){
@@ -158,9 +140,9 @@ public class CenterNewVer extends AutoSequence {
 		if(timer.atTime(1000+t8+t7+t6+t5+t4+t3+t2+t1)) {
 			Robot.intake.stopMotor();
 		}
-//		if(timer.atTime(14800)) {
-//			Robot.drive.setMode(Chassis.Mode.ARCADE);
-//		}
+		if(timer.atTime(14900)) {
+			Robot.drive.setMode(Chassis.Mode.ARCADE);
+		}
 
 		timer.update();
 	}

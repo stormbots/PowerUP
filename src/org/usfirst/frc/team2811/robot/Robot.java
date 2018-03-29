@@ -76,13 +76,13 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {		
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
-		autoChoice = new CenterNewVer(false);
+//		autoChoice = new CenterNewVer(false);
 		
 		// Do auto mode initialization 
 		drive.shiftLow();
 		intake.tiltBackward(false);
 		elevator.setMode(Elevator.Mode.MANUALPOSITION);
-		//elevator.resetTo(ElevatorPosition.AUTO_STARTUP);
+		elevator.resetTo(ElevatorPosition.AUTO_STARTUP);
 		elevator.setPos(ElevatorPosition.SWITCH);
 		intake.squeezeOpen(false);
 	}
