@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2811.robot;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Utility;
 
 
@@ -13,14 +14,16 @@ public class CXTIMER {
 	
 	
 	// this are static variables that are shared by all instances of the timer
-	private static long mylasttm=(long) 0;  // the last count from the system timer
+	private static long mylasttime=(long) 0;  // the last count from the system timer
 	private static long mytimeticks=(long) 0; // Number of time ticks to add this pass though the main loop
 	private static long mytimeticksrm=(long) 0; // the remainder numbers of ticks 
 	
 	private long mycurtime=(long)0;  // the current number of ticks this timer has accumulated
-;
 
-	CXTIMER(){
+	public double lasttime = 0;
+	public double presenttime = 0;
+	
+	public CXTIMER(){
 		mycurtime=0;
 	}
 	
@@ -49,10 +52,10 @@ public class CXTIMER {
 		curt=curt&maxsf; // fix for signed VS unsigned
 		
 		
-		if(curt>=mylasttm) 
-			mytimeticks=curt-mylasttm;  // not roll over just normal
+		if(curt>=mylasttime) 
+			mytimeticks=curt-mylasttime;  // not roll over just normal
 		else
-			mytimeticks=maxsf-(mylasttm-curt)+1; // handle roll over case
+			mytimeticks=maxsf-(mylasttime-curt)+1; // handle roll over case
 		// the roll over case is designed to keep with math limits and use normal operands
 		// it would be simpler to do a two complement but with the uncertainty about the 
 		// compilers actual methods a pure operator methods was used. 
@@ -67,7 +70,7 @@ public class CXTIMER {
 		// if enough fractional ticks have accumulated increase the tick count by 1
 		while (mytimeticksrm>sf) {mytimeticks++;mytimeticksrm-=sf;} // add odd time 
 		// keep this count to use as the last count in then next call
-		mylasttm=curt;
+		mylasttime=curt;
 	}
 	
 	
@@ -126,4 +129,5 @@ public class CXTIMER {
 		mycurtime=0;	
 	}
 
+		
 }

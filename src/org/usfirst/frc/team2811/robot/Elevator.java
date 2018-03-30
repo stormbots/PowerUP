@@ -1,10 +1,5 @@
 package org.usfirst.frc.team2811.robot;
 
-import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
-import org.usfirst.frc.team2811.robot.Robot.ScaleConfig;
-import org.usfirst.frc.team2811.robot.Robot.SwitchConfig;
-import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -15,15 +10,10 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2811.robot.FB;
 
-/**
- * Class using WPI_TalonSRX to move Elevator w/ joystick and by setting a position.
- * Inputs: eMotor address
- * Outputs: eVelocity, elevatorPos 
- */
-
-public class Elevator extends RobotModule {
+public class Elevator {
 	
-	 WPI_TalonSRX eMotor = new WPI_TalonSRX(8);
+	 WPI_TalonSRX eMotorA;
+	 WPI_TalonSRX eMotorB;
 	 DigitalInput LimitSwitch = new DigitalInput(1);
 	 Preferences prefs = Preferences.getInstance();
 
@@ -47,211 +37,158 @@ public class Elevator extends RobotModule {
 	 
 	 
 	 public Elevator() {
-		 reset();
-		 double voltageRampRate = 0.2;
-		eMotor.configOpenloopRamp(voltageRampRate, 30);
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
+			eMotorA = new WPI_TalonSRX(8);
+			eMotorB = new WPI_TalonSRX(9);
+		}
+		else {
+			eMotorA = new WPI_TalonSRX(8);
+			eMotorB = new WPI_TalonSRX(9);
+		}
+		
+		reset();
+		double voltageRampRate = 0.2;
+		eMotorA.configOpenloopRamp(voltageRampRate, 30);
 	 }
-	 
 	
 	public enum Mode{ 
 		MANUALVELOCITY, MANUALPOSITION, BUTTON, HOMING //Used to change how the elevator is controlled
-	}
+	, DISABLED}
 	
-	public Mode mode = Mode.MANUALPOSITION;
+	private Mode mode = Mode.MANUALPOSITION;
 	private boolean homed=false; 
 	
-	public void changeMode (Mode newMode) {
+	public void setMode(Mode newMode) {
 		mode = newMode;
 	}
-		
-	void init(){
-		//reset();
+	public Mode getMode () {
+		return mode;
 	}
 	
-	
-	public void disabledPeriodic(){
-		//update constants and stuff from flash
-		maxPos = prefs.getDouble("elevatorTopLimit", 93000);
-		
+	/** Fetch preferences and adjust variables as needed */
+	public void disabledPeriodic() {
+		maxPos = prefs.getDouble("elevatorTopLimit", 92000);
+		SmartDashboard.putNumber("ElevatorPos (Disabled)", eMotorA.getSelectedSensorPosition(0));
 	}
 	
-	void update(Joystick driver1,Joystick driver2, Joystick functions1) { //Only using functions1
-		
-		double breakpoint = 0.0;
-		
-		//TODO: new joystick needs to be plugged in with slider at zero, or moved, otherwise it reads incorrectly
-		// Fix should be to make sure that the joystick input is -1 before enabling the elevator
-		if(prefs.getBoolean("compbot", false)) {
-			//comp bot
-			currentPos = eMotor.getSelectedSensorPosition(0);
-		}
-		else {
-			//prac bot
-			currentPos = -eMotor.getSelectedSensorPosition(0);
-		}
-		double stickValue = -functions1.getRawAxis(3);
-
-		if(functions1.getRawButtonPressed(11)) {
-			if(mode == Mode.MANUALPOSITION) {
-				mode = Mode.MANUALVELOCITY;
-			}
-			else if(mode == Mode.MANUALVELOCITY) {
-				mode = Mode.MANUALPOSITION;
-			}
-			else {
-				//this shouldn't happen
-				mode = Mode.MANUALPOSITION;
-			}
-		}
-		
-		if(mode == Mode.HOMING) {
-			if(!LimitSwitch.get()) {
-				eVelocity = 0.1;
-			}
-			else{
-				mode = Mode.MANUALPOSITION;
-				homed = true;
-				reset();
-			}
-		}
-		
-		else if(mode == Mode.MANUALVELOCITY) {
-			
-			eVelocity = stickValue;
-
-			
-			
-		
-		}
-		//Position setlist, currently unused
-		/*else if(mode == Mode.BUTTON) {
-			
-			eVelocity = FB.FB(elevatorPos, -currentPos, 0.02);
-			//Takes an inputed position and adjusts the velocity to get there.
-			//Last value needs to be tested and adjusted.
-			
-		}*/
-		
-		else if(mode == Mode.MANUALPOSITION) {
-			
-			
-			elevatorPos = ( (stickValue-(-1)) / (1-(-1)) * (maxPos-minPos) + minPos ); //Maps controller y-axis to elevator position.
-			
-			//Not applicable to practice robot, not used
-			/*if(elevatorPos < midBP && currentPos > midBP) {
-				breakpoint = midBP;
-			}
-			else if(elevatorPos > midBP && currentPos < midBP) {
-				breakpoint = midBP;
-			}
-			else {
-				breakpoint = elevatorPos;
-				
-			}*/
-			
-			eVelocity = FB.FB(elevatorPos, currentPos, 0.007);			
-			
-		}
-		
-		//Invert motor phase. The Talon command to do this does not seem to work.
-		if(currentPos >= maxPos && eVelocity > 0) { //Keeps elevator from going too high.
-			eVelocity = 0; 
-		}
-		else if(!LimitSwitch.get()) {
-			reset();
-			homed = true;
-			if(eVelocity < 0) {
-				eVelocity = 0;
-			}
-		}
-		else if(functions1.getRawButton(3)) {
-			eVelocity = -0.5;
-		}
-		else if(currentPos <= softLimit && eVelocity < 0) { //Keeps elevator from going too low.
-			eVelocity = 0; 
-		}
-		else {
-		}
-		
-	
-		//Set Motor phase, currently not needed 
-		//eVelocity = -eVelocity;
-		
-		
-		eMotor.set(ControlMode.PercentOutput, eVelocity);
-		SmartDashboard.putNumber("Elevator Current Position", currentPos);
-		SmartDashboard.putNumber("Breakpoint", breakpoint);
-		SmartDashboard.putNumber("Desired Position", elevatorPos);
-		SmartDashboard.putNumber("Voltage", eMotor.getOutputCurrent());
-		SmartDashboard.putNumber("Joystick Position", functions1.getY());
-		SmartDashboard.putNumber("elevatorVelocity", eVelocity);
-		SmartDashboard.putBoolean("LimitSwitch", LimitSwitch.get());
-		
+	public void bind() {
+		eMotorB.follow(eMotorA);
+		// Investigate whther this makes the thing follow forever like expected
+		// eMotorB.set(ControlMode.Follower, 8);
 	}
 		
 	public void reset() {
-		eMotor.setSelectedSensorPosition(0, 0, 20); //First argument is desired position, second is the type of loop? (0 or 1), third is the timeout.
-		
-	}
-		
-	void autoInit(RobotLocation robotLocation, TargetLocation targetLocation, SwitchConfig switchConfig, ScaleConfig scaleConfig) { //Elevator only cares about targetLocation
-		eMotor.setSelectedSensorPosition(0, (int) initializePos, 20);
-		eMotor.setSelectedSensorPosition((int) initializePos, 0, 20);// maybe just in case? Shouldn't do anything.
-		
-		if(robotLocation == RobotLocation.CENTER) {
-			autoActiveStep = 3;
-			autoActiveTime = 1;
-		}
-		else {
-			autoActiveStep = 1;
-			autoActiveTime = 5.5;
-		}
-		if(targetLocation == TargetLocation.SCALE) {
-			autoActiveStep = 1;
-			autoActiveTime = 3.5;
-		}
-		
-		elevatorPos=initializePos;
-		if(targetLocation == TargetLocation.SWITCH) {
-			autoPosition = switchPos; // bug fix 201802222021  =scaleHighPos
-		}
-		else if(targetLocation == TargetLocation.SCALE) {
-			autoPosition = scaleHighPos;
-		}
-		else if(targetLocation == TargetLocation.MOVE_ONLY) {
-			autoPosition = switchPos;
-		}
-		else {
-			autoPosition = initializePos;		
-		}
+		eMotorA.setSelectedSensorPosition(0, 0, 20); //First argument is desired position, second is the type of loop? (0 or 1), third is the timeout.
 	}
 	
-	void auto(int stepAuto, double time) {
+	public void resetTo(ElevatorPosition position) {
+		eMotorA.setSelectedSensorPosition(0, (int) position.ticks(), 20);
+		eMotorA.setSelectedSensorPosition((int) position.ticks(), 0, 20);// maybe just in case? Shouldn't do anything.
+	}
 		
-		if(time > autoActiveTime && stepAuto == autoActiveStep) {
-			elevatorPos = autoPosition;
-		}
+	public void setMaxHeight(ElevatorPosition newMaxPos) {
+		maxPos = newMaxPos.ticks;
+	}
+	
+	public void setVel(double velocity) {
+		eVelocity = velocity;
+	}
 		
-		//TODO may need to set these motor phases
+	/**
+	 * @param position between -1 and 1
+	 */
+	public void setPos(double position) {
+		Utilities.clamp(position,-1,1);
+		elevatorPos = Utilities.lerp(position, -1, 1, 0, maxPos);
+		elevatorPos = Utilities.clamp(elevatorPos, 0, maxPos);
+	}
+	
+	/**
+	 * 	setPos(ElevatorPosition.SWITCH);
+	 * @param position
+	 */
+	public void setPos(ElevatorPosition position) {
+		double pos = Utilities.lerp(position.ticks(),0,maxPos,-1,1);
+		setPos(pos);
+	}
+
+	public enum ElevatorPosition{
+		FLOOR(0),
+		SWITCH (25_000),
+		SCALEHIGH(92_000),
+		AUTO_STARTUP(25_000),
+		CLIMB(50_000)
+		;
 		
-		if(prefs.getBoolean("compbot", false)) {
+		double ticks = 0;
+		ElevatorPosition(double ticks){this.ticks = ticks;}
+		double ticks() {return this.ticks;};
+	}
+	
+	void newUpdate() {
+
+		
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			//comp bot
-			SmartDashboard.putNumber("ElevatorCurrentPos", eMotor.getSelectedSensorPosition(0));
-			eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, eMotor.getSelectedSensorPosition(0), 0.01));
+			currentPos = eMotorA.getSelectedSensorPosition(0);
 		}
 		else {
 			//prac bot
-			eMotor.set(ControlMode.PercentOutput, FB.FB(elevatorPos, -eMotor.getSelectedSensorPosition(0), 0.01));
-			SmartDashboard.putNumber("ElevatorCurrentPos", -eMotor.getSelectedSensorPosition(0));
+			currentPos = eMotorA.getSelectedSensorPosition(0);
 		}
-			
-		SmartDashboard.putNumber("ElevatorAutoPos", autoPosition);
-		SmartDashboard.putNumber("Elevatorvelocity", eMotor.getMotorOutputPercent());
-		SmartDashboard.putNumber("ElevatorPos", elevatorPos);
 		
-	}
-	
-	
-	
+		switch(mode) {
+		case MANUALPOSITION:
+			Utilities.clamp(elevatorPos, 0, maxPos);
+			eVelocity = FB.FB(elevatorPos, currentPos, 0.005);			
+			//expected fallthrough to velocity mode
+		case MANUALVELOCITY:
+			//no need to manipulate velocity
+			break;
+		case HOMING:
+			if(!LimitSwitch.get()) {
+				eVelocity = 0;
+			}
+			else {
+				eVelocity = -0.3;
+			}
+			break;
+		default: 
+			//disabled
+			break;
+		}
+		
+		//manipulate our velocity
+		if(!LimitSwitch.get() && eVelocity <0) {
+			eVelocity = 0;
+		}
+		
+		//check for limit switch and reset if found
+		if(!LimitSwitch.get()) {
+			homed = true;
+			reset();
+		}
 
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
+			// nothing is done in here
+			//eVelocity = -eVelocity; //maybE?
+		}
+		else {
+		}
+		
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
+			eVelocity *= 1;			
+		}
+		else {
+		}
+		
+		eMotorA.set(ControlMode.PercentOutput, eVelocity);
+		bind();
+
+		SmartDashboard.putNumber("Elevator Current Position", currentPos);
+		SmartDashboard.putNumber("Elevator Desired Position", elevatorPos);
+		SmartDashboard.putNumber("Elevator Voltage", eMotorA.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Elevator Velocity", -eVelocity);
+		SmartDashboard.putBoolean("Elevator Limit Switch is pressed", !LimitSwitch.get());
+	}
 }

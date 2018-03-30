@@ -2,11 +2,6 @@ package org.usfirst.frc.team2811.robot;
 
 import com.ctre.phoenix.motorcontrol.can.*;
 
-import org.usfirst.frc.team2811.robot.Robot.RobotLocation;
-import org.usfirst.frc.team2811.robot.Robot.ScaleConfig;
-import org.usfirst.frc.team2811.robot.Robot.SwitchConfig;
-import org.usfirst.frc.team2811.robot.Robot.TargetLocation;
-
 import com.ctre.phoenix.Util;
 import com.ctre.phoenix.motorcontrol.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -35,7 +30,7 @@ import edu.wpi.first.wpilibj.Talon;
  * 
  */
 
-public class Chassis extends RobotModule {
+public class Chassis {
 	WPI_TalonSRX leadL = new WPI_TalonSRX(2);
 	TalonSRX frontL = new TalonSRX(1);
 	TalonSRX rearL = new TalonSRX(0);
@@ -46,55 +41,44 @@ public class Chassis extends RobotModule {
 	Preferences prefs = Preferences.getInstance();
 	PowerDistributionPanel pdp = new PowerDistributionPanel();
 	
-	//Initialization is robot specific, done in constructor
-	Solenoid LeftShiftA;
-	Solenoid LeftShiftB;
-	Solenoid RightShiftA;
-	Solenoid RightShiftB;
-	
+	//Now identical in both robots
+	Solenoid LeftShiftA = new Solenoid(2);
+	Solenoid LeftShiftB = new Solenoid(3);
+	Solenoid RightShiftA = new Solenoid(4); // practice bot only
+	Solenoid RightShiftB = new Solenoid(5); // practice bot only
+
 
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
 	Motion345 right345 = new Motion345(10000, 3, 0, 200);
+	TinyTimer profileTimer = new TinyTimer();
+	public enum Mode{PROFILE,TANK,ARCADE,DISABLED}
+	Mode mode = Mode.ARCADE;
+	double leftPower = 0; 
+	double rightPower = 0;
 	
+	//Drive configuration values. Will be overwritten by disabledperiodic
+	double scaleFactorL = 199.8; // compbot default
+	double scaleFactorR = 405.4; // compbot default
+	
+	double arcadeTurn = 0; 
+	double arcadePower = 0;
+	boolean squaredInputs = true;
+
 	boolean braking = true;
-	boolean isTank = false;
+
 	
-	public double left1 = 0;
-	public double left2 = 0;
-	public double left3 = 0;
-	public double right1 = 0;
-	public double right2 = 0;
-	public double right3 = 0;
-	public double t1=2.5;
-	public double t2=2.5;
-	public double t3=2.5;
-
-
 	/**
 	 * the constructor: 
 	 *initializes the slave talons
 	 */
 	public Chassis() {
-		if(prefs.getBoolean("compbot", true)) {
-			//Comp Bot
-			LeftShiftA = new Solenoid(2);
-			LeftShiftB = new Solenoid(3);
-			RightShiftA = new Solenoid(6); //not actually used
-			RightShiftB = new Solenoid(7);	//not actually used
-		}
-		else {
-			//practice bot
-			LeftShiftA = new Solenoid(2);
-			LeftShiftB = new Solenoid(3);
-			RightShiftA = new Solenoid(4);
-			RightShiftB = new Solenoid(5);		
-		}
+		braking(true);
+		resetEnc();
 
 		//initializes the slaves and shifters
 
 		shiftLow();
 		bind();
-		prefs.getBoolean("compbot", false); // true if on the compbot
 		
 		double voltageRampRate = 0.075;
 		leadL.configOpenloopRamp(voltageRampRate, 30);
@@ -105,15 +89,28 @@ public class Chassis extends RobotModule {
 		rearR.configOpenloopRamp(voltageRampRate, 30);
 	}
 	
+	/** Fetch preferences and adjust variables as needed */
+	public void disabledPeriodic() {
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
+			//compbot
+			
+			//One encoder a 128 instead of a 256
+			scaleFactorL = 199.8; 
+			scaleFactorR = 405.4;
+		}else {
+			//practice bot
+			scaleFactorL = 291; 
+			scaleFactorR = 291;
+		}
+		//braking(false);
+	}
+
+	
 	/**
 	 * sets braking or coasting based on input
 	 * @param brake
 	 */
 	public void braking(boolean brake) {
-		NeutralMode mode = NeutralMode.Brake;
-		if(brake == false) {
-			mode = NeutralMode.Coast;
-		}
 		
 		// need to fix for coast on disable
 		leadL.setNeutralMode(NeutralMode.Brake);
@@ -143,56 +140,12 @@ public class Chassis extends RobotModule {
 		shiftLow();
 	}
 	
-	/**
-	 * Drives:
-	 *   gets the stick axi, and plug that into the 2 motor arcade drive.
-	 *   Then binds the slaves to the leads
-	 * @param stick
-	 */
-	void update(Joystick stickDrive, Joystick stickL, Joystick functions) {
-		//updates the lead talons, then updates the slave talons
-
-		if(stickDrive.getRawButton(8)) {
-			shiftHigh();
-		}
-		else {
-			shiftLow(); 
-		}
-		
-		// get pdp voltage
-		// calculate a scale factor, 
-		// mod = util.lerp(voltage,8.25,6.5,1,0
-		// constrain mod to 0... 1
-		//apply to all aracade drive outputs
-		
-		double mod = Utilities.lerp(pdp.getVoltage(), 8.25, 6.5, 1.0, 0.0);
-		mod = Utilities.clamp(mod, 0, 1);
-		
-		double joyAdjustment = 0.75;
-		if(prefs.getBoolean("compbot", false)) {
-			//comp bot
-			driver.arcadeDrive(stickDrive.getRawAxis(3)*mod, -stickDrive.getRawAxis(0)*joyAdjustment*mod,true);
-		}
-		else {
-			//prac bot
-			driver.arcadeDrive(-stickDrive.getRawAxis(3)*mod, -stickDrive.getRawAxis(0)*joyAdjustment*mod,true);
-		}
-
-
-		bind();
-
-		SmartDashboard.putNumber("Pos Right", -leadR.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("Pos Left", -leadL.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("Vel Right", leadR.getMotorOutputPercent());
-		SmartDashboard.putNumber("Vel Left", leadL.getMotorOutputPercent());
-	}
-	
 	public void shiftLow() {
 		// sets the gear to low
-		if(prefs.getBoolean("compbot", true)) {
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			//comp bot
-			LeftShiftA.set(true);
-			LeftShiftB.set(false);			
+			LeftShiftA.set(false);
+			LeftShiftB.set(true);			
 		}
 		else {
 			//prac bot
@@ -206,10 +159,10 @@ public class Chassis extends RobotModule {
 
 	public void shiftHigh() {
 		// sets the gear to high
-		if(prefs.getBoolean("compbot", false)) {
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			//comp bot
-			LeftShiftA.set(false);
-			LeftShiftB.set(true);			
+			LeftShiftA.set(true);
+			LeftShiftB.set(false);			
 		}
 		else {
 			//prac bot
@@ -221,9 +174,6 @@ public class Chassis extends RobotModule {
 	}
 	
 	
-	// ---- Autonomous Stuff ----
-	
-	
 	/**
 	 * re-initializes the lead talonSRX encoders
 	 */
@@ -232,279 +182,124 @@ public class Chassis extends RobotModule {
 		leadR.setSelectedSensorPosition(0, 0, 20);
 	}
 	
-	void autoInit(
-			RobotLocation robotLocation, 
-			TargetLocation targetLocation, 
-			SwitchConfig switchConfig, 
-			ScaleConfig scaleConfig) {
-		//save RobotLocation and TargetLocation to class fields, as we'll need in auto
+	/** Set the Chassis operational mode
+	 * @param mode
+	 */
+	public void setMode(Mode newmode) {
+		mode = newmode;
+	}
+	
+	/** Set the target output power for Tankdrive mode
+	 * @param left
+	 * @param right
+	 */
+	public void tankMode(double left,double right,boolean squaredInputs) {
+		leftPower = left;
+		rightPower = right;
+	}
+	
+	/** Configure the chassis to perform a motion-profile squence of set distance and duration.
+	 * 
+	 * @param inchesLeft
+	 * @param inchesRight
+	 * @param time (in ms)
+	 */
+	public void setProfile(double inchesLeft,double inchesRight, double time) {
+		//Convert our input time from ms to seconds
+		time  = time / 1000; 
+
+		System.out.printf("Creating auto [ %f , %f ] over %f s\n",inchesLeft,inchesRight,time);
+
+		// create our motion profile
+		left345.setMove(10_000, time, inchesLeft*scaleFactorL, 200);
+		right345.setMove(10_000, time, inchesRight*scaleFactorR, 200);
+		//TODO: Actually find some values for max speed and a good tolerance
 		
-		double scaleFactorL;
-		double scaleFactorR;
+		// Reset our timer to start executing
+		profileTimer.reset();
+		resetEnc();
+
+		//set our chassis mode to use the profile!
+		mode = Mode.PROFILE;
+	}
+	
+	/** Update function that handles all busywork the chassis has been 
+	 * set up to perform.
+	 */
+	public void newUpdate(){
+		//Generate a power modifier to ensure we avoid brownouts
+		double mod = Utilities.lerp(pdp.getVoltage(), 8.25, 6.5, 1.0, 0.0);
+		mod = Utilities.clamp(mod, 0, 1);
+
+		SmartDashboard.putString("Chassis Mode", mode.toString());
 		
-		braking(true);
-		shiftLow();
-		double scale = prefs.getDouble("chassisScaleFactor", 291);
-		if(prefs.getBoolean("compbot", false)) {
-			//comp bot
-			scaleFactorL = 199.8;//change to preference
-			scaleFactorR = 405.4;//change to preference
-		}
-		else {
-			//prac bot
-			scaleFactorL = scale;
-			scaleFactorR = scale;			
-		}
+		switch(mode) {
+		case DISABLED:
+			driver.tankDrive(0,0);	
+			return;
+		case PROFILE:	
+			profileTimer.update();
+			
+			if(prefs.getBoolean("compbot", Robot.compbot)) {
+				//compbot
+				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.024);
+				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.020);				
 		
 
-		if(robotLocation == RobotLocation.LEFT) {
-			SmartDashboard.putString("RobotLoc", "left");
-			if(targetLocation == TargetLocation.SCALE) {
-				SmartDashboard.putString("TargLoc", "scale");
-				left1 = 265*scaleFactorL;
-				right1 = -265*scaleFactorR;
-				
-				//left1 = 270.1284*scaleFactorL;
-				//right1 = -260.0641*scaleFactorR;
-				//left1 = 270.7794*scaleFactorL;
-				//right1 = -262.4143*scaleFactorR;
-				left2 = 24*scaleFactorL;
-				right2 = -0*scaleFactorR;
-
-				left3 = 0;
-				right3 = 0;
-				t1=8.0; t2=3; t3=0;
-			}
-			if(targetLocation == TargetLocation.SWITCH) {
-				SmartDashboard.putString("TargLoc", "switch");
-				left1 = 130.6405*scaleFactorL;
-				right1 = -114.5790*scaleFactorR;
-				
-				//left1 = 133.6405*scaleFactorL;
-				//right1 = -108.5790*scaleFactorR;
-				//left1 = 139.3341*scaleFactorL;
-				//right1 = -111.9587*scaleFactorR;
-				left2 = 0;
-				right2 = 0;
-				left3 = 0;
-				right3 = 0;
-				t1=8.0; t2=0; t3=0;
-
-			}
-			if(targetLocation == TargetLocation.MOVE_ONLY) {
-				SmartDashboard.putString("TargLoc", "move");
-
-				left1 = 130*scaleFactorL;
-				right1 = -130*scaleFactorR;
-				left2 = 0;
-				right2 = 0;
-				left3 = 0;
-				right3 = 0;
-				t1=8.0; t2=0; t3=0;
-
-			}
-		}
-		else if(robotLocation == RobotLocation.CENTER) {
-			SmartDashboard.putString("RobotLoc", "center");
-			SmartDashboard.putString("TargLoc", "switch");
-
-			t1=2.0; t2=2.0;	t3=1.0;
-			if(switchConfig == switchConfig.LEFT) {
-				left1 = 29.0597*scaleFactorL;
-				right1 = -68.3296*scaleFactorR;
-				left2 = 68.3296*scaleFactorL;																																																											;
-				right2 = -29.0597*scaleFactorR;
-				left3 = 37*scaleFactorL;
-				right3 = -37*scaleFactorR;
-				
-//				left1 = 26.7035*scaleFactorL;
-//				right1 = -65.9734*scaleFactorR;
-//				left2 = 65.9734*scaleFactorL;																																																											;
-//				right2 = -26.7035*scaleFactorR;
-//				left3 = 43*scaleFactorL;
-//				right3 = -43*scaleFactorR;
-				SmartDashboard.putString("SwitchConfig", "left");
-
+				SmartDashboard.putNumber("Chassis Profile Left",         leftPower);
+				SmartDashboard.putNumber("Chassis Profile Right",        rightPower);
+				SmartDashboard.putNumber("Chassis Profile Left Sensor",  leadL.getSelectedSensorPosition(0));
+				SmartDashboard.putNumber("Chassis Profile Sensor",       leadR.getSelectedSensorPosition(0));
+			
 			}
 			else {
-				SmartDashboard.putString("SwitchConfig", "right");
-				left1 = 81.4712*scaleFactorL;
-				right1 = -41.5013*scaleFactorR;
-				left2 = 41.5013*scaleFactorL;
-				right2 = -81.4712*scaleFactorR;
-				left3 = 2*scaleFactorL;
-				right3 = -2*scaleFactorR;
-				
-//				left1 = 58.1194*scaleFactorL;
-//				right1 = -18.8495*scaleFactorR;
-//				left2 = 18.8495*scaleFactorL;
-//				right2 = -58.1194*scaleFactorR;
-//				left3 = 53*scaleFactorL;
-//				right3 = -53*scaleFactorR;
+				//practice bot
+				leftPower = -left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.023);
+				rightPower = -right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.023);
 			}
-		}
-		else if(robotLocation == RobotLocation.RIGHT) {
-			SmartDashboard.putString("RobotLoc", "right");
 
-			if(targetLocation == TargetLocation.SCALE) {
-				left1 = 265*scaleFactorL;
-				right1 = -265*scaleFactorR;
-				
-				//left1 = 255.0641*scaleFactorL;
-				//right1 = -261.1284*scaleFactorR;
-				
-				//left1 = 262.0641*scaleFactorL;
-				//right1 = -270.1284*scaleFactorR;
-				
-				//left1 = 261.2217*scaleFactorL;//262.4143*scaleFactorL;
-				//right1 = -267.3818*scaleFactorR;//270.7794*scaleFactorR;
-				left2 = 0*scaleFactorL;
-				right2 = -24*scaleFactorR;
-				left3 = 0;
-				right3 = 0;
-				t1=8.0;	t2=3.0;	t3=0.0;
-				SmartDashboard.putString("TargLoc", "scale");
-
-			}
-			if(targetLocation == TargetLocation.SWITCH) {
-				left1 = 114.5790*scaleFactorL;
-				right1 = -130.6405*scaleFactorR;
-				
-				//left1 = 111.9587*scaleFactorL;
-				//right1 = -139.3341*scaleFactorR;
-				left2 = 0;
-				right2 = 0;
-				left3 = 0;
-				right3 = 0;
-				t1=8.0;	t2=0.0;	t3=0.0;
-				SmartDashboard.putString("TargLoc", "switch");
-
-			}
-			if(targetLocation == TargetLocation.MOVE_ONLY) {
-				SmartDashboard.putString("TargLoc", "move");
-
-				left1 = 130*scaleFactorL;
-				right1 = -130*scaleFactorR;
-				left2 = 0;
-				right2 = 0;
-				left3 = 0;
-				right3 = 0;
-				t1=8.0;	t2=0.0;	t3=0.0;
-
-			}
-		}
-		
-		resetEnc();
-	}
-
-	
-	/**
-	 * auto forward:
-	 *   uses an variable position, no pid yet
-	 * 
-	 * @param pos
-	 */
-	void auto(int step, double time) {
-		
-		double rightV = 0;
-		double leftV = 0;
-		
-		switch(step) {
+			SmartDashboard.putNumber("Chassis Profile Left",         leftPower);
+			SmartDashboard.putNumber("Chassis Profile Right",        rightPower);
+			SmartDashboard.putNumber("Chassis Profile Left Sensor",  leadL.getSelectedSensorPosition(0));
+			SmartDashboard.putNumber("Chassis Profile Sensor",       leadR.getSelectedSensorPosition(0));
 			
-			case 0:
-				if(time == 0) {
-					resetEnc();
-				}
-				break;
-					
-			case 1:
-				if(time == 0) {
-					resetEnc();
-				}
-				left345.setMove(10000, t1, left1, 200);
-				right345.setMove(10000, t1, right1, 200);
-				//keep at Case 1
-				break;
-				
-			case 2:
-				if(time == 0) {
-					resetEnc();
-				}
-				left345.setMove(10000, t2, left2, 200);
-				right345.setMove(10000, t2, right2, 200);
-				//keep at Case 2
-				break;
-				
-			case 3:
-				if(time == 0) {
-					resetEnc();
-				}
-				left345.setMove(10000, t3, left3, 200);
-				right345.setMove(10000, t3, right3, 200);
-				//keep at Case 3
-				break;
-				
-			case 4:
-				if(time == 0) {
-					resetEnc();
-				}
-				//keep at Case 4
-				break;
-				
-			case 5:
-				if(time == 0) {
-					resetEnc();
-				}
-				//keep at Case 5
-				break;
-				
-			default:
-				if(time == 0) {
-					resetEnc();
-				}
-				//keep at default
-				break;
-		}
-		
-		if(step > 0 && step < 4 && time > 0.1) {
-			if(prefs.getBoolean("compbot", false)) {
+			
+						
+			//NOTE: EXPECTED FALLTHROUGH TO TANK MODE
+		case TANK:
+			//Set the motor
+			if (prefs.getBoolean("compbot", Robot.compbot)){
 				//comp bot
-				leftV = left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.023);
-				rightV = -right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.018);
+				driver.tankDrive(leftPower, rightPower);
 			}
 			else {
 				//prac bot
-				leftV = -left345.getVelPosFb(time, -leadL.getSelectedSensorPosition(0), 0.018);
-				rightV = right345.getVelPosFb(time, -leadR.getSelectedSensorPosition(0), 0.018);				
-			}	
+				driver.tankDrive(rightPower, leftPower);	
+			}
+			break;
+		case ARCADE:
+			//Not enabled for now, pending an update for OI related stuff.
+			if(prefs.getBoolean("compbot", Robot.compbot)) {
+				//comp bot
+				driver.arcadeDrive(-arcadePower*mod, -arcadeTurn*mod, squaredInputs);
+			}
+			else {
+				//prac bot
+				driver.arcadeDrive(arcadePower*mod, -arcadeTurn*mod, squaredInputs);
+			}
+			break;
 		}
-		
-		if (prefs.getBoolean("compbot", false)){
-			//comp bot
-			driver.tankDrive(leftV, rightV);
-		}
-		else {
-			//prac bot
-			driver.tankDrive(rightV, leftV);	
-		}
-		
-		
-		SmartDashboard.putNumber("leftV", leftV);
-		SmartDashboard.putNumber("rightV", rightV);
-		SmartDashboard.putNumber("Pos Right", leadR.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("Pos Left", -leadL.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("Vel Right", leadR.getMotorOutputPercent());
-		SmartDashboard.putNumber("Vel Left", leadL.getMotorOutputPercent());
-		SmartDashboard.putNumber("time", time);
-		SmartDashboard.putNumber("step", step);
-		SmartDashboard.putNumber("right1", right1);
-		SmartDashboard.putNumber("left1", left1);
-		SmartDashboard.putNumber("leftTarg", left345.getPos(time));
-		SmartDashboard.putNumber("rightTarg", right345.getPos(time));
 	}
 	
-	public void disabledPeriodic() {
-		//braking(false);
+	/** Set the the arcadeDrive functions
+	 * @param power
+	 * @param turn
+	 * @param squared inputs (more precise for small movements)
+	 */
+	public void arcadeDrive(double power,double turn, boolean squared) {
+		arcadePower = power;
+		arcadeTurn = turn;
+		squaredInputs = squared;
 	}
 
 }
