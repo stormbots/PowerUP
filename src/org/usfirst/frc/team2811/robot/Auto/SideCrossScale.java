@@ -23,19 +23,19 @@ public class SideCrossScale extends AutoSequence {
 	double right2;
 	double left3;
 	double right3;
-	double left4;
-	double right4;
-	double left5;
-	double right5;
-	double backward = -24;
+//	double left4;
+//	double right4;
+//	double left5;
+//	double right5;
+//	double backward = -24;
 	
 	long t0 = 0000;
 	long t1 = 7500;
 	long t2 = 1100;
 	long t3 = 4000;
-	long t4 = 1100;
-	long t5 = 1000;
-	long t6 = 1000;
+//	long t4 = 1100;
+//	long t5 = 1000;
+//	long t6 = 1000;
 
 
 
@@ -47,12 +47,12 @@ public class SideCrossScale extends AutoSequence {
 		double outside1 = 205;
 		double inside2 = -20;
 		double outside2 = 20;
-		double inside3 = 174; // distance to the end of the scale = 131.84; // this current is too far
-		double outside3 = 174;
-		double inside4 = 20; // turn is really not tested
-		double outside4 = -20;
-		double inside5 = 15; // increase time?  going too fast
-		double outside5 = 15;
+		double inside3 = 120; //174; // distance to the end of the scale = 131.84; // this current is too far
+		double outside3 = 120; //174;
+//		double inside4 = 20;
+//		double outside4 = -20;
+//		double inside5 = 15; // increase time?  going too fast
+//		double outside5 = 15;
 		
 		if(isLeft) {
 			left1 = outside1;
@@ -61,10 +61,10 @@ public class SideCrossScale extends AutoSequence {
 			right2 = inside2;
 			left3 = outside3;
 			right3 = inside3;
-			left4 = outside4;
-			right4 = inside4;
-			left5 = outside5;
-			right5 = inside5;
+//			left4 = outside4;
+//			right4 = inside4;
+//			left5 = outside5;
+//			right5 = inside5;
 		}
 		else {
 			left1 = inside1;
@@ -73,10 +73,10 @@ public class SideCrossScale extends AutoSequence {
 			right2 = outside2;
 			left3 = inside3;
 			right3 = outside3;
-			left4 = inside4;
-			right4 = outside4;
-			left5 = inside5;
-			right5 = outside5;
+//			left4 = inside4;
+//			right4 = outside4;
+//			left5 = inside5;
+//			right5 = outside5;
 		}
 	}
 	
@@ -99,30 +99,30 @@ public class SideCrossScale extends AutoSequence {
 		if(timer.atTime(t2+t1)) {
 			Robot.drive.setProfile(left3, right3, t3);
 		}
-		if(timer.atTime(t3+t2+t1)) {
-			Robot.drive.setProfile(left4, right4, t4);
-		}
-		if(timer.atTime(t4+t3+t2+t1)) {
-			Robot.drive.setProfile(left5, left5, t5);
-		}
-		if(timer.atTime(t5+t4+t3+t2+t1)) {
-			Robot.drive.setProfile(backward, backward, t6);
-		}
+//		if(timer.atTime(t3+t2+t1)) {
+//			Robot.drive.setProfile(left4, right4, t4);
+//		}
+//		if(timer.atTime(t4+t3+t2+t1)) {
+//			Robot.drive.setProfile(left5, left5, t5);
+//		}
+//		if(timer.atTime(t5+t4+t3+t2+t1)) {
+//			Robot.drive.setProfile(backward, backward, t6);
+//		}
 		
 		if(timer.atTime(t0)) {
 			Robot.elevator.setPos(ElevatorPosition.SWITCH);
 		}
-		if(timer.atTime(t4+t3+t2+t1)) {
+		if(timer.atTime(t3+t2+t1)) { // add in t4 when doing the full run... no t4 because not complete
 			Robot.elevator.setPos(ElevatorPosition.SCALEHIGH);
 		}
-		if(timer.atTime(t5+t4+t3+t2+t1)) {
-			Robot.intake.ejectCube();
-		}
-		if(timer.atTime(t6+t5+t4+t3+t2+t1)) {
-			Robot.intake.stopMotor();
-			Robot.elevator.setPos(ElevatorPosition.SWITCH);
-		}
-		if(timer.atTime(14800)) {
+//		if(timer.atTime(t5+t4+t3+t2+t1)) {
+//			Robot.intake.ejectCube();
+//		}
+//		if(timer.atTime(t6+t5+t4+t3+t2+t1)) {
+//			Robot.intake.stopMotor();
+//			Robot.elevator.setPos(ElevatorPosition.SWITCH);
+//		}
+		if(timer.atTime(14900)) {
 			Robot.drive.setMode(Chassis.Mode.ARCADE);
 		}
 		

@@ -15,6 +15,7 @@ import org.usfirst.frc.team2811.robot.Auto.Example;
 import org.usfirst.frc.team2811.robot.Auto.SideCrossScale;
 import org.usfirst.frc.team2811.robot.Auto.SideEscape;
 import org.usfirst.frc.team2811.robot.Auto.SideScale;
+import org.usfirst.frc.team2811.robot.Auto.SideScaleNewVer;
 import org.usfirst.frc.team2811.robot.Auto.SideSwitch;
 import org.usfirst.frc.team2811.robot.Auto.Testing1;
 import org.usfirst.frc.team2811.robot.Elevator.ElevatorPosition;
@@ -57,8 +58,9 @@ public class Robot extends IterativeRobot {
 		drive.resetEnc();
 		elevator.reset();
 		climber.resetEnc();
-		CameraServer.getInstance().startAutomaticCapture();
+		//CameraServer.getInstance().startAutomaticCapture();
 		autoSelector.putSmartDashboard();
+		SmartDashboard.putString("Climb Range", "83500 - 87500");
 	}
 
 	/**
@@ -76,7 +78,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {		
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
-//		autoChoice = new CenterNewVer(false);
+		//autoChoice = new SideScaleNewVer(false);
 		
 		// Do auto mode initialization 
 		drive.shiftLow();
@@ -103,6 +105,7 @@ public class Robot extends IterativeRobot {
 	
 	/** Ensure robot is ready for human operator in matches */
 	public void teleopInit() {
+		CameraServer.getInstance().startAutomaticCapture();
 		drive.setMode(Chassis.Mode.ARCADE);
 		drive.setMode(Mode.ARCADE);
 		elevator.setMode(Elevator.Mode.MANUALPOSITION);

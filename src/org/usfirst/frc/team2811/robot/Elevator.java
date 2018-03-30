@@ -114,10 +114,10 @@ public class Elevator {
 
 	public enum ElevatorPosition{
 		FLOOR(0),
-		SWITCH (25_000),
+		SWITCH (32_000),
 		SCALEHIGH(92_000),
-		AUTO_STARTUP(25_000),
-		CLIMB(50_000)
+		AUTO_STARTUP(32_000),
+		CLIMB(85_300)
 		;
 		
 		double ticks = 0;
@@ -140,7 +140,7 @@ public class Elevator {
 		switch(mode) {
 		case MANUALPOSITION:
 			Utilities.clamp(elevatorPos, 0, maxPos);
-			eVelocity = FB.FB(elevatorPos, currentPos, 0.005);			
+			eVelocity = FB.FB(elevatorPos, currentPos, 0.005);
 			//expected fallthrough to velocity mode
 		case MANUALVELOCITY:
 			//no need to manipulate velocity
