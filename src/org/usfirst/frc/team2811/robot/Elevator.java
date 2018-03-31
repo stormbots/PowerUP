@@ -114,9 +114,9 @@ public class Elevator {
 
 	public enum ElevatorPosition{
 		FLOOR(0),
-		SWITCH (32_000),
+		SWITCH (38_000),
 		SCALEHIGH(92_000),
-		AUTO_STARTUP(32_000),
+		AUTO_STARTUP(38_000),
 		CLIMB(85_300)
 		;
 		

@@ -29,8 +29,8 @@ public class OI {
 		
 		//DRIVE
 		Robot.drive.arcadeDrive(
-			driver.getRawAxis(3)*-1,
-			driver.getRawAxis(0)*turnScaleValue,
+			driver.getRawAxis(1)*-1, // make #3 for Lily
+			driver.getRawAxis(2)*turnScaleValue, // make #0 for Lily
 			true);
 		
 		if(driver.getRawButton(8)) {

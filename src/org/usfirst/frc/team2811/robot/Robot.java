@@ -78,7 +78,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {		
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
-		//autoChoice = new SideScaleNewVer(false);
+		//autoChoice = new SideCrossScale(true);
 		
 		// Do auto mode initialization 
 		drive.shiftLow();

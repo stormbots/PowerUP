@@ -47,8 +47,8 @@ public class SideCrossScale extends AutoSequence {
 		double outside1 = 205;
 		double inside2 = -20;
 		double outside2 = 20;
-		double inside3 = 120; //174; // distance to the end of the scale = 131.84; // this current is too far
-		double outside3 = 120; //174;
+		double inside3 = 100; //174; // distance to the end of the scale = 131.84; // this current is too far
+		double outside3 = 100; //174;
 //		double inside4 = 20;
 //		double outside4 = -20;
 //		double inside5 = 15; // increase time?  going too fast
@@ -112,9 +112,9 @@ public class SideCrossScale extends AutoSequence {
 		if(timer.atTime(t0)) {
 			Robot.elevator.setPos(ElevatorPosition.SWITCH);
 		}
-		if(timer.atTime(t3+t2+t1)) { // add in t4 when doing the full run... no t4 because not complete
-			Robot.elevator.setPos(ElevatorPosition.SCALEHIGH);
-		}
+//		if(timer.atTime(t4+t3+t2+t1)) {
+//			Robot.elevator.setPos(ElevatorPosition.SCALEHIGH);
+//		}
 //		if(timer.atTime(t5+t4+t3+t2+t1)) {
 //			Robot.intake.ejectCube();
 //		}
