@@ -16,6 +16,7 @@ import org.usfirst.frc.team2811.robot.TinyTimer;
 public class CenterVer3 extends AutoSequence {
 
 	TinyTimer timer = new TinyTimer();
+	
 	double left1;
 	double right1;
 	double left2;
@@ -38,13 +39,7 @@ public class CenterVer3 extends AutoSequence {
 	double right10;
 	double left11;
 	double right11;
-	double left12;
-	double right12;
-	double left13;
-	double right13;
-	double left14;
-	double right14;
-	double backward = -24;
+//	double backward = -24;
 	
 	long t0 = 0000;
 	long t1 = 500;
@@ -56,11 +51,8 @@ public class CenterVer3 extends AutoSequence {
 	long t7 = 500;
 	long t8 = 1500;
 	long t9 = 1500;
-	long t10 = 500;
-	long t11 = 500;
-	long t12 = 500;
-	long t13 = 500;
-	long t14 = 1500;
+	long t10 = 1000;
+	long t11 = 2000;
 	
 	public CenterVer3(boolean toLeft) {
 		if(toLeft) {			
@@ -86,8 +78,6 @@ public class CenterVer3 extends AutoSequence {
 			right10 = 0;
 			left11 = 0;
 			right11 = 0;
-			left12 = 0;
-			right12 = 0;
 		}
 		else {
 			// 1 - turn to face switch
@@ -99,8 +89,8 @@ public class CenterVer3 extends AutoSequence {
 			right2 = 102;
 
 			// 3 - back away
-			left3 = -32;
-			right3 = -32;
+			left3 = -36;
+			right3 = -36;
 
 			// 4 - turn to cube pile
 			left4 = -20;
@@ -119,32 +109,20 @@ public class CenterVer3 extends AutoSequence {
 			right7 = -20;
 
 			// 8 - drive to the switch
-			left8 = 32;
-			right8 = 32;
+			left8 = 36;
+			right8 = 36;
 
 			// 9 - back away
 			left9 = -32;
 			right9 = -32;
 
-			// 10 - turn to cube pile
+			// 10 - turn to exchange
 			left10 = -20;
 			right10 = 20;
 
-			// 11 - forward to grab cube
+			// 11 - forward to deploy the cube into the eschange
 			left11 = 10;
 			right11 = 10;
-
-			// 12 - back away from cube pile
-			left12 = -10;
-			right12 = -10;
-
-			// 13 - turn to switch
-			left13 = 20;
-			right13 = -20;
-
-			// 14 - drive to the switch
-			left14 = 32;
-			right14 = 32;
 		}
 	}
 	

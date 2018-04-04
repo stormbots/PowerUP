@@ -58,7 +58,6 @@ public class Robot extends IterativeRobot {
 		drive.resetEnc();
 		elevator.reset();
 		climber.resetEnc();
-		//CameraServer.getInstance().startAutomaticCapture();
 		autoSelector.putSmartDashboard();
 		SmartDashboard.putString("Climb Range", "83500 - 87500");
 	}

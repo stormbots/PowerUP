@@ -1,6 +1,9 @@
 package org.usfirst.frc.team2811.robot.ClimberSequence;
 
 import org.usfirst.frc.team2811.robot.Elevator.ElevatorPosition;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.usfirst.frc.team2811.robot.Chassis;
 import org.usfirst.frc.team2811.robot.Climber;
 import org.usfirst.frc.team2811.robot.Elevator;
@@ -8,6 +11,7 @@ import org.usfirst.frc.team2811.robot.Chassis.Mode;
 import org.usfirst.frc.team2811.robot.Motion345;
 import org.usfirst.frc.team2811.robot.Robot;
 import org.usfirst.frc.team2811.robot.TinyTimer;
+
 
 /**
  * Example Auto command doing a basic thing. 
@@ -17,8 +21,7 @@ import org.usfirst.frc.team2811.robot.TinyTimer;
  */
 public class ClimberModeVer1 extends ClimberSequence {
 
-	TinyTimer timer = new TinyTimer();
-	
+	TinyTimer timer = new TinyTimer();	
 	double fwd = 10;
 	
 	long t0 = 0000;
@@ -33,13 +36,11 @@ public class ClimberModeVer1 extends ClimberSequence {
 	
 	public void init() {
 		timer.reset();
-		Robot.drive.setMode(Mode.PROFILE);
-		// the below are from OI and don't work currently
-//		Robot.climber.setPosition(0.1);
-//		Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.CLIMB);
-//		Robot.climber.setMode(Climber.Mode.CLOSEDLOOP);
-//		Robot.climber.setPosition(1);
-//		climberMode = ClimberMode.ENABLED;
+		Robot.drive.setMode(Chassis.Mode.PROFILE);
+		Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.CLIMB);
+		Robot.climber.setMode(Climber.Mode.CLOSEDLOOP);			
+		Robot.climber.setPosition(1);
+		//Robot.climber.detach(); //need to test on robot
 	}
 
 	/**
@@ -51,6 +52,12 @@ public class ClimberModeVer1 extends ClimberSequence {
 	 */
 	public void run() {
 
+		//Move the climber and elevator
+		double height = Robot.climber.getClimberPosition();
+		Robot.elevator.setPos(height);
+		SmartDashboard.putNumber("ClimberHeight", height);
+
+		//Run everything else
 		if(timer.atTime(t0)){ // step 1
 			// drive away from the wall
 			Robot.drive.setProfile(fwd, fwd, driveTime);
@@ -76,9 +83,7 @@ public class ClimberModeVer1 extends ClimberSequence {
 	public void cancel() {
 		Robot.drive.setMode(Mode.ARCADE);
 		Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.SCALEHIGH);
-		// the below are from OI and don't work currently
-//		Robot.climber.setMode(Climber.Mode.DISABLED);
-//		Robot.oi.climberMode = Robot.oi.ClimberMode.DISABLED;
+		Robot.climber.setMode(Climber.Mode.DISABLED);
 	}
 	
 }

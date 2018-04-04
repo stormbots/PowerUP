@@ -1,6 +1,8 @@
 package org.usfirst.frc.team2811.robot;
 
 import org.usfirst.frc.team2811.robot.Elevator.Mode;
+import org.usfirst.frc.team2811.robot.ClimberSequence.ClimberModeVer1;
+import org.usfirst.frc.team2811.robot.ClimberSequence.ClimberSequence;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
@@ -20,6 +22,10 @@ public class OI {
 	Joystick driver = new Joystick(0);
 	Joystick functions = new Joystick(3);
 	Preferences prefs = Preferences.getInstance();
+	
+	ClimberSequence climberSequence = new ClimberModeVer1();
+	boolean climberEngaged = false;
+	
 	OI(){
 
 	}
@@ -75,45 +81,7 @@ public class OI {
 		}
 		
 
-		
-		//CLIMBER
-		if(functions.getRawButtonPressed(5)) {
-			// enable climber mode
-		}
-		if(functions.getRawButtonReleased(5)) {
-			// disable climber mode or go to climber mode stage 2? 
-		}
-		
-		//DEBUG FOR HOLDING
-		if(functions.getRawButton(5)) {
-			Robot.climber.setMode(Climber.Mode.MANUAL);
-			Robot.climber.setPower(functions.getRawAxis(1));
-		}
-		SmartDashboard.putNumber("climber velocity", functions.getRawAxis(1));
-		
-		//hit a button to enable climber mode
-		if(functions.getRawButtonPressed(8)) { // note: a negative motor will make a posotive increase in position ticks
-			//Robot.climber.detach();
-			Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.CLIMB);
-			Robot.climber.setMode(Climber.Mode.CLOSEDLOOP);			
-			Robot.climber.setPosition(1);
-			climberMode = ClimberMode.ENABLED;
-		}
-		if(functions.getRawButton(12)) {
-			Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.SCALEHIGH);
-			Robot.climber.setMode(Climber.Mode.DISABLED);
-			climberMode = ClimberMode.DISABLED;
-		}
-		
-		if(climberMode == ClimberMode.ENABLED) {
-			double height = Robot.climber.getClimberPosition();
-			Robot.elevator.setPos(height);
-			SmartDashboard.putNumber("ClimberHeight", height);
-		}
-		else {
-			//probably do nothing here.
-		}
-		
+				
 		//INTAKE
 		if(functions.getRawButton(1)) {
 			Robot.intake.grabCube();
@@ -152,5 +120,35 @@ public class OI {
 			Robot.intake.tiltBackward(true);
 			Robot.intake.squeezeOpen(false);
 		}
+		
+		
+		//CLIMBER
+		if(functions.getRawButtonPressed(5)) {
+			// enable climber mode
+		}
+		if(functions.getRawButtonReleased(5)) {
+			// disable climber mode or go to climber mode stage 2? 
+		}
+		
+		//DEBUG FOR HOLDING
+		if(functions.getRawButton(5)) {
+			Robot.climber.setMode(Climber.Mode.MANUAL);
+			Robot.climber.setPower(functions.getRawAxis(1));
+		}
+		SmartDashboard.putNumber("climber velocity", functions.getRawAxis(1));
+		
+		//hit a button to enable climber mode
+		if(functions.getRawButtonPressed(8)) {
+			climberSequence.init();
+			climberEngaged = true;
+		}
+		if(climberEngaged) {
+			climberSequence.run();
+		}
+		if(functions.getRawButtonPressed(12)) {
+			climberEngaged = false;
+			climberSequence.cancel();
+		}
+
 	}
 }

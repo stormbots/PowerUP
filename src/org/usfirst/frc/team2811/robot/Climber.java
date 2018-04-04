@@ -24,7 +24,7 @@ public class Climber {
 		resetEnc();
 	}
 	
-	enum Mode{CLOSEDLOOP, DISABLED, MANUAL}
+	public enum Mode{CLOSEDLOOP, DISABLED, MANUAL}
 	Mode mode = Mode.DISABLED;
 	private double power = 0;
 	private double maxClimbHeight = 101926;
