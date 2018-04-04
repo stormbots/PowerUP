@@ -33,16 +33,14 @@ public class SideScaleVer3 extends AutoSequence {
 	double right7;
 	double left8;
 	double right8;
-	double left9;
-	double right9;
 	
 	long t0 = 0000;
-	long raiseScale = 3000;
+	long raiseScale = 5000;
 	long t1 = 7500;
 	long t2 = 500;
 	long t3 = 500;
-	long t4 = 3000;
-	long t5 = 3000;
+	long t4 = 2750;
+	long t5 = 2750;
 	long t6 = 500;
 	long t7 = 500;
 	long t8 = 3000;
