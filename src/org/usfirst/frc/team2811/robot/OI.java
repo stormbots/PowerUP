@@ -86,20 +86,20 @@ public class OI {
 		
 		//DEBUG FOR HOLDING
 		if(functions.getRawButton(5)) {
+			Robot.climber.setMode(Climber.Mode.MANUAL);
 			Robot.climber.setPower(functions.getRawAxis(1));
 		}
 		SmartDashboard.putNumber("climber velocity", functions.getRawAxis(1));
 		
 		//hit a button to enable climber mode
-		if(functions.getRawButton(8)) { // note: a negative motor will make a posotive increase in position ticks
-			Robot.climber.setPosition(0.1);
-			
-//			Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.CLIMB);
-			Robot.climber.setMode(Climber.Mode.CLOSEDLOOP);
-//			Robot.climber.setPosition(1);
-//			climberMode = ClimberMode.ENABLED;
+		if(functions.getRawButtonPressed(8)) { // note: a negative motor will make a posotive increase in position ticks
+			//Robot.climber.detach();
+			Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.CLIMB);
+			Robot.climber.setMode(Climber.Mode.CLOSEDLOOP);			
+			Robot.climber.setPosition(1);
+			climberMode = ClimberMode.ENABLED;
 		}
-		else if(functions.getRawButton(12)) {
+		if(functions.getRawButton(12)) {
 			Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.SCALEHIGH);
 			Robot.climber.setMode(Climber.Mode.DISABLED);
 			climberMode = ClimberMode.DISABLED;
@@ -108,6 +108,7 @@ public class OI {
 		if(climberMode == ClimberMode.ENABLED) {
 			double height = Robot.climber.getClimberPosition();
 			Robot.elevator.setPos(height);
+			SmartDashboard.putNumber("ClimberHeight", height);
 		}
 		else {
 			//probably do nothing here.

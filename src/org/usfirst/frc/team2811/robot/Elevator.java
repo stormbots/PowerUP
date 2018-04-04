@@ -108,8 +108,7 @@ public class Elevator {
 	 * @param position
 	 */
 	public void setPos(ElevatorPosition position) {
-		double pos = Utilities.lerp(position.ticks(),0,maxPos,-1,1);
-		setPos(pos);
+		elevatorPos = position.ticks();
 	}
 
 	public enum ElevatorPosition{
@@ -117,7 +116,8 @@ public class Elevator {
 		SWITCH (38_000),
 		SCALEHIGH(92_000),
 		AUTO_STARTUP(38_000),
-		CLIMB(85_300)
+		//CLIMB(85_300) //Comp Bot
+		CLIMB(42_000), //Practice Bot
 		;
 		
 		double ticks = 0;

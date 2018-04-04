@@ -44,7 +44,7 @@ public class Robot extends IterativeRobot {
 	public static Climber climber = new Climber();
 	Lighting lighting = new Lighting();
 	public OI oi = new OI();
-	static boolean compbot = true;
+	static boolean compbot = false;
 	
 	AutoSequence autoChoice = new SideEscape();
 	AutoSelector autoSelector = new AutoSelector();
@@ -144,12 +144,13 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		// Constantly update and print our auto-selection
 		// to see the auto we'll execute before enabling
+		autoSelector.putSmartDashboard();
 		autoChoice=autoSelector.getBestAuto();
 		
 		drive.disabledPeriodic();
 		elevator.disabledPeriodic();
 		intake.disabledPeriodic();
-//		climber.disabledPeriodic();
+		climber.disabledPeriodic();
 		
 		SmartDashboard.putBoolean("Am I Compbot?", Preferences.getInstance().getBoolean("compbot", Robot.compbot));
 	}

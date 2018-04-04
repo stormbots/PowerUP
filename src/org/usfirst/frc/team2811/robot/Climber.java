@@ -21,12 +21,15 @@ public class Climber {
 		else {
 			mtr1 = new WPI_TalonSRX(10);
 		}
+		resetEnc();
 	}
 	
 	enum Mode{CLOSEDLOOP, DISABLED, MANUAL}
 	Mode mode = Mode.DISABLED;
 	private double power = 0;
 	private double maxClimbHeight = 101926;
+	//private double maxClimbHeight = 4000;
+	private double targetPosition = 0;
 		
 	public void setMode(Mode newMode) {
 		mode = newMode;
@@ -45,13 +48,17 @@ public class Climber {
 	
 	void newUpdate() {
 //		void newUpdate(Joystick driver1,Joystick driver2, Joystick stick) {
+		SmartDashboard.putNumber("ClimberTargetPos", targetPosition);
+		SmartDashboard.putNumber("ClimberCurrentPos", mtr1.getSelectedSensorPosition(0));
+		SmartDashboard.putString("ClimberMode", mode.toString());
 		
 		switch(mode) {
 		
 		case CLOSEDLOOP:
 			
 			//positive motor output generates negative direction on climber
-			power = -FB.FB(101926, mtr1.getSelectedSensorPosition(0), 0.005);
+			power = FB.FB(targetPosition, mtr1.getSelectedSensorPosition(0), 0.005);
+			
 			break;
 	
 	
@@ -69,7 +76,7 @@ public class Climber {
 		
 		//Make a positive power everywhere else correspond to the "up" direction
 		if(prefs.getBoolean("compbot", Robot.compbot)) {
-			power = power ; 
+			power = -power ; 
 		}
 		else {
 			power = -power ; 
@@ -97,8 +104,9 @@ public class Climber {
  	 * @param position
  	 */
 	public void setPosition(double position) {
-		Utilities.clamp(position,-1,1);
-		Utilities.lerp(position, -1,1,0,maxClimbHeight );
+		position = Utilities.clamp(position,-1,1);
+		position = Utilities.lerp(position, -1,1,0,maxClimbHeight );
+		this.targetPosition = position;
 	}
 
 	public void detach() {
