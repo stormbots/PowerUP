@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.Preferences;
  * @author stormbots
  *
  */
-public class SideScale extends AutoSequence {
+public class SideCross extends AutoSequence {
 
 	TinyTimer timer = new TinyTimer();
 	double left1;
@@ -23,20 +23,22 @@ public class SideScale extends AutoSequence {
 	double right2;
 	double left3;
 	double right3;
-	double backward = -16;
 	
-//	long t0 = 0000;
-//	long t1 = 7500;
-//	long t2 = 1000;
-//	long t3 = 2000;
+	long t0 = 0000;
+	long t1 = 7500;
+	long t2 = 1100;
+	long t3 = 6000;
 
-	public SideScale(boolean isLeft) {
-		double inside1 = 280;
-		double outside1 = 280;
-		double inside2 = -20;
-		double outside2 = 20;
-		double inside3 = 30;
-		double outside3 = 30;
+
+
+	public SideCross(boolean isLeft) {
+		
+		double inside1 = 212;
+		double outside1 = 212;
+		double inside2 = -23;
+		double outside2 = 24;
+		double inside3 = 130;
+		double outside3 = 130;
 		
 		if(isLeft) {
 			left1 = outside1;
@@ -64,30 +66,19 @@ public class SideScale extends AutoSequence {
 	 * eg, if(have-cube) then intake.close() then elevator.move_pos(switch) then drive.setProfile(24,24,1000)
 	 */
 	public void run() {
+		
 		//Example: Approximate movements to drop on the switch then back up
-		if(timer.atTime(0000)){
-			Robot.drive.setProfile(left1, right1, 7500);
-			//Robot.elevator.setPos(switch height);
+		if(timer.atTime(t0)){
+			Robot.elevator.setPos(ElevatorPosition.SWITCH);
+			Robot.drive.setProfile(left1, right1, t1);
 		}
-		if(timer.atTime(3500)) {
-			Robot.elevator.setPos(ElevatorPosition.SCALEHIGH);
+		if(timer.atTime(t1)){
+			Robot.drive.setProfile(left2, right2, t2);
 		}
-		if(timer.atTime(7500)){
-			Robot.drive.setProfile(left2, right2, 1000);
+		if(timer.atTime(t2+t1)) {
+			Robot.drive.setProfile(left3, right3, t3);
 		}
-		if(timer.atTime(8500)){
-			Robot.drive.setProfile(left3, right3, 2000);
-		}
-		if(timer.atTime(10000)) {
-			Robot.intake.ejectCube();
-		}
-		if(timer.atTime(10500)) {
-			Robot.drive.setProfile(backward, backward, 2000);
-		}
-		if(timer.atTime(15000)) {
-			Robot.intake.stopMotor();
-			Robot.elevator.setPos(ElevatorPosition.FLOOR);
-		}
+
 		if(timer.atTime(14900)) {
 			Robot.drive.setMode(Chassis.Mode.ARCADE);
 		}

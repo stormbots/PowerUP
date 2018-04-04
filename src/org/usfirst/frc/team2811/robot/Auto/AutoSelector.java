@@ -105,10 +105,10 @@ public class AutoSelector {
 		if(robotLocation == RobotLocation.CENTER) {
 			targetLocation = TargetLocation.SWITCH;
 			if(switchConfig == SwitchConfig.LEFT) {
-				return new CenterNewVer(true);
+				return new CenterVer2(true);
 			}
 			else {
-				return new CenterNewVer(false);
+				return new CenterVer2(false);
 			}
 		}
 		else if(robotLocation == RobotLocation.LEFT) {
@@ -132,7 +132,7 @@ public class AutoSelector {
 				}
 				else {
 					targetLocation = TargetLocation.MOVE_ONLY;
-					return new SideCrossScale(true);
+					return new SideCross(true);
 				}
 			}
 			else if(scaleConfig == ScaleConfig.LEFT && scaleAbility.getSelected()==true) {
@@ -145,7 +145,7 @@ public class AutoSelector {
 			}
 			else {
 				targetLocation = TargetLocation.MOVE_ONLY;
-				return new SideCrossScale(true);
+				return new SideCross(true);
 			}
 		}
 		
@@ -173,7 +173,7 @@ public class AutoSelector {
 				}
 				else {
 					targetLocation = TargetLocation.MOVE_ONLY;
-					return new SideCrossScale(false);
+					return new SideCross(false);
 				}
 			}
 			else if(scaleConfig == ScaleConfig.RIGHT && scaleAbility.getSelected()==true) {
@@ -186,7 +186,7 @@ public class AutoSelector {
 			}
 			else {
 				targetLocation = TargetLocation.MOVE_ONLY;
-				return new SideCrossScale(false);
+				return new SideCross(false);
 			}
 		}
 		
