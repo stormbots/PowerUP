@@ -27,7 +27,7 @@ public class Climber {
 	public enum Mode{CLOSEDLOOP, DISABLED, MANUAL}
 	Mode mode = Mode.DISABLED;
 	private double power = 0;
-	private double maxClimbHeight = 101926;
+	private double maxClimbHeight = 124162;
 	//private double maxClimbHeight = 4000;
 	private double targetPosition = 0;
 		
@@ -109,9 +109,12 @@ public class Climber {
 		this.targetPosition = position;
 	}
 
+	boolean detached = false; 
 	public void detach() {
+		if(detached) return;
+		detached = true;
 		//TODO: May need to reverse first and second arguments?
-		mtr1.setSelectedSensorPosition(0, -4000, 20);
+		mtr1.setSelectedSensorPosition(0, -10_000, 20);
 	}
 
 }

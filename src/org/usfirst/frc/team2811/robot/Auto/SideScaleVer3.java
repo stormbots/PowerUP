@@ -35,15 +35,16 @@ public class SideScaleVer3 extends AutoSequence {
 	double right8;
 	
 	long t0 = 0000;
-	long raiseScale = 5000;
-	long t1 = 7500;
-	long t2 = 500;
-	long t3 = 500;
-	long t4 = 2750;
-	long t5 = 2750;
-	long t6 = 500;
-	long t7 = 500;
-	long t8 = 3000;
+	long raiseScale = 4000; // 3.5 seconds to raise the scale
+	long t1 = 7500; // 7.5 seconds to move to scale
+	long t2 = 750; // pivot towards scale
+	long t3 = 750; // pivot towards switch cubes
+	long t4 = 2750; // drive to cube
+	long elevatorDelay = 1500; // 0.75 seconds after drive started
+	long t5 = 2750; // drive away from cube
+	long t6 = 750; // turn to scale
+	long t7 = 750; // turn away from scale
+	long t8 = 3000; // drive towards 3rd cube
 
 	public SideScaleVer3(boolean isLeft) {
 		// 1 - move forward
@@ -147,12 +148,14 @@ public class SideScaleVer3 extends AutoSequence {
 			Robot.drive.setProfile(left4, right4, t4);
 		}
 		if(timer.atTime(t4+t3+t2+t1)) {
-			Robot.intake.squeezeOpen(false);
 			Robot.intake.grabCube();
+			Robot.intake.squeezeOpen(false);
 			Robot.drive.setProfile(left5, right5, t5);
 		}
-		if(timer.atTime(t5+t4+t3+t2+t1)) {
+		if(timer.atTime(elevatorDelay+t4+t3+t2+t1)) {
 			Robot.elevator.setPos(ElevatorPosition.SCALEHIGH);
+		}
+		if(timer.atTime(t5+t4+t3+t2+t1)) {
 			Robot.drive.setProfile(left6, right6, t6);
 		}
 		if(timer.atTime(t6+t5+t4+t3+t2+t1)) {
@@ -166,10 +169,10 @@ public class SideScaleVer3 extends AutoSequence {
 			Robot.drive.setProfile(left8, right8, t8);
 		}
 
-		if(timer.atTime(14900)) {
-			Robot.intake.stopMotor();
-			Robot.drive.setMode(Chassis.Mode.ARCADE);
-		}
+//		if(timer.atTime(14900)) {
+//			Robot.intake.stopMotor();
+//			Robot.drive.setMode(Chassis.Mode.ARCADE);
+//		}
 		
 		timer.update();
 	}

@@ -11,13 +11,8 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-enum ClimberMode{ENABLED, DISABLED}
 
 public class OI {
-	
-	ClimberMode climberMode = ClimberMode.DISABLED;
-	boolean intakeOpen = false;
-	boolean tiltedBack = false;
 	double turnScaleValue = 0.75;
 	Joystick driver = new Joystick(0);
 	Joystick functions = new Joystick(3);
@@ -89,31 +84,20 @@ public class OI {
 		else if(functions.getRawButton(4)) {
 			Robot.intake.ejectCube();
 		}
+		else if(functions.getRawButton(9)) {
+			Robot.intake.ejectCubeSlow();
+		}
 		else {
 			Robot.intake.stopMotor();
 		}
 		
 		if(functions.getRawButtonPressed(2)) {
 			System.out.println("Pressed the button for intake!");
-			if(intakeOpen == false) {
-				Robot.intake.squeezeOpen(true); // TODO The action for this should actually toggle.
-				intakeOpen = true;
-			}
-			else if(intakeOpen == true) {
-				Robot.intake.squeezeOpen(false); //Do we need to create a separate function for closing the intake?
-				intakeOpen = false;
-			}
+			Robot.intake.squeezeToggle();
 		}
 		
 		if(functions.getRawButtonPressed(10)) {
-			if(tiltedBack == true) {
-				Robot.intake.tiltBackward(false);
-				tiltedBack = false;	
-			}
-			else if(tiltedBack == false) {
-				Robot.intake.tiltBackward(true);
-				tiltedBack =  true;
-			}
+			Robot.intake.tiltToggle();
 		}
 		
 		if(Timer.getMatchTime() <= 1 && Timer.getMatchTime() >= 0) {

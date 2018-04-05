@@ -22,7 +22,7 @@ import org.usfirst.frc.team2811.robot.TinyTimer;
 public class ClimberModeVer1 extends ClimberSequence {
 
 	TinyTimer timer = new TinyTimer();	
-	double fwd = 10;
+	double fwd = 6;
 	
 	long t0 = 0000;
 	long driveTime = 1000;
@@ -37,10 +37,10 @@ public class ClimberModeVer1 extends ClimberSequence {
 	public void init() {
 		timer.reset();
 		Robot.drive.setMode(Chassis.Mode.PROFILE);
-		Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.CLIMB);
+		Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.CLIMB_AWAY);
 		Robot.climber.setMode(Climber.Mode.CLOSEDLOOP);			
 		Robot.climber.setPosition(1);
-		//Robot.climber.detach(); //need to test on robot
+		Robot.climber.detach();
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class ClimberModeVer1 extends ClimberSequence {
 			// drive away from the wall
 			Robot.drive.setProfile(fwd, fwd, driveTime);
 			// move climber and elevator to the proper height
-			Robot.elevator.setPos(ElevatorPosition.CLIMB);
+			Robot.elevator.setPos(ElevatorPosition.CLIMB_AWAY);
 		}
 		if(timer.atTime(t1)){ // step 2
 			// tilt backwards really quick
@@ -85,5 +85,5 @@ public class ClimberModeVer1 extends ClimberSequence {
 		Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.SCALEHIGH);
 		Robot.climber.setMode(Climber.Mode.DISABLED);
 	}
-	
+
 }

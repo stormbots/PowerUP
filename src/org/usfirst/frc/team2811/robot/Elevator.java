@@ -49,7 +49,8 @@ public class Elevator {
 		reset();
 		double voltageRampRate = 0.2;
 		eMotorA.configOpenloopRamp(voltageRampRate, 30);
-	 }
+		eMotorB.configOpenloopRamp(voltageRampRate, 30);
+		}
 	
 	public enum Mode{ 
 		MANUALVELOCITY, MANUALPOSITION, BUTTON, HOMING //Used to change how the elevator is controlled
@@ -116,8 +117,10 @@ public class Elevator {
 		SWITCH (38_000),
 		SCALEHIGH(92_000),
 		AUTO_STARTUP(38_000),
-		//CLIMB(85_300) //Comp Bot
-		CLIMB(42_000), //Practice Bot
+		CLIMB_WALL(85_300), //Comp Bot
+		CLIMB_AWAY(79421.875) //Comp Bot
+		//CLIMB_WALL(42_000), //Practice Bot
+		//CLIMB_AWAY(42_000), //Practice Bot
 		;
 		
 		double ticks = 0;

@@ -58,6 +58,7 @@ public class Chassis {
 	
 	//Drive configuration values. Will be overwritten by disabledperiodic
 	double scaleFactorL = 199.8; // compbot default
+	//double scaleFactorL = 215; // compbot default // for Debugging!!
 	double scaleFactorR = 405.4; // compbot default
 	
 	double arcadeTurn = 0; 

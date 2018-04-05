@@ -11,11 +11,13 @@ import org.usfirst.frc.team2811.robot.Auto.AutoSelector;
 import org.usfirst.frc.team2811.robot.Auto.AutoSequence;
 import org.usfirst.frc.team2811.robot.Auto.Center;
 import org.usfirst.frc.team2811.robot.Auto.CenterVer2;
+import org.usfirst.frc.team2811.robot.Auto.CenterVer3;
 import org.usfirst.frc.team2811.robot.Auto.Example;
 import org.usfirst.frc.team2811.robot.Auto.SideCrossScale;
 import org.usfirst.frc.team2811.robot.Auto.SideEscape;
 import org.usfirst.frc.team2811.robot.Auto.SideScale;
 import org.usfirst.frc.team2811.robot.Auto.SideScaleVer2;
+import org.usfirst.frc.team2811.robot.Auto.SideScaleVer3;
 import org.usfirst.frc.team2811.robot.Auto.SideSwitch;
 import org.usfirst.frc.team2811.robot.Auto.Testing1;
 import org.usfirst.frc.team2811.robot.Elevator.ElevatorPosition;
@@ -44,7 +46,7 @@ public class Robot extends IterativeRobot {
 	public static Climber climber = new Climber();
 	Lighting lighting = new Lighting();
 	public OI oi = new OI();
-	static boolean compbot = false;
+	static boolean compbot = true;
 	
 	AutoSequence autoChoice = new SideEscape();
 	AutoSelector autoSelector = new AutoSelector();
@@ -77,7 +79,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {		
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
-		//autoChoice = new SideCrossScale(true);
+		//autoChoice = new SideEscape();
 		
 		// Do auto mode initialization 
 		drive.shiftLow();
