@@ -36,6 +36,7 @@ public class ClimberModeVer1 extends ClimberSequence {
 	
 	public void init() {
 		timer.reset();
+		Robot.drive.resetEnc();
 		Robot.drive.setMode(Chassis.Mode.PROFILE);
 		Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.CLIMB_AWAY);
 		Robot.climber.setMode(Climber.Mode.CLOSEDLOOP);			

@@ -127,8 +127,8 @@ public class CenterVer3 extends AutoSequence {
 			right1 = 0;
 
 			// 2 - drive to the switch
-			left2 = 104-2;
-			right2 = 104-2;
+			left2 = 104-5;
+			right2 = 104-5;
 	
 			// 3 - back away
 			left3 = -42;
@@ -147,8 +147,8 @@ public class CenterVer3 extends AutoSequence {
 			right6 = -18;
 
 			// 7 - turn to switch
-			left7 = 21;
-			right7 = -21;
+			left7 = 20;
+			right7 = -20;
 
 			// 8 - drive to the switch
 			left8 = 42;

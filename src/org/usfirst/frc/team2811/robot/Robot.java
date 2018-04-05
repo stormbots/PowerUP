@@ -79,7 +79,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {		
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
-		//autoChoice = new SideEscape();
+		//autoChoice = new SideScaleVer3(true);
 		
 		// Do auto mode initialization 
 		drive.shiftLow();
@@ -106,6 +106,8 @@ public class Robot extends IterativeRobot {
 	
 	/** Ensure robot is ready for human operator in matches */
 	public void teleopInit() {
+		oi.climberEngaged = false;
+		oi.climberSequence.cancel();
 		CameraServer.getInstance().startAutomaticCapture();
 		drive.setMode(Chassis.Mode.ARCADE);
 		drive.setMode(Mode.ARCADE);
