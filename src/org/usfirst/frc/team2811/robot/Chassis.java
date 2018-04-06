@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
 
 /* Inputs:
  *   Joystick Y & X axis
@@ -51,7 +52,7 @@ public class Chassis {
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
 	Motion345 right345 = new Motion345(10000, 3, 0, 200);
 	TinyTimer profileTimer = new TinyTimer();
-	public enum Mode{PROFILE,TANK,ARCADE,DISABLED}
+	public enum Mode{PROFILE,TANK,ARCADE,DISABLED,VELPROFILE}
 	Mode mode = Mode.ARCADE;
 	double leftPower = 0; 
 	double rightPower = 0;
@@ -211,8 +212,8 @@ public class Chassis {
 		System.out.printf("Creating auto [ %f , %f ] over %f s\n",inchesLeft,inchesRight,time);
 
 		// create our motion profile
-		left345.setMove(10_000, time, inchesLeft*scaleFactorL, 200);
-		right345.setMove(10_000, time, inchesRight*scaleFactorR, 200);
+		left345.setMove(25_200, time, inchesLeft*scaleFactorL, 200);
+		right345.setMove(25_200, time, inchesRight*scaleFactorR, 200);
 		//TODO: Actually find some values for max speed and a good tolerance
 		
 		// Reset our timer to start executing
@@ -223,6 +224,11 @@ public class Chassis {
 		mode = Mode.PROFILE;
 	}
 	
+	double maxleft=0,maxright=0;
+	double lastLeft=0,lastRight=0;
+	double lastTime=0;
+	double maxDeltaLeft=0;
+	double maxDeltaRight=0;
 	/** Update function that handles all busywork the chassis has been 
 	 * set up to perform.
 	 */
@@ -237,14 +243,19 @@ public class Chassis {
 		case DISABLED:
 			driver.tankDrive(0,0);	
 			return;
+		case VELPROFILE:
+			leftPower = left345.getVelPosFbFF(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.023);
+			rightPower = right345.getVelPosFbFF(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.023);
+			driver.tankDrive(leftPower, rightPower);
+
+			break;
 		case PROFILE:	
 			profileTimer.update();
 			
 			if(prefs.getBoolean("compbot", Robot.compbot)) {
 				//compbot
-				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.022);
-				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.022);				
-		
+				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.026);
+				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.022);
 
 				SmartDashboard.putNumber("Chassis Profile Left",         leftPower);
 				SmartDashboard.putNumber("Chassis Profile Right",        rightPower);
@@ -290,9 +301,49 @@ public class Chassis {
 			break;
 		}
 		
+		double leftv = leadL.getSelectedSensorVelocity(0);
+		if(leftv > maxleft) { maxleft = leftv; }
+		
+		double rightv = leadR.getSelectedSensorVelocity(0);
+		if(rightv > maxright) { maxright = rightv; }
+		
+		SmartDashboard.putNumber("Chassis Left Max Velocity",  maxleft);
+		SmartDashboard.putNumber("Chassis Left Max Velocity*2",  maxleft*2);
+		SmartDashboard.putNumber("Chassis Right Max Velocity",  maxright);
+	
+		
+		double deltaLeft=lastLeft-leadL.getSelectedSensorPosition(0);
+		double deltaRight=lastRight-leadR.getSelectedSensorPosition(0);
+		
+		if(deltaLeft > maxDeltaLeft) {maxDeltaLeft = deltaLeft;}
+		if(deltaRight > maxDeltaRight) {maxDeltaRight = deltaRight;}
+		
+		lastLeft=leadL.getSelectedSensorPosition(0);
+		lastRight=leadR.getSelectedSensorPosition(0);
+		
+		SmartDashboard.putNumber("Chassis Left Max Velocity (per loop)", maxDeltaLeft );
+		SmartDashboard.putNumber("Chassis Left Max Velocity (per loop)*2",  maxDeltaLeft*2);
+		SmartDashboard.putNumber("Chassis Right Max Velocity (per loop)",  maxDeltaRight);
+
+		double deltaTime = Timer.getFPGATimestamp() - lastTime;
+		lastTime = Timer.getFPGATimestamp();
+		
+		if(rightv > maxright) { maxright = rightv; }
+
+		SmartDashboard.putNumber("Chassis Left Max Velocity (per second)", maxDeltaLeft/deltaTime );
+		SmartDashboard.putNumber("Chassis Left Max Velocity (per second)*2",  maxDeltaLeft/deltaTime*2);
+		SmartDashboard.putNumber("Chassis Right Max Velocity (per second)",  maxDeltaRight/deltaTime);
+		
+		
 		SmartDashboard.putNumber("Chassis Left Raw Enc",  leadL.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Chassis Left Mod Enc",  leadL.getSelectedSensorPosition(0)*2);
 		SmartDashboard.putNumber("Chassis Right Enc",  leadR.getSelectedSensorPosition(0));
+		
+		double leftError = left345.getPos(profileTimer.getSeconds()) - -leadL.getSelectedSensorPosition(0);
+		SmartDashboard.putNumber("Chassis Left Error", leftError);
+		
+		double rightError = right345.getPos(profileTimer.getSeconds()) - leadR.getSelectedSensorPosition(0);
+		SmartDashboard.putNumber("Chassis Right Error", rightError);
 
 	}
 	

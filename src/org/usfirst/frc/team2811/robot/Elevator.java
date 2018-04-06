@@ -118,7 +118,7 @@ public class Elevator {
 		SCALEHIGH(98_800),
 		AUTO_STARTUP(38_000),
 		CLIMB_WALL(85_300), //Comp Bot
-		CLIMB_AWAY(83_421.875) //Comp Bot
+		CLIMB_AWAY(83_421.875+1_500) //Comp Bot
 		//CLIMB_WALL(42_000), //Practice Bot
 		//CLIMB_AWAY(42_000), //Practice Bot
 		;

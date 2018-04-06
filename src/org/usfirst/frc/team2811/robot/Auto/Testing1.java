@@ -32,37 +32,41 @@ public class Testing1 extends AutoSequence {
 	public void run() {
 		System.out.println("RUNNINGAUTO");
 
-		//Example: Approximate movements to drop on the switch then back up
-		if(timer.atTime(0)){
-			Robot.elevator.setPos(-0.9);
-		}
 		if(timer.atTime(1000)) {
-			Robot.elevator.setPos(-0.8);
+			Robot.drive.setProfile(-80, 80, 2000);
 		}
-		if(timer.atTime(2000)) {
-			Robot.elevator.setPos(-0.7);
-		}
-		if(timer.atTime(3000)) {
-			Robot.elevator.setPos(-0.6);
-		}
-		if(timer.atTime(4000)) {
-			Robot.elevator.setPos(-0.5);
-		}
-		if(timer.atTime(5000)) {
-			Robot.elevator.setPos(-0.4);
-		}
-		if(timer.atTime(6000)) {
-			Robot.elevator.setPos(-0.3);
-		}
-		if(timer.atTime(7000)) {
-			Robot.elevator.setPos(-0.2);
-		}
-		if(timer.atTime(8000)) {
-			Robot.elevator.setPos(-0.1);
-		}
-		if(timer.atTime(9000)) {
-			Robot.elevator.setPos(0.0);
-		}
+		
+		//Example: Approximate movements to drop on the switch then back up
+//		if(timer.atTime(0)){
+//			Robot.elevator.setPos(-0.9);
+//		}
+//		if(timer.atTime(1000)) {
+//			Robot.elevator.setPos(-0.8);
+//		}
+//		if(timer.atTime(2000)) {
+//			Robot.elevator.setPos(-0.7);
+//		}
+//		if(timer.atTime(3000)) {
+//			Robot.elevator.setPos(-0.6);
+//		}
+//		if(timer.atTime(4000)) {
+//			Robot.elevator.setPos(-0.5);
+//		}
+//		if(timer.atTime(5000)) {
+//			Robot.elevator.setPos(-0.4);
+//		}
+//		if(timer.atTime(6000)) {
+//			Robot.elevator.setPos(-0.3);
+//		}
+//		if(timer.atTime(7000)) {
+//			Robot.elevator.setPos(-0.2);
+//		}
+//		if(timer.atTime(8000)) {
+//			Robot.elevator.setPos(-0.1);
+//		}
+//		if(timer.atTime(9000)) {
+//			Robot.elevator.setPos(0.0);
+//		}
 		
 		timer.update();
 	}

@@ -57,6 +57,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		//Only do this if we need to for things to work consistently, which may be the case
+		//CameraServer.getInstance().startAutomaticCapture();
+
 		drive.resetEnc();
 		elevator.reset();
 		climber.resetEnc();
@@ -78,7 +81,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {		
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
-		//autoChoice = new SideScaleVer3(false); // COMMENT OUT BEFORE GOING TO THE FIELD
+		//autoChoice = new CenterVer3(true); // COMMENT OUT BEFORE GOING TO THE FIELD
 		
 		// Do auto mode initialization 
 		drive.shiftLow();

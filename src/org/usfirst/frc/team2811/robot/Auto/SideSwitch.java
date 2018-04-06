@@ -19,6 +19,8 @@ public class SideSwitch extends AutoSequence {
 	double right1;
 	double left2;
 	double right2;
+	double left3;
+	double right3;
 	double backward = -24;
 	
 	public SideSwitch(boolean isLeft) {
@@ -34,12 +36,16 @@ public class SideSwitch extends AutoSequence {
 			right1 = inside1;
 			left2 = outside2;
 			right2 = inside2;
+			left3 = 30;
+			right3 = 30;
 		}
 		else {
 			left1 = inside1;
 			right1 = outside1;
 			left2 = inside2;
 			right2 = outside2;
+			left3 = 0;
+			right3 = 0;
 		}
 	}
 	
@@ -62,6 +68,7 @@ public class SideSwitch extends AutoSequence {
 		}
 		if(timer.atTime(6000)) {
 			Robot.intake.ejectCube();
+			Robot.drive.setProfile(left3, right3, 1000);
 		}
 		if(timer.atTime(6500)) {
 			Robot.drive.setProfile(backward, backward, 2000);
