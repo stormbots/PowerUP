@@ -66,7 +66,7 @@ public class CenterVer3 extends AutoSequence {
 		if(toLeft) {			
 			// 1 - turn to face switch
 			left1 = 0;
-			right1 = 14;
+			right1 = 15;
 
 			// 2 - drive to the switch
 			left2 = 104;
@@ -147,8 +147,8 @@ public class CenterVer3 extends AutoSequence {
 			right6 = -18;
 
 			// 7 - turn to switch
-			left7 = 20;
-			right7 = -20;
+			left7 = 25;
+			right7 = -25;
 
 			// 8 - drive to the switch
 			left8 = 42;
@@ -159,8 +159,8 @@ public class CenterVer3 extends AutoSequence {
 			right9 = -28;
 
 			// 10 - turn to cube pile
-			left10 = -20;
-			right10 = 20;
+			left10 = -25;
+			right10 = 25;
 
 			// 11 - forward to grab cube
 			left11 = 15;

@@ -35,7 +35,7 @@ public class ClimberModeVer1 extends ClimberSequence {
 	}
 	
 	public void init() {
-		timer.reset();
+		timer = new TinyTimer(); //instead of reset, create new one to avoid a atTime(0) bug
 		Robot.drive.resetEnc();
 		Robot.drive.setMode(Chassis.Mode.PROFILE);
 		Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.CLIMB_AWAY);

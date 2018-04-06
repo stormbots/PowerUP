@@ -57,9 +57,8 @@ public class Chassis {
 	double rightPower = 0;
 	
 	//Drive configuration values. Will be overwritten by disabledperiodic
-	double scaleFactorL = 199.8; // compbot default
-	//double scaleFactorL = 215; // compbot default // for Debugging!!
-	double scaleFactorR = 405.4; // compbot default
+	double scaleFactorL = 27400 / 137; // 210; // compbot default
+	double scaleFactorR = 54400 / 137; // 405.4; // compbot default
 	
 	double arcadeTurn = 0; 
 	double arcadePower = 0;
@@ -243,8 +242,8 @@ public class Chassis {
 			
 			if(prefs.getBoolean("compbot", Robot.compbot)) {
 				//compbot
-				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.024);
-				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.020);				
+				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.022);
+				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.022);				
 		
 
 				SmartDashboard.putNumber("Chassis Profile Left",         leftPower);
@@ -287,9 +286,14 @@ public class Chassis {
 			else {
 				//prac bot
 				driver.arcadeDrive(arcadePower*mod, -arcadeTurn*mod, squaredInputs);
-			}
+			}			
 			break;
 		}
+		
+		SmartDashboard.putNumber("Chassis Left Raw Enc",  leadL.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Chassis Left Mod Enc",  leadL.getSelectedSensorPosition(0)*2);
+		SmartDashboard.putNumber("Chassis Right Enc",  leadR.getSelectedSensorPosition(0));
+
 	}
 	
 	/** Set the the arcadeDrive functions

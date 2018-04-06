@@ -37,31 +37,31 @@ public class SideScaleVer3 extends AutoSequence {
 	long t0 = 0000;
 	long raiseScale = 4000; // 3.5 seconds to raise the scale
 	long t1 = 7500; // 7.5 seconds to move to scale
-	long t2 = 750; // pivot towards scale
+	long t2 = 500; // pivot towards scale
 	long t3 = 750; // pivot towards switch cubes
-	long t4 = 2750; // drive to cube
+	long t4 = 3250; // drive to cube
 	long elevatorDelay = 1500; // 0.75 seconds after drive started
-	long t5 = 2750; // drive away from cube
-	long t6 = 750; // turn to scale
-	long t7 = 750; // turn away from scale
-	long t8 = 3000; // drive towards 3rd cube
+//	long t5 = 2750; // drive away from cube
+//	long t6 = 750; // turn to scale
+//	long t7 = 750; // turn away from scale
+//	long t8 = 3000; // drive towards 3rd cube
 
 	public SideScaleVer3(boolean isLeft) {
 		// 1 - move forward
-		double inside1 = 270;
-		double outside1 = 270;
+		double inside1 = 270-6;
+		double outside1 = 270-6;
 		
-		// 2 - 90 degree rotation about the center
-		double inside2 = -20;
-		double outside2 = 20;
+		// 2 - small rotation about the center
+		double inside2 = -8;
+		double outside2 = 8;
 		
 		// 3 - something less than 90 degree rotation about the center
-		double inside3 = -16;
-		double outside3 = 16;
+		double inside3 = -28;
+		double outside3 = 28;
 		
 		// 4 - forward to the 2nd cube
-		double inside4 = 90;
-		double outside4 = 90;
+		double inside4 = 80; // 90
+		double outside4 = 80; // 90
 		
 		// 5 - back up to scale
 		double inside5 = -90;
@@ -80,7 +80,7 @@ public class SideScaleVer3 extends AutoSequence {
 		double outside8 = 80;
 		
 		if(isLeft) {
-			left1 = outside1;
+			left1 = outside1+24;
 			right1 = inside1;
 			left2 = outside2;
 			right2 = inside2;
@@ -147,32 +147,32 @@ public class SideScaleVer3 extends AutoSequence {
 			Robot.elevator.setPos(ElevatorPosition.FLOOR);
 			Robot.drive.setProfile(left4, right4, t4);
 		}
-		if(timer.atTime(t4+t3+t2+t1)) {
-			Robot.intake.grabCube();
-			Robot.intake.squeezeOpen(false);
-			Robot.drive.setProfile(left5, right5, t5);
-		}
-		if(timer.atTime(elevatorDelay+t4+t3+t2+t1)) {
-			Robot.elevator.setPos(ElevatorPosition.SCALEHIGH);
-		}
-		if(timer.atTime(t5+t4+t3+t2+t1)) {
-			Robot.drive.setProfile(left6, right6, t6);
-		}
-		if(timer.atTime(t6+t5+t4+t3+t2+t1)) {
-			Robot.intake.ejectCube();
-			Robot.drive.setProfile(left7, right7, t7);
-		}
-		if(timer.atTime(t7+t6+t5+t4+t3+t2+t1)) {
-			Robot.intake.stopMotor();
-			Robot.intake.squeezeOpen(true);
-			Robot.elevator.setPos(ElevatorPosition.FLOOR);
-			Robot.drive.setProfile(left8, right8, t8);
-		}
-
-//		if(timer.atTime(14900)) {
-//			Robot.intake.stopMotor();
-//			Robot.drive.setMode(Chassis.Mode.ARCADE);
+//		if(timer.atTime(t4+t3+t2+t1)) {
+//			Robot.intake.grabCube();
+//			Robot.intake.squeezeOpen(false);
+//			Robot.drive.setProfile(left5, right5, t5);
 //		}
+//		if(timer.atTime(elevatorDelay+t4+t3+t2+t1)) {
+//			Robot.elevator.setPos(ElevatorPosition.SCALEHIGH);
+//		}
+//		if(timer.atTime(t5+t4+t3+t2+t1)) {
+//			Robot.drive.setProfile(left6, right6, t6);
+//		}
+//		if(timer.atTime(t6+t5+t4+t3+t2+t1)) {
+//			Robot.intake.ejectCube();
+//			Robot.drive.setProfile(left7, right7, t7);
+//		}
+//		if(timer.atTime(t7+t6+t5+t4+t3+t2+t1)) {
+//			Robot.intake.stopMotor();
+//			Robot.intake.squeezeOpen(true);
+//			Robot.elevator.setPos(ElevatorPosition.FLOOR);
+//			Robot.drive.setProfile(left8, right8, t8);
+//		}
+
+		if(timer.atTime(14900)) {
+			Robot.intake.stopMotor();
+			Robot.drive.setMode(Chassis.Mode.ARCADE);
+		}
 		
 		timer.update();
 	}

@@ -115,10 +115,10 @@ public class Elevator {
 	public enum ElevatorPosition{
 		FLOOR(0),
 		SWITCH (38_000),
-		SCALEHIGH(92_000),
+		SCALEHIGH(98_800),
 		AUTO_STARTUP(38_000),
 		CLIMB_WALL(85_300), //Comp Bot
-		CLIMB_AWAY(79421.875) //Comp Bot
+		CLIMB_AWAY(83_421.875) //Comp Bot
 		//CLIMB_WALL(42_000), //Practice Bot
 		//CLIMB_AWAY(42_000), //Practice Bot
 		;

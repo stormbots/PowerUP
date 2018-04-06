@@ -63,7 +63,7 @@ public class Intake {
 	}
 	
 	public void grabCube() {
-		velocity = 0.75;
+		velocity = 0.5;
 	}
 	
 	public void stopMotor() {
@@ -86,7 +86,6 @@ public class Intake {
 	public void squeezeToggle() {
 		if(intakeOpen) {
 			squeezeOpen(false);
-			
 		}
 		else {
 			squeezeOpen(true);

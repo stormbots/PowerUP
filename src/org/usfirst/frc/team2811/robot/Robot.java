@@ -70,7 +70,6 @@ public class Robot extends IterativeRobot {
 	 * chooser code works with the Java SmartDashboard. If you prefer the
 	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
 	 * getString line to get the auto name from the text box below the Gyro
-	 *
 	 * <p>You can add additional auto modes by adding additional comparisons to
 	 * the switch structure below with additional strings. If using the
 	 * SendableChooser make sure to add them to the chooser code above as well.
@@ -79,7 +78,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {		
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
-		//autoChoice = new SideScaleVer3(true);
+		//autoChoice = new SideScaleVer3(false); // COMMENT OUT BEFORE GOING TO THE FIELD
 		
 		// Do auto mode initialization 
 		drive.shiftLow();
@@ -109,12 +108,14 @@ public class Robot extends IterativeRobot {
 		oi.climberEngaged = false;
 		oi.climberSequence.cancel();
 		CameraServer.getInstance().startAutomaticCapture();
+		drive.resetEnc();
 		drive.setMode(Chassis.Mode.ARCADE);
 		drive.setMode(Mode.ARCADE);
 		elevator.setMode(Elevator.Mode.MANUALPOSITION);
 		intake.tiltBackward(false);
 		climber.setMode(Climber.Mode.MANUAL);
 	}
+
 
 	/**
 	 * This function is called periodically during operator control.
@@ -131,6 +132,8 @@ public class Robot extends IterativeRobot {
 		elevator.newUpdate();
 		intake.newUpdate();
 		climber.newUpdate();
+		
+//		SmartDashboard.putNumber("Timer Per Loop",timer1.timer)
 		
 	}
 

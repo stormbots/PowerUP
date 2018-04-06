@@ -25,10 +25,10 @@ public class Climber {
 	}
 	
 	public enum Mode{CLOSEDLOOP, DISABLED, MANUAL}
-	Mode mode = Mode.DISABLED;
+	Mode mode = Mode.CLOSEDLOOP;
 	private double power = 0;
 	//private double maxClimbHeight = 124162;//works with lots of slack
-	private double maxClimbHeight = 94_000;
+	private double maxClimbHeight = 94_000+8000;
 	//private double maxClimbHeight = 4000;
 	private double targetPosition = 0;
 		
