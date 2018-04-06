@@ -56,8 +56,8 @@ public class SideScaleVer3 extends AutoSequence {
 		double outside2 = 8;
 		
 		// 3 - something less than 90 degree rotation about the center
-		double inside3 = -28;
-		double outside3 = 28;
+		double inside3 = -60;
+		double outside3 = 60;
 		
 		// 4 - forward to the 2nd cube
 		double inside4 = 80; // 90

@@ -53,6 +53,7 @@ public class ClimberModeVer1 extends ClimberSequence {
 	 */
 	public void run() {
 
+		SmartDashboard.putNumber("Climber Timer", timer.getSeconds());
 		//Move the climber and elevator
 		double height = Robot.climber.getClimberPosition();
 		Robot.elevator.setPos(height);
@@ -67,6 +68,7 @@ public class ClimberModeVer1 extends ClimberSequence {
 		}
 		if(timer.atTime(t1)){ // step 2
 			// tilt backwards really quick
+			Robot.drive.setMode(Mode.ARCADE);
 			Robot.intake.tiltBackward(true);
 		}
 		if(timer.atTime(t2+t1)){ // step 3
@@ -83,7 +85,7 @@ public class ClimberModeVer1 extends ClimberSequence {
 	@Override
 	public void cancel() {
 		Robot.drive.setMode(Mode.ARCADE);
-		Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.SCALEHIGH);
+		//Robot.elevator.setMaxHeight(Elevator.ElevatorPosition.SCALEHIGH);
 		Robot.climber.setMode(Climber.Mode.DISABLED);
 	}
 

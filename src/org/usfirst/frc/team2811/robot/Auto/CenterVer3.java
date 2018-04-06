@@ -63,6 +63,10 @@ public class CenterVer3 extends AutoSequence {
 	long t14 = 3000; // drive forward towards the exchange
 	
 	public CenterVer3(boolean toLeft) {
+		//This auto works reliably with old, bad gains. Preserve these gains when this auto is being run
+		Robot.drive.setProfileGains(0.026,0.022);
+		Robot.drive.setProfileCalibration(199.8, 405.4); //Possibly was 400.4?
+		
 		if(toLeft) {			
 			// 1 - turn to face switch
 			left1 = 1;

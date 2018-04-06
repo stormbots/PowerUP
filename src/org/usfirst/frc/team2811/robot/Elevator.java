@@ -100,8 +100,8 @@ public class Elevator {
 	 */
 	public void setPos(double position) {
 		Utilities.clamp(position,-1,1);
-		elevatorPos = Utilities.lerp(position, -1, 1, 0, maxPos);
-		elevatorPos = Utilities.clamp(elevatorPos, 0, maxPos);
+		elevatorPos = Utilities.lerp(position, -1, 1, minPos, maxPos);
+		elevatorPos = Utilities.clamp(elevatorPos, minPos, maxPos);
 	}
 	
 	/**

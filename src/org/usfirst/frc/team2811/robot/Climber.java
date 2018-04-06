@@ -97,7 +97,8 @@ public class Climber {
 	
  	public double getClimberPosition() {
 		//-1..1
- 		return Utilities.lerp(mtr1.getSelectedSensorPosition(0), 0, maxClimbHeight,-1,1);
+ 		double position = Utilities.lerp(mtr1.getSelectedSensorPosition(0), 0, maxClimbHeight,-1,1);
+ 		return Utilities.clamp(position, -1,1);
 	}
 	
  	/** 

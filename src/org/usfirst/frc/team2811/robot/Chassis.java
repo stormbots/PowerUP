@@ -58,14 +58,17 @@ public class Chassis {
 	double rightPower = 0;
 	
 	//Drive configuration values. Will be overwritten by disabledperiodic
-	double scaleFactorL = 27400 / 137; // 210; // compbot default
-	double scaleFactorR = 54400 / 137; // 405.4; // compbot default
-	
+	//also these values are bubkis
+	double scaleFactorL = 100; 
+	double scaleFactorR = 100; 
+
 	double arcadeTurn = 0; 
 	double arcadePower = 0;
 	boolean squaredInputs = true;
 
 	boolean braking = true;
+	private double leftFBGain=0.024; //GOLD on compbot
+	private double rightFBGain=0.024; // GOLD on compbot
 
 	
 	/**
@@ -96,8 +99,14 @@ public class Chassis {
 			//compbot
 			
 			//One encoder a 128 instead of a 256
-			scaleFactorL = 199.8; 
-			scaleFactorR = 405.4;
+			//Bad calibration values for use with Centerv3 auto 
+			//when paired with the incorrect calibration values
+			//scaleFactorL = 199.8; 
+			//scaleFactorR = 400.4; 
+
+			scaleFactorL = (27400 / 137) + 2; //is GOLD
+			scaleFactorR = (54400 / 137) + 1; //is GOLD
+			
 		}else {
 			//practice bot
 			scaleFactorL = 291; 
@@ -199,6 +208,17 @@ public class Chassis {
 		rightPower = right;
 	}
 	
+	
+	public void setProfileGains(double leftGain,double rightGain) {
+		leftFBGain = leftGain;
+		rightFBGain = rightGain;
+	}
+	
+	public void setProfileCalibration(double leftCal,double rightCal) {
+		scaleFactorL = leftCal;
+		scaleFactorR = rightCal;
+	}
+
 	/** Configure the chassis to perform a motion-profile squence of set distance and duration.
 	 * 
 	 * @param inchesLeft
@@ -244,9 +264,9 @@ public class Chassis {
 			driver.tankDrive(0,0);	
 			return;
 		case VELPROFILE:
-			leftPower = left345.getVelPosFbFF(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.023);
-			rightPower = right345.getVelPosFbFF(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.023);
-			driver.tankDrive(leftPower, rightPower);
+			//leftPower = left345.getVelPosFbFF(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.023);
+			//rightPower = right345.getVelPosFbFF(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.023);
+			//driver.tankDrive(leftPower, rightPower);
 
 			break;
 		case PROFILE:	
@@ -254,8 +274,8 @@ public class Chassis {
 			
 			if(prefs.getBoolean("compbot", Robot.compbot)) {
 				//compbot
-				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.026);
-				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.022);
+				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), leftFBGain); // 24 is GOLD
+				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), rightFBGain); // 24 is GOLD
 
 				SmartDashboard.putNumber("Chassis Profile Left",         leftPower);
 				SmartDashboard.putNumber("Chassis Profile Right",        rightPower);
