@@ -109,12 +109,12 @@ public class CenterVer3 extends AutoSequence {
 			right10 = -22.5;
 
 			// 11 - forward to grab cube
-			left11 = 15;
-			right11 = 15;
+			left11 = 17;
+			right11 = 17;
 
 			// 12 - back away from cube pile
-			left12 = -15;
-			right12 = -15;
+			left12 = -17;
+			right12 = -17;
 			
 			// 13 - turn to exchange
 			left13 = 0; // 19
@@ -131,8 +131,8 @@ public class CenterVer3 extends AutoSequence {
 			right1 = 1;
 
 			// 2 - drive to the switch
-			left2 = 104-5;
-			right2 = 104-5;
+			left2 = 104-5-1+0.5;
+			right2 = 104-5-1+0.5;
 	
 			// 3 - back away
 			left3 = -42;
@@ -167,12 +167,12 @@ public class CenterVer3 extends AutoSequence {
 			right10 = 28;
 
 			// 11 - forward to grab cube
-			left11 = 15;
-			right11 = 15;
+			left11 = 17;
+			right11 = 17;
 
 			// 12 - back away from cube pile
-			left12 = -15;
-			right12 = -15;
+			left12 = -17;
+			right12 = -17;
 			
 			// 13 - turn to exchange
 			left13 = 0; // -19

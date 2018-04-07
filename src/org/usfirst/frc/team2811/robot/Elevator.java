@@ -91,6 +91,10 @@ public class Elevator {
 		maxPos = newMaxPos.ticks;
 	}
 	
+	public void setMinHeight(ElevatorPosition newMinPos) {
+		minPos = newMinPos.ticks;
+	}
+	
 	public void setVel(double velocity) {
 		eVelocity = velocity;
 	}
@@ -118,7 +122,7 @@ public class Elevator {
 		SCALEHIGH(98_800),
 		AUTO_STARTUP(38_000),
 		CLIMB_WALL(85_300), //Comp Bot
-		CLIMB_AWAY(83_421.875+1_500) //Comp Bot
+		CLIMB_AWAY(83_421.875+3_500) //Comp Bot
 		//CLIMB_WALL(42_000), //Practice Bot
 		//CLIMB_AWAY(42_000), //Practice Bot
 		;
@@ -142,7 +146,7 @@ public class Elevator {
 		
 		switch(mode) {
 		case MANUALPOSITION:
-			Utilities.clamp(elevatorPos, 0, maxPos);
+			Utilities.clamp(elevatorPos, minPos, maxPos);
 			eVelocity = FB.FB(elevatorPos, currentPos, 0.005);
 			//expected fallthrough to velocity mode
 		case MANUALVELOCITY:
@@ -186,7 +190,7 @@ public class Elevator {
 		}
 		
 		eMotorA.set(ControlMode.PercentOutput, eVelocity);
-		bind();
+		eMotorB.set(ControlMode.PercentOutput, eVelocity);
 
 		SmartDashboard.putNumber("Elevator Current Position", currentPos);
 		SmartDashboard.putNumber("Elevator Desired Position", elevatorPos);

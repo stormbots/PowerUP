@@ -104,7 +104,7 @@ public class Chassis {
 			//scaleFactorL = 199.8; 
 			//scaleFactorR = 400.4; 
 
-			scaleFactorL = (27400 / 137) + 2; //is GOLD
+			scaleFactorL = (27400 / 137) + 2 - 2; //is GOLD
 			scaleFactorR = (54400 / 137) + 1; //is GOLD
 			
 		}else {

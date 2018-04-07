@@ -119,7 +119,7 @@ public class AutoSelector {
 						return new SideSwitch(true);
 					}
 					if(targetLocation == TargetLocation.SCALE) {
-						return new SideScale(true);
+						return new SideScaleVer3(true);
 					}
 				}
 				else if(switchAbility.getSelected()==true){
@@ -128,7 +128,7 @@ public class AutoSelector {
 				}
 				else if(scaleAbility.getSelected()==true){
 					targetLocation = TargetLocation.SCALE;
-					return new SideScale(true);
+					return new SideScaleVer3(true);
 				}
 				else {
 					targetLocation = TargetLocation.MOVE_ONLY;
@@ -137,7 +137,7 @@ public class AutoSelector {
 			}
 			else if(scaleConfig == ScaleConfig.LEFT && scaleAbility.getSelected()==true) {
 				targetLocation = TargetLocation.SCALE;
-				return new SideScale(true);
+				return new SideScaleVer3(true);
 			}
 			else if(switchConfig == SwitchConfig.LEFT && switchAbility.getSelected()==true) {
 				targetLocation = TargetLocation.SWITCH;
