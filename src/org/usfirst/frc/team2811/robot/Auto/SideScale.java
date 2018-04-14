@@ -31,12 +31,12 @@ public class SideScale extends AutoSequence {
 //	long t3 = 2000;
 
 	public SideScale(boolean isLeft) {
-		double inside1 = 280;
-		double outside1 = 280;
+		double inside1 = 308;
+		double outside1 = 308;
 		double inside2 = -20;
 		double outside2 = 20;
-		double inside3 = 30;
-		double outside3 = 30;
+		double inside3 = 6;
+		double outside3 = 6;
 		
 		if(isLeft) {
 			left1 = outside1;
