@@ -168,8 +168,8 @@ public class Chassis {
 	}
 	
 	void autonomousInit() {
-		String[] label = {"time","target","position","error","velocity","current","%output"};
-		String[] units = {"sec","ticks","ticks","ticks","ticks/sec","amps","-1..1"};
+		String[] label = {"time","target","position","error","velocity","current","%output","sys voltage"};
+		String[] units = {"sec","ticks","ticks","ticks","ticks/sec","amps","-1..1","Volts"};
 		logfileLeft.init("chassisLeft", units, label);
 		logfileRight.init("chassisRight", units, label);
 	}
@@ -402,7 +402,8 @@ public class Chassis {
 				leftError,
 				deltaLeft, //velocity for now
 				leadL.getOutputCurrent(), //current
-				leftPower
+				leftPower,
+				pdp.getVoltage()
 				);
 		
 		logfileRight.writeData(
@@ -412,7 +413,8 @@ public class Chassis {
 				rightError,
 				deltaRight, //velocity for now
 				leadR.getOutputCurrent(), //current
-				rightPower
+				rightPower,
+				pdp.getVoltage()
 				);
 
 	}

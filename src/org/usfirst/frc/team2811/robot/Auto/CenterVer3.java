@@ -47,20 +47,20 @@ public class CenterVer3 extends AutoSequence {
 	double right14;
 	
 	long t0 = 0000;
-	long t1 = 1000; // turn
-	long t2 = 3000; // to scale
-	long t3 = 2000; // back away from scale
-	long t4 = 750; // turn to cube pile
-	long t5 = 750; // forward to cube pile
-	long t6 = 750; // back from cube pile
-	long t7 = 750; // turn to the switch
-	long t8 = 2000; // forward to the switch
-	long t9 = 1500; // back away from the switch
-	long t10 = 750; // turn to the cube pile
-	long t11 = 750; // forward to grab cube
-	long t12 = 750; // back from cubes
-	long t13 = 750; // turn to the exchange
-	long t14 = 3000; // drive forward towards the exchange
+	long t1 = 1000*2; // turn
+	long t2 = 3000*2; // to scale
+	long t3 = 2000*2; // back away from scale
+	long t4 = 750*2; // turn to cube pile
+	long t5 = 750*2; // forward to cube pile
+	long t6 = 750*2; // back from cube pile
+	long t7 = 750*2; // turn to the switch
+	long t8 = 2000*2; // forward to the switch
+	long t9 = 1500*2; // back away from the switch
+	long t10 = 750*2; // turn to the cube pile
+	long t11 = 750*2; // forward to grab cube
+	long t12 = 750*2; // back from cubes
+	long t13 = 750*2; // turn to the exchange
+	long t14 = 3000*2; // drive forward towards the exchange
 	
 	public CenterVer3(boolean toLeft) {
 		
@@ -78,8 +78,8 @@ public class CenterVer3 extends AutoSequence {
 			right3 = -42;
 	
 			// 4 - turn to cube pile
-			left4 = 20;
-			right4 = -20;
+			left4 = 22-0.25;
+			right4 = -22-0.25;
 
 			// 5 - forward to grab cube
 			left5 = 18;
@@ -90,8 +90,8 @@ public class CenterVer3 extends AutoSequence {
 			right6 = -18;
 
 			// 7 - turn to switch
-			left7 = -22;
-			right7 = 22;
+			left7 = -12;
+			right7 = 12;
 
 			// 8 - drive to the switch
 			left8 = 42;
@@ -102,8 +102,8 @@ public class CenterVer3 extends AutoSequence {
 			right9 = -28;
 
 			// 10 - turn to cube pile
-			left10 = 22.5;
-			right10 = -22.5;
+			left10 = 8;
+			right10 = -8;
 
 			// 11 - forward to grab cube
 			left11 = 17;
@@ -132,12 +132,12 @@ public class CenterVer3 extends AutoSequence {
 			right2 = 104-5-1+0.5;
 	
 			// 3 - back away
-			left3 = -42;
-			right3 = -42;
+			left3 = -44;
+			right3 = -44;
 	
 			// 4 - turn to cube pile
-			left4 = -16;
-			right4 = 16;
+			left4 = -15;
+			right4 = 15;
 
 			// 5 - forward to grab cube
 			left5 = 18;
@@ -148,20 +148,20 @@ public class CenterVer3 extends AutoSequence {
 			right6 = -18;
 
 			// 7 - turn to switch
-			left7 = 20;
-			right7 = -20;
+			left7 = 15;
+			right7 = -15;
 
 			// 8 - drive to the switch
 			left8 = 42;
 			right8 = 42;
 
 			// 9 - back away
-			left9 = -28;
-			right9 = -28;
+			left9 = -25;
+			right9 = -25;
 
 			// 10 - turn to cube pile
-			left10 = -28;
-			right10 = 28;
+			left10 = -20-0.5;
+			right10 = 20-0.5;
 
 			// 11 - forward to grab cube
 			left11 = 17;
