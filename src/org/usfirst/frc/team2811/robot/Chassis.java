@@ -59,8 +59,8 @@ public class Chassis {
 	
 	//Drive configuration values. Will be overwritten by disabledperiodic
 	//also these values are bubkis
-	double scaleFactorL = 100; 
-	double scaleFactorR = 100; 
+	double scaleFactorL = 100; // OVERWRITTEN DO NOT USE
+	double scaleFactorR = 100; // OVERWRITTEN DO NOT USE 
 
 	double arcadeTurn = 0; 
 	double arcadePower = 0;
@@ -108,6 +108,10 @@ public class Chassis {
 
 			scaleFactorL = (27400 / 137) + 2 - 2; //is GOLD
 			scaleFactorR = (54400 / 137) + 1; //is GOLD
+			
+			//Factor =        (ticks/inches) * (expected/actual)
+			// scaleFactorL = () * (1);
+			// scaleFactorR = () * (1);
 			
 		}else {
 			//practice bot
