@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team2811.robot.FB;
@@ -31,10 +32,12 @@ public class Elevator {
 	 double softLimit = -2000;
 	 double autoActiveStep = 3;
 	 double autoActiveTime = 1;
+	 double fbGain = 0.005;
 	 
 	 double autoPosition = 0.0; //Where you want to go to during auto.
 	 double currentPos = 0.0;
 	 
+	 SimpleCsvLogger logfile = new SimpleCsvLogger();
 	 
 	 public Elevator() {
 		if(prefs.getBoolean("compbot", Robot.compbot)) {
@@ -51,7 +54,8 @@ public class Elevator {
 		eMotorA.configOpenloopRamp(voltageRampRate, 30);
 		eMotorB.configOpenloopRamp(voltageRampRate, 30);
 		}
-	
+	 
+	 	
 	public enum Mode{ 
 		MANUALVELOCITY, MANUALPOSITION, BUTTON, HOMING //Used to change how the elevator is controlled
 	, DISABLED}
@@ -68,8 +72,19 @@ public class Elevator {
 	
 	/** Fetch preferences and adjust variables as needed */
 	public void disabledPeriodic() {
+		
+		if(prefs.getBoolean("compbot", Robot.compbot)) {
+			//comp bot
+			fbGain = 0.005;
+		}
+		else {
+			//prac bot
+			fbGain = 0.007;
+		}
+		
 		maxPos = prefs.getDouble("elevatorTopLimit", 92000);
 		SmartDashboard.putNumber("ElevatorPos (Disabled)", eMotorA.getSelectedSensorPosition(0));
+		logfile.close();
 	}
 	
 	public void bind() {
@@ -132,9 +147,16 @@ public class Elevator {
 		double ticks() {return this.ticks;};
 	}
 	
-	void newUpdate() {
+	 public void init() {
+		 String[] label = {"time","target","position","error","velocity","current","%output"};
+		 String[] units = {"sec","ticks","ticks","ticks","ticks/sec","amps","-1..1"};
+		 logfile.init("elevator", units, label);
+	 }
 
-		
+	double lastTime = 0;
+	double lastPos = 0;
+	
+	void newUpdate() {
 		if(prefs.getBoolean("compbot", Robot.compbot)) {
 			//comp bot
 			currentPos = eMotorA.getSelectedSensorPosition(0);
@@ -147,7 +169,7 @@ public class Elevator {
 		switch(mode) {
 		case MANUALPOSITION:
 			Utilities.clamp(elevatorPos, minPos, maxPos);
-			eVelocity = FB.FB(elevatorPos, currentPos, 0.005);
+			eVelocity = FB.FB(elevatorPos, currentPos, fbGain);
 			//expected fallthrough to velocity mode
 		case MANUALVELOCITY:
 			//no need to manipulate velocity
@@ -181,13 +203,30 @@ public class Elevator {
 			//eVelocity = -eVelocity; //maybE?
 		}
 		else {
+			eVelocity *= 1;			
+			//eVelocity *= -0.5;	 //brain in box	
 		}
 		
-		if(prefs.getBoolean("compbot", Robot.compbot)) {
-			eVelocity *= 1;			
-		}
-		else {
-		}
+		//write any number of things to this
+//		 String[] label = {"time","target","position","error","velocity","current","%output"};
+//		 String[] units = {"sec","ticks","ticks","ticks","ticks/sec","amps","-1..1"};
+
+
+		double deltaPos = lastPos - eMotorA.getSelectedSensorPosition(0);
+		lastPos = eMotorA.getSelectedSensorPosition(0);
+
+		double deltaTime = Timer.getFPGATimestamp() - lastTime;
+		lastTime = Timer.getFPGATimestamp();
+
+		logfile.writeData(
+				Timer.getMatchTime(),
+				elevatorPos,
+				currentPos,
+				elevatorPos-currentPos,
+				deltaPos/deltaTime, //velocity for now
+				eMotorA.getOutputCurrent(), //current
+				eVelocity
+				);
 		
 		eMotorA.set(ControlMode.PercentOutput, eVelocity);
 		eMotorB.set(ControlMode.PercentOutput, eVelocity);
@@ -195,7 +234,7 @@ public class Elevator {
 		SmartDashboard.putNumber("Elevator Current Position", currentPos);
 		SmartDashboard.putNumber("Elevator Desired Position", elevatorPos);
 		SmartDashboard.putNumber("Elevator Voltage", eMotorA.getMotorOutputVoltage());
-		SmartDashboard.putNumber("Elevator Velocity", -eVelocity);
+		SmartDashboard.putNumber("Elevator Velocity", eVelocity);
 		SmartDashboard.putBoolean("Elevator Limit Switch is pressed", !LimitSwitch.get());
 	}
 }

@@ -63,9 +63,6 @@ public class CenterVer3 extends AutoSequence {
 	long t14 = 3000; // drive forward towards the exchange
 	
 	public CenterVer3(boolean toLeft) {
-		//This auto works reliably with old, bad gains. Preserve these gains when this auto is being run
-		Robot.drive.setProfileGains(0.026,0.022);
-		Robot.drive.setProfileCalibration(199.8, 405.4); //Possibly was 400.4?
 		
 		if(toLeft) {			
 			// 1 - turn to face switch
@@ -127,7 +124,7 @@ public class CenterVer3 extends AutoSequence {
 		
 		else {
 			// 1 - turn to face switch
-			left1 = 19;
+			left1 = 15;
 			right1 = 1;
 
 			// 2 - drive to the switch
@@ -139,8 +136,8 @@ public class CenterVer3 extends AutoSequence {
 			right3 = -42;
 	
 			// 4 - turn to cube pile
-			left4 = -20;
-			right4 = 20;
+			left4 = -16;
+			right4 = 16;
 
 			// 5 - forward to grab cube
 			left5 = 18;
@@ -151,8 +148,8 @@ public class CenterVer3 extends AutoSequence {
 			right6 = -18;
 
 			// 7 - turn to switch
-			left7 = 31;
-			right7 = -31;
+			left7 = 20;
+			right7 = -20;
 
 			// 8 - drive to the switch
 			left8 = 42;
@@ -191,6 +188,7 @@ public class CenterVer3 extends AutoSequence {
 	 * For now, leave autos on a time-based scale to make migration easier. We will worry about event-driven autos later
 	 * eg, if(have-cube) then intake.close() then elevator.move_pos(switch) then drive.setProfile(24,24,1000)
 	 */
+	
 	public void run() {
 
 		if(timer.atTime(t0)){ // step 1
@@ -205,7 +203,7 @@ public class CenterVer3 extends AutoSequence {
 			Robot.drive.setProfile(left3, right3, t3);
 		}
 		if(timer.atTime(t3+t2+t1)) { // step 4
-			Robot.elevator.setPos(ElevatorPosition.FLOOR);
+//			Robot.elevator.setPos(ElevatorPosition.FLOOR);
 			Robot.intake.stopMotor();
 			Robot.intake.squeezeOpen(true);
 			Robot.drive.setProfile(left4, right4, t4);
@@ -231,7 +229,7 @@ public class CenterVer3 extends AutoSequence {
 			Robot.drive.setProfile(left9, right9, t9);
 		}
 		if(timer.atTime(t9+t8+t7+t6+t5+t4+t3+t2+t1)) { // step 10
-			Robot.elevator.setPos(ElevatorPosition.FLOOR);
+//			Robot.elevator.setPos(ElevatorPosition.FLOOR);
 			Robot.intake.stopMotor();
 			Robot.intake.squeezeOpen(true);
 			Robot.drive.setProfile(left10, right10, t10);

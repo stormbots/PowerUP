@@ -46,7 +46,7 @@ public class Robot extends IterativeRobot {
 	public static Climber climber = new Climber();
 	Lighting lighting = new Lighting();
 	public OI oi = new OI();
-	static boolean compbot = true;
+	static boolean compbot = false;
 	
 	AutoSequence autoChoice = new SideEscape();
 	AutoSelector autoSelector = new AutoSelector();
@@ -87,9 +87,12 @@ public class Robot extends IterativeRobot {
 		drive.shiftLow();
 		intake.tiltBackward(false);
 		elevator.setMode(Elevator.Mode.MANUALPOSITION);
-		elevator.resetTo(ElevatorPosition.AUTO_STARTUP);
+		//elevator.resetTo(ElevatorPosition.AUTO_STARTUP);
 		elevator.setPos(ElevatorPosition.SWITCH);
 		intake.squeezeOpen(false);
+		
+		elevator.init();
+		drive.autonomousInit();
 	}
 
 	/**
@@ -160,7 +163,7 @@ public class Robot extends IterativeRobot {
 		elevator.disabledPeriodic();
 		intake.disabledPeriodic();
 		climber.disabledPeriodic();
-		
+				
 		SmartDashboard.putBoolean("Am I Compbot?", Preferences.getInstance().getBoolean("compbot", Robot.compbot));
 	}
 	
