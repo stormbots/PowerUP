@@ -81,7 +81,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {		
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
-		autoChoice = new SideScale(false); // COMMENT OUT BEFORE GOING TO THE FIELD
+//		autoChoice = new SideScale(false); // COMMENT OUT BEFORE GOING TO THE FIELD
 		
 		// Do auto mode initialization 
 		drive.shiftLow();
@@ -119,6 +119,7 @@ public class Robot extends IterativeRobot {
 		drive.setMode(Mode.ARCADE);
 		elevator.setMode(Elevator.Mode.MANUALPOSITION);
 		intake.tiltBackward(false);
+		intake.squeezeOpen(false);
 		climber.setMode(Climber.Mode.MANUAL);
 	}
 
