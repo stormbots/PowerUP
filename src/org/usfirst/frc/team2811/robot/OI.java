@@ -2,6 +2,9 @@ package org.usfirst.frc.team2811.robot;
 
 import org.usfirst.frc.team2811.robot.Elevator.Mode;
 import org.usfirst.frc.team2811.robot.ClimberSequence.ClimberModeVer1;
+import org.usfirst.frc.team2811.robot.ClimberSequence.ClimberModeVer2;
+import org.usfirst.frc.team2811.robot.ClimberSequence.ClimberModeVer3;
+import org.usfirst.frc.team2811.robot.ClimberSequence.ClimberModeVer4;
 import org.usfirst.frc.team2811.robot.ClimberSequence.ClimberSequence;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -18,7 +21,7 @@ public class OI {
 	Joystick functions = new Joystick(3);
 	Preferences prefs = Preferences.getInstance();
 	
-	ClimberSequence climberSequence = new ClimberModeVer1();
+	ClimberSequence climberSequence = new ClimberModeVer4();
 	boolean climberEngaged = false;
 	
 	OI(){

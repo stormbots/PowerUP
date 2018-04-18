@@ -110,8 +110,8 @@ public class Chassis {
 			scaleFactorR = (54400 / 137) + 1; //is GOLD
 			
 			//Factor =        (ticks/inches) * (expected/actual)
-			// scaleFactorL = () * (1);
-			// scaleFactorR = () * (1);
+			scaleFactorL = (30815.0/153.125) * (130/129) * (130/129.5);
+			scaleFactorR = (60935.0/152.125) * (130/128.5);
 			
 		}else {
 			//practice bot
@@ -302,15 +302,14 @@ public class Chassis {
 			
 			if(prefs.getBoolean("compbot", Robot.compbot)) {
 				//compbot
-				leftPower = left345.getVelPosFbFF(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), leftFBGain); // 24 is GOLD
-				rightPower = right345.getVelPosFbFF(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), rightFBGain); // 24 is GOLD
+				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), leftFBGain); // 24 is GOLD
+				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), rightFBGain); // 24 is GOLD
 				System.out.println( right345.getVel(profileTimer.getSeconds()));
 
 				SmartDashboard.putNumber("Chassis Profile Left",         leftPower);
 				SmartDashboard.putNumber("Chassis Profile Right",        rightPower);
 				SmartDashboard.putNumber("Chassis Profile Left Sensor",  leadL.getSelectedSensorPosition(0));
-				SmartDashboard.putNumber("Chas"
-						+ "sis Profile Sensor",       leadR.getSelectedSensorPosition(0));
+				SmartDashboard.putNumber("Chassis Profile Sensor",       leadR.getSelectedSensorPosition(0));
 			
 			}
 			else {

@@ -137,9 +137,9 @@ public class Elevator {
 		SCALEHIGH(98_800),
 		AUTO_STARTUP(38_000),
 		CLIMB_WALL(85_300), //Comp Bot
-		CLIMB_AWAY(83_421.875+3_500) //Comp Bot
-		//CLIMB_WALL(42_000), //Practice Bot
-		//CLIMB_AWAY(42_000), //Practice Bot
+		CLIMB_AWAY(83_421.875+3_500), //Comp Bot
+		CLIMB_MIN(55_000), //Practice Bot // used only for climbing
+		CLIMB_MAX(98_800), //Practice Bot // used only for climbing
 		;
 		
 		double ticks = 0;

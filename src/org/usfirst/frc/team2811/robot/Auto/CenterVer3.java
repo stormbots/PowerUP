@@ -41,26 +41,22 @@ public class CenterVer3 extends AutoSequence {
 	double right11;
 	double left12;
 	double right12;
-	double left13;
-	double right13;
-	double left14;
-	double right14;
+	
+	long ts = 1;
 	
 	long t0 = 0000;
-	long t1 = 1000*2; // turn
-	long t2 = 3000*2; // to scale
-	long t3 = 2000*2; // back away from scale
-	long t4 = 750*2; // turn to cube pile
-	long t5 = 750*2; // forward to cube pile
-	long t6 = 750*2; // back from cube pile
-	long t7 = 750*2; // turn to the switch
-	long t8 = 2000*2; // forward to the switch
-	long t9 = 1500*2; // back away from the switch
-	long t10 = 750*2; // turn to the cube pile
-	long t11 = 750*2; // forward to grab cube
-	long t12 = 750*2; // back from cubes
-	long t13 = 750*2; // turn to the exchange
-	long t14 = 3000*2; // drive forward towards the exchange
+	long t1 = 1000*ts; // turn							// 1000
+	long t2 = 3000*ts; // to scale						// 3000
+	long t3 = 2000*ts; // back away from scale			// 2000
+	long t4 = 750*ts; // turn to cube pile				// 1000
+	long t5 = 750*ts; // forward to cube pile			// 750
+	long t6 = 750*ts; // back from cube pile			// 750
+	long t7 = 750*ts; // turn to the switch				// 1000
+	long t8 = 2000*ts; // forward to the switch			// 2000
+	long t9 = 1500*ts; // back away from the switch		// 1500
+	long t10 = 750*ts; // turn to the cube pile			// 1000
+	long t11 = 750*ts; // forward to grab cube			// 750 ends at 14,750
+	long t12 = 750*ts; // back from cubes				// 750 ends at 15,500
 	
 	public CenterVer3(boolean toLeft) {
 		
@@ -112,14 +108,6 @@ public class CenterVer3 extends AutoSequence {
 			// 12 - back away from cube pile
 			left12 = -17;
 			right12 = -17;
-			
-			// 13 - turn to exchange
-			left13 = 0; // 19
-			right13 = 0; // -19
-
-			// 14 - forward to deploy the cube into the exchange
-			left14 = 0; // 40
-			right14 = 0; // 40
 		}
 		
 		else {
@@ -170,14 +158,6 @@ public class CenterVer3 extends AutoSequence {
 			// 12 - back away from cube pile
 			left12 = -17;
 			right12 = -17;
-			
-			// 13 - turn to exchange
-			left13 = 0; // -19
-			right13 = 0; // 19
-
-			// 14 - forward to deploy the cube into the exchange
-			left14 = 0; // 40
-			right14 = 0; // 40
 		}
 	}
 	
@@ -203,7 +183,7 @@ public class CenterVer3 extends AutoSequence {
 			Robot.drive.setProfile(left3, right3, t3);
 		}
 		if(timer.atTime(t3+t2+t1)) { // step 4
-//			Robot.elevator.setPos(ElevatorPosition.FLOOR);
+			Robot.elevator.setPos(ElevatorPosition.FLOOR);
 			Robot.intake.stopMotor();
 			Robot.intake.squeezeOpen(true);
 			Robot.drive.setProfile(left4, right4, t4);
@@ -229,7 +209,7 @@ public class CenterVer3 extends AutoSequence {
 			Robot.drive.setProfile(left9, right9, t9);
 		}
 		if(timer.atTime(t9+t8+t7+t6+t5+t4+t3+t2+t1)) { // step 10
-//			Robot.elevator.setPos(ElevatorPosition.FLOOR);
+			Robot.elevator.setPos(ElevatorPosition.FLOOR);
 			Robot.intake.stopMotor();
 			Robot.intake.squeezeOpen(true);
 			Robot.drive.setProfile(left10, right10, t10);
@@ -241,13 +221,6 @@ public class CenterVer3 extends AutoSequence {
 		if(timer.atTime(t11+t10+t9+t8+t7+t6+t5+t4+t3+t2+t1)) { // step 12
 			Robot.intake.squeezeOpen(false);
 			Robot.drive.setProfile(left12, right12, t12);
-		}
-		if(timer.atTime(t12+t11+t10+t9+t8+t7+t6+t5+t4+t3+t2+t1)) { // step 13
-			Robot.intake.stopMotor();
-			Robot.drive.setProfile(left13, right13, t13);
-		}
-		if(timer.atTime(t13+t12+t11+t10+t9+t8+t7+t6+t5+t4+t3+t2+t1)) { // step 14
-			Robot.drive.setProfile(left14, right14, t14);
 		}
 		
 		if(timer.atTime(14900)) {

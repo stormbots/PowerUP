@@ -46,7 +46,7 @@ public class Robot extends IterativeRobot {
 	public static Climber climber = new Climber();
 	Lighting lighting = new Lighting();
 	public OI oi = new OI();
-	static boolean compbot = false;
+	static boolean compbot = true;
 	
 	AutoSequence autoChoice = new SideEscape();
 	AutoSelector autoSelector = new AutoSelector();
@@ -81,7 +81,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {		
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
-//		autoChoice = new SideScale(false); // COMMENT OUT BEFORE GOING TO THE FIELD
+//		autoChoice = new SideEscape(); // COMMENT OUT BEFORE GOING TO THE FIELD
 		
 		// Do auto mode initialization 
 		drive.shiftLow();
@@ -107,6 +107,7 @@ public class Robot extends IterativeRobot {
 		drive.newUpdate();
 		elevator.newUpdate();
 		intake.newUpdate();
+		SmartDashboard.putNumber("PDP voltage", drive.pdp.getVoltage());
 	}
 	
 	/** Ensure robot is ready for human operator in matches */
@@ -140,6 +141,7 @@ public class Robot extends IterativeRobot {
 		intake.newUpdate();
 		climber.newUpdate();
 		
+		SmartDashboard.putNumber("PDP voltage", drive.pdp.getVoltage());
 //		SmartDashboard.putNumber("Timer Per Loop",timer1.timer)
 		
 	}

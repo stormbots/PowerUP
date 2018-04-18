@@ -28,7 +28,7 @@ public class Climber {
 	Mode mode = Mode.CLOSEDLOOP;
 	private double power = 0;
 	//private double maxClimbHeight = 124162;//works with lots of slack
-	private double maxClimbHeight = 94_000 + 8_000 + 2_000;
+	private double maxClimbHeight = 94_000 + 8_000 + 2_000 + 2_000 + 1_000 + 2_000;
 	//private double maxClimbHeight = 4000;
 	private double targetPosition = 0;
 		
@@ -116,7 +116,7 @@ public class Climber {
 		if(detached) return;
 		detached = true;
 		//TODO: May need to reverse first and second arguments?
-		mtr1.setSelectedSensorPosition(0, -6_000, 20);
+		mtr1.setSelectedSensorPosition(0, -2_000, 20);
 	}
 
 }
