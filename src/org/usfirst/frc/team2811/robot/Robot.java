@@ -87,7 +87,7 @@ public class Robot extends IterativeRobot {
 		drive.shiftLow();
 		intake.tiltBackward(false);
 		elevator.setMode(Elevator.Mode.MANUALPOSITION);
-		//elevator.resetTo(ElevatorPosition.AUTO_STARTUP);
+		elevator.resetTo(ElevatorPosition.AUTO_STARTUP);
 		elevator.setPos(ElevatorPosition.SWITCH);
 		intake.squeezeOpen(false);
 		
@@ -140,7 +140,6 @@ public class Robot extends IterativeRobot {
 		elevator.newUpdate();
 		intake.newUpdate();
 		climber.newUpdate();
-		
 		SmartDashboard.putNumber("PDP voltage", drive.pdp.getVoltage());
 //		SmartDashboard.putNumber("Timer Per Loop",timer1.timer)
 		

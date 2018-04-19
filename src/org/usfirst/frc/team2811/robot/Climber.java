@@ -28,7 +28,7 @@ public class Climber {
 	Mode mode = Mode.CLOSEDLOOP;
 	private double power = 0;
 	//private double maxClimbHeight = 124162;//works with lots of slack
-	private double maxClimbHeight = 94_000 + 8_000 + 2_000 + 2_000 + 1_000 + 2_000;
+	private double maxClimbHeight = 75435 + 51666;//94_000 + 8_000 + 2_000 + 2_000 + 1_000 + 2_000 + 3_000 + 3_000;
 	//private double maxClimbHeight = 4000;
 	private double targetPosition = 0;
 		
@@ -59,7 +59,7 @@ public class Climber {
 			
 			//positive motor output generates negative direction on climber
 			power = FB.FB(targetPosition, mtr1.getSelectedSensorPosition(0), 0.005);
-			
+//			power = Utilities.clamp(power, -0.3, 0.3);
 			break;
 	
 	

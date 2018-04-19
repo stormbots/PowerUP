@@ -22,14 +22,14 @@ import org.usfirst.frc.team2811.robot.TinyTimer;
 public class ClimberModeVer4 extends ClimberSequence {
 
 	TinyTimer timer = new TinyTimer();	
-	double fwd = 6.75+2.5;
+	double fwd = 6.75+2.5+2-0.5;
 	
 	long t0 = 0000;
-	long driveTime = 1000;
-	long t1 = 5000; // 5000 works, 7000 is for testing
-	long t2 = 250;
-	long t3 = 5000;
-	long t4 = 6000;
+	long driveTime = 1200;
+	long t1 = 5500; // 5000 works, 7000 is for testing
+	long t2 = 1500;
+	long t3 = 500;
+
 	
 	
 	double climberTarget = 1;
@@ -42,7 +42,7 @@ public class ClimberModeVer4 extends ClimberSequence {
 		timer = new TinyTimer(); //instead of reset, create new one to avoid a atTime(0) bug
 		Robot.drive.resetEnc();
 		Robot.drive.setMode(Chassis.Mode.PROFILE);
-		Robot.elevator.setMaxHeight(ElevatorPosition.SCALEHIGH);
+		Robot.elevator.setMaxHeight(ElevatorPosition.SCALEHIGH); // SCALEHIGH
 		Robot.elevator.setMinHeight(ElevatorPosition.SWITCH);
 		Robot.climber.setMode(Climber.Mode.CLOSEDLOOP);			
 		Robot.climber.setPosition(climberTarget);
@@ -64,7 +64,7 @@ public class ClimberModeVer4 extends ClimberSequence {
 		Robot.climber.setPosition(climberTarget);
 		Robot.elevator.setPos(elevatorTarget);
 
-		if(timer.getMillis()<t1) {
+		if(timer.getMillis() > 500 && timer.getMillis()<t1) {
 			climberTarget = 1;
 			double height = Robot.climber.getClimberPosition();
 			elevatorTarget = height;
@@ -82,14 +82,15 @@ public class ClimberModeVer4 extends ClimberSequence {
 			// tilt backwards really quick
 			Robot.intake.tiltBackward(true);
 		}
-		if(timer.atTime(driveTime+t1)){ // step 3
+		if(timer.atTime(driveTime+t2+t1)){ // step 3
 			// take the elevator down and detach the hook
 			climberTarget = 0.3;
 			elevatorTarget = 0;
-		}
-		if(timer.atTime(driveTime+t2+t1)){ // step 4
-			Robot.drive.setMode(Mode.ARCADE);
 			// pull us up! 
+		}
+		if(timer.atTime(driveTime+t3+t2+t1)){ // step 4
+			Robot.drive.setMode(Mode.ARCADE);
+
 		}
 
 		timer.update();

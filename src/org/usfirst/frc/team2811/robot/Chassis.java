@@ -282,7 +282,7 @@ public class Chassis {
 	 */
 	public void newUpdate(){
 		//Generate a power modifier to ensure we avoid brownouts
-		double mod = Utilities.lerp(pdp.getVoltage(), 8.25, 6.5, 1.0, 0.0);
+		double mod = Utilities.lerp(pdp.getVoltage(), 8, 6.5, 1.0, 0.0);
 		mod = Utilities.clamp(mod, 0, 1);
 
 		SmartDashboard.putString("Chassis Mode", mode.toString());
@@ -318,8 +318,8 @@ public class Chassis {
 				rightPower = -right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), rightFBGain);
 			}
 
-			SmartDashboard.putNumber("Chassis Profile Left",         leftPower);
-			SmartDashboard.putNumber("Chassis Profile Right",        rightPower);
+			SmartDashboard.putNumber("Chassis Left Power",         leftPower);
+			SmartDashboard.putNumber("Chassis Right Power",        rightPower);
 			SmartDashboard.putNumber("Chassis Profile Left Sensor",  leadL.getSelectedSensorPosition(0));
 			SmartDashboard.putNumber("Chassis Profile Sensor",       leadR.getSelectedSensorPosition(0));
 			
@@ -419,7 +419,13 @@ public class Chassis {
 				rightPower,
 				pdp.getVoltage()
 				);
-
+		
+		SmartDashboard.putNumber("leadL", leadL.getOutputCurrent());
+		SmartDashboard.putNumber("leadR", leadR.getOutputCurrent());		
+		SmartDashboard.putNumber("rearL", rearL.getOutputCurrent());
+		SmartDashboard.putNumber("rearR", rearR.getOutputCurrent());
+		SmartDashboard.putNumber("frontL", frontL.getOutputCurrent());
+		SmartDashboard.putNumber("frontR", frontR.getOutputCurrent());
 	}
 	
 	/** Set the the arcadeDrive functions

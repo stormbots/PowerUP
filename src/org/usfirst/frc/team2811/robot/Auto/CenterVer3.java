@@ -45,16 +45,16 @@ public class CenterVer3 extends AutoSequence {
 	long ts = 1;
 	
 	long t0 = 0000;
-	long t1 = 1000*ts; // turn							// 1000
+	long t1 = 1000+500*ts; // turn							// 1000
 	long t2 = 3000*ts; // to scale						// 3000
 	long t3 = 2000*ts; // back away from scale			// 2000
-	long t4 = 750*ts; // turn to cube pile				// 1000
+	long t4 = 750+500*ts; // turn to cube pile				// 1000
 	long t5 = 750*ts; // forward to cube pile			// 750
 	long t6 = 750*ts; // back from cube pile			// 750
-	long t7 = 750*ts; // turn to the switch				// 1000
+	long t7 = 750+500*ts; // turn to the switch				// 1000
 	long t8 = 2000*ts; // forward to the switch			// 2000
 	long t9 = 1500*ts; // back away from the switch		// 1500
-	long t10 = 750*ts; // turn to the cube pile			// 1000
+	long t10 = 750+500*ts; // turn to the cube pile			// 1000
 	long t11 = 750*ts; // forward to grab cube			// 750 ends at 14,750
 	long t12 = 750*ts; // back from cubes				// 750 ends at 15,500
 	
@@ -63,11 +63,11 @@ public class CenterVer3 extends AutoSequence {
 		if(toLeft) {			
 			// 1 - turn to face switch
 			left1 = 1;
-			right1 = 18;
+			right1 = 17;
 
 			// 2 - drive to the switch
-			left2 = 104-4.5;
-			right2 = 104-4.5;
+			left2 = 104-4.5+2;
+			right2 = 104-4.5+2;
 	
 			// 3 - back away
 			left3 = -44;
@@ -90,8 +90,8 @@ public class CenterVer3 extends AutoSequence {
 			right7 = 14;
 
 			// 8 - drive to the switch
-			left8 = 47;
-			right8 = 47;
+			left8 = 49;
+			right8 = 49;
 
 			// 9 - back away
 			left9 = -25;
@@ -112,7 +112,7 @@ public class CenterVer3 extends AutoSequence {
 		
 		else {
 			// 1 - turn to face switch
-			left1 = 15;
+			left1 = 15+3.5;
 			right1 = 1;
 
 			// 2 - drive to the switch
@@ -120,8 +120,8 @@ public class CenterVer3 extends AutoSequence {
 			right2 = 104-5-1+0.5;
 	
 			// 3 - back away
-			left3 = -44;
-			right3 = -44;
+			left3 = -44+2;
+			right3 = -44+2;
 	
 			// 4 - turn to cube pile
 			left4 = -15+1;
@@ -140,8 +140,8 @@ public class CenterVer3 extends AutoSequence {
 			right7 = -15;
 
 			// 8 - drive to the switch
-			left8 = 42+0.5;
-			right8 = 42+0.5;
+			left8 = 42+0.5+2;
+			right8 = 42+0.5+2;
 
 			// 9 - back away
 			left9 = -25;
