@@ -172,8 +172,8 @@ public class Chassis {
 	}
 	
 	void autonomousInit() {
-		String[] label = {"time","target","position","error","velocity","current","%output","sys voltage"};
-		String[] units = {"sec","ticks","ticks","ticks","ticks/sec","amps","-1..1","Volts"};
+		String[] label = {"time","target","position","error","velocity","%output","current lead","current rear","current front","sys voltage"};
+		String[] units = {"sec","ticks","ticks","ticks","ticks/sec","-1..1","amps","amps","amps","Volts"};
 		logfileLeft.init("chassisLeft", units, label);
 		logfileRight.init("chassisRight", units, label);
 	}
@@ -401,11 +401,13 @@ public class Chassis {
 		logfileLeft.writeData(
 				Timer.getMatchTime(),
 				left345.getPos(profileTimer.getSeconds()),
-				leadL.getSelectedSensorPosition(0),
+				-leadL.getSelectedSensorPosition(0),
 				leftError,
 				deltaLeft, //velocity for now
-				leadL.getOutputCurrent(), //current
 				leftPower,
+				leadL.getOutputCurrent(), //current
+				rearL.getOutputCurrent(), //current
+				frontL.getOutputCurrent(), //current
 				pdp.getVoltage()
 				);
 		
@@ -415,8 +417,10 @@ public class Chassis {
 				leadR.getSelectedSensorPosition(0),
 				rightError,
 				deltaRight, //velocity for now
-				leadR.getOutputCurrent(), //current
 				rightPower,
+				leadR.getOutputCurrent(), //current
+				rearR.getOutputCurrent(), //current
+				frontR.getOutputCurrent(), //current
 				pdp.getVoltage()
 				);
 		

@@ -224,7 +224,7 @@ public class Elevator {
 				currentPos,
 				elevatorPos-currentPos,
 				deltaPos/deltaTime, //velocity for now
-				eMotorA.getOutputCurrent(), //current
+				eMotorA.getOutputCurrent()+eMotorB.getOutputCurrent(), //current
 				eVelocity
 				);
 		

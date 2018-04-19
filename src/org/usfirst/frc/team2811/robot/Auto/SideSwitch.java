@@ -19,25 +19,41 @@ public class SideSwitch extends AutoSequence {
 	double right1;
 	double left2;
 	double right2;
+	double left3;
+	double right3;
 	double backward = -24;
+	
+	long ts = 1;
+	
+	long t0 = 0000;
+	long t1 = 5000*ts;
+	long t2 = 1000*ts;
+	long t3 = 1000*ts;
+	long t4 = 1000*ts;
 	
 	public SideSwitch(boolean isLeft) {
 		double inside1 = 124;
 		double outside1 = 124;
 		double inside2 = 11;
 		double outside2 = 59;
+		double inside3 = 18;
+		double outside3 = 18;
 		
 		if(isLeft) {
 			left1 = outside1;
 			right1 = inside1;
 			left2 = outside2;
 			right2 = inside2;
+			left3 = outside3;
+			right3 = inside3;
 		}
 		else {
 			left1 = inside1;
 			right1 = outside1;
 			left2 = inside2;
 			right2 = outside2;
+			left3 = inside3;
+			right3 = outside3;
 		}
 	}
 	
@@ -51,23 +67,25 @@ public class SideSwitch extends AutoSequence {
 	public void run() {
 		
 		//Example: Approximate movements to drop on the switch then back up
-		if(timer.atTime(0)){
-			Robot.drive.setProfile(left1, right1, 5000);
+		if(timer.atTime(t0)){
+			Robot.drive.setProfile(left1, right1, t1);
 			Robot.elevator.setPos(ElevatorPosition.SWITCH);
 		}
-		if(timer.atTime(5000)) {
-			Robot.drive.setProfile(left2, right2, 1000);
+		if(timer.atTime(t1)) {
+			Robot.drive.setProfile(left2, right2, t2);
 		}
-		if(timer.atTime(7000)) {
+		if(timer.atTime(t2+t1)) {
+			Robot.drive.setProfile(left3, right3, t3);
+		}
+		if(timer.atTime(t3+t2+t1)) {
 			Robot.intake.ejectCube();
-			Robot.intake.squeezeOpen(true);
-			Robot.drive.setProfile(backward, backward, 2000);
+			Robot.drive.setProfile(backward, backward, t4);
 		}
-		if(timer.atTime(7000)) {
+		if(timer.atTime(t4+t3+t2+t1)) {
 			Robot.intake.stopMotor();
-			Robot.elevator.setPos(ElevatorPosition.SWITCH);
+			Robot.elevator.setPos(ElevatorPosition.FLOOR);
 		}
-		if(timer.atTime(8500)) {
+		if(timer.atTime(14900)) {
 			Robot.drive.setMode(Chassis.Mode.ARCADE);
 		}
 		
