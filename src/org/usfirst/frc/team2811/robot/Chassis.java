@@ -112,7 +112,8 @@ public class Chassis {
 			//Factor =        (ticks/inches) * (expected/actual)
 			scaleFactorL = (30815.0/153.125) * (130/129) * (130/129.5);
 			scaleFactorR = (60935.0/152.125) * (130/128.5);
-			
+
+			scaleFactorL*=2; //account for the stupid encoder
 		}else {
 			//practice bot
 			//good, but 1/2" short over 130 inches
@@ -302,7 +303,7 @@ public class Chassis {
 			
 			if(prefs.getBoolean("compbot", Robot.compbot)) {
 				//compbot
-				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), leftFBGain); // 24 is GOLD
+				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0)*2, leftFBGain); // 24 is GOLD
 				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), rightFBGain); // 24 is GOLD
 				System.out.println( right345.getVel(profileTimer.getSeconds()));
 
