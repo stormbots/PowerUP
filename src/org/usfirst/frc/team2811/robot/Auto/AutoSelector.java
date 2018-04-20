@@ -91,11 +91,12 @@ public class AutoSelector {
 		 */
 		robotLocation = startPosition.getSelected();
 			if(robotLocation==RobotLocation.AUTO) {
-				switch(DriverStation.getInstance().getLocation()) {
-				case 1: robotLocation = RobotLocation.LEFT;break;
-				case 2: robotLocation = RobotLocation.CENTER;break;
-				case 3: robotLocation = RobotLocation.RIGHT;break;
-				}
+				return new SideEscape();
+//				switch(DriverStation.getInstance().getLocation()) {
+//				case 1: robotLocation = RobotLocation.LEFT;break;
+//				case 2: robotLocation = RobotLocation.CENTER;break;
+//				case 3: robotLocation = RobotLocation.RIGHT;break;
+//				}
 			}
 
 		/*
@@ -105,10 +106,10 @@ public class AutoSelector {
 		if(robotLocation == RobotLocation.CENTER) {
 			targetLocation = TargetLocation.SWITCH;
 			if(switchConfig == SwitchConfig.LEFT) {
-				return new CenterVer3(true);
+				return new CenterVer4(true);
 			}
 			else {
-				return new CenterVer3(false);
+				return new CenterVer4(false);
 			}
 		}
 		else if(robotLocation == RobotLocation.LEFT) {

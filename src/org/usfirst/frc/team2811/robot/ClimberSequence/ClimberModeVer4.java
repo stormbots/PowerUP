@@ -22,7 +22,7 @@ import org.usfirst.frc.team2811.robot.TinyTimer;
 public class ClimberModeVer4 extends ClimberSequence {
 
 	TinyTimer timer = new TinyTimer();	
-	double fwd = 6.75+2.5+2-0.5;
+	double fwd = 6.75+4;
 	
 	long t0 = 0000;
 	long driveTime = 1200;
@@ -42,6 +42,8 @@ public class ClimberModeVer4 extends ClimberSequence {
 		timer = new TinyTimer(); //instead of reset, create new one to avoid a atTime(0) bug
 		Robot.drive.resetEnc();
 		Robot.drive.setMode(Chassis.Mode.PROFILE);
+		Robot.drive.setProfile(0, 0, 0);
+		
 		Robot.elevator.setMaxHeight(ElevatorPosition.SCALEHIGH); // SCALEHIGH
 		Robot.elevator.setMinHeight(ElevatorPosition.SWITCH);
 		Robot.climber.setMode(Climber.Mode.CLOSEDLOOP);			

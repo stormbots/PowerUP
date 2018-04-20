@@ -37,7 +37,7 @@ public class SideScaleVer3 extends AutoSequence {
 	long t0 = 0000;
 	long raiseScale = 4000; // 3.5 seconds to raise the scale
 	long t1 = 7500; // 7.5 seconds to move to scale
-	long t2 = 500; // pivot towards scale
+	long t2 = 1000; // pivot towards scale
 	long t3 = 750; // pivot towards switch cubes
 	long t4 = 3250; // drive to cube
 	long elevatorDelay = 1500; // 0.75 seconds after drive started
@@ -52,16 +52,16 @@ public class SideScaleVer3 extends AutoSequence {
 		double outside1 = 270-6;
 		
 		// 2 - small rotation about the center
-		double inside2 = -8;
-		double outside2 = 8;
+		double inside2 = -7;
+		double outside2 = 7;
 		
 		// 3 - something less than 90 degree rotation about the center
 		double inside3 = -60;
 		double outside3 = 60;
 		
 		// 4 - forward to the 2nd cube
-		double inside4 = -60; // 80 to go forward
-		double outside4 = -60; // 80 to go forward
+		double inside4 = -35; // 80 to go forward
+		double outside4 = -35; // 80 to go forward
 		
 		// 5 - back up to scale
 		double inside5 = -90;
