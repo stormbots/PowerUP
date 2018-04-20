@@ -12,6 +12,7 @@ import org.usfirst.frc.team2811.robot.Auto.AutoSequence;
 import org.usfirst.frc.team2811.robot.Auto.Center;
 import org.usfirst.frc.team2811.robot.Auto.CenterVer2;
 import org.usfirst.frc.team2811.robot.Auto.CenterVer3;
+import org.usfirst.frc.team2811.robot.Auto.CenterVer4;
 import org.usfirst.frc.team2811.robot.Auto.Example;
 import org.usfirst.frc.team2811.robot.Auto.SideCrossScale;
 import org.usfirst.frc.team2811.robot.Auto.SideEscape;
@@ -81,7 +82,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {		
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
-//		autoChoice = new SideEscape(); // COMMENT OUT BEFORE GOING TO THE FIELD
+		autoChoice = new CenterVer4(false); // COMMENT OUT BEFORE GOING TO THE FIELD
 		
 		// Do auto mode initialization 
 		drive.shiftLow();

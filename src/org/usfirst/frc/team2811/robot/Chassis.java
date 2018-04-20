@@ -424,12 +424,13 @@ public class Chassis {
 				pdp.getVoltage()
 				);
 		
-		SmartDashboard.putNumber("leadL", leadL.getOutputCurrent());
-		SmartDashboard.putNumber("leadR", leadR.getOutputCurrent());		
-		SmartDashboard.putNumber("rearL", rearL.getOutputCurrent());
-		SmartDashboard.putNumber("rearR", rearR.getOutputCurrent());
-		SmartDashboard.putNumber("frontL", frontL.getOutputCurrent());
-		SmartDashboard.putNumber("frontR", frontR.getOutputCurrent());
+		SmartDashboard.putNumber("leadL", pdp.getCurrent(2));
+		SmartDashboard.putNumber("leadR", pdp.getCurrent(15));		
+		SmartDashboard.putNumber("rearL", pdp.getCurrent(1));
+		SmartDashboard.putNumber("rearR", pdp.getCurrent(14));
+		SmartDashboard.putNumber("frontL", pdp.getCurrent(0));
+		SmartDashboard.putNumber("frontR", pdp.getCurrent(13));
+
 	}
 	
 	/** Set the the arcadeDrive functions

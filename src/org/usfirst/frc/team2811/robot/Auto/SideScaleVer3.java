@@ -60,8 +60,8 @@ public class SideScaleVer3 extends AutoSequence {
 		double outside3 = 60;
 		
 		// 4 - forward to the 2nd cube
-		double inside4 = 80; // 90
-		double outside4 = 80; // 90
+		double inside4 = -60; // 80 to go forward
+		double outside4 = -60; // 80 to go forward
 		
 		// 5 - back up to scale
 		double inside5 = -90;

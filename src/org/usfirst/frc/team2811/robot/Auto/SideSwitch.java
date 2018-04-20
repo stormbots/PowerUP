@@ -34,7 +34,7 @@ public class SideSwitch extends AutoSequence {
 	public SideSwitch(boolean isLeft) {
 		double inside1 = 124;
 		double outside1 = 124;
-		double inside2 = 11;
+		double inside2 = 6;
 		double outside2 = 59;
 		double inside3 = 18;
 		double outside3 = 18;

@@ -112,7 +112,7 @@ public class CenterVer3 extends AutoSequence {
 		
 		else {
 			// 1 - turn to face switch
-			left1 = 15+3.5;
+			left1 = 15+3.5+1.5;
 			right1 = 1;
 
 			// 2 - drive to the switch

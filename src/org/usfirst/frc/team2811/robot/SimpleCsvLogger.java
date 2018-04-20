@@ -60,6 +60,7 @@ public class SimpleCsvLogger {
     long log_write_index;
     String log_name = null;
     String output_dir = "/U/data_captures/"; // USB drive is mounted to /U on roboRIO
+    String backup_dir = "/home/admindata_captures/";
     BufferedWriter log_file = null;
     boolean log_open = false;
 
@@ -120,7 +121,52 @@ public class SimpleCsvLogger {
 
     }
 
+    public int init_backup(String prefix, String[] data_fields, String[] units_fields) {
 
+        if (log_open) {
+            System.out.println("Warning - log is already open!");
+            return 0;
+        }
+
+        log_open = false;
+        System.out.println("Initalizing Log file...");
+        try {
+            // Reset state variables
+            log_write_index = 0;
+
+            // Determine a unique file name
+            log_name = backup_dir + "log_" + getDateTimeString() + "_" + prefix + ".csv";
+
+            // Open File
+            FileWriter fstream = new FileWriter(log_name, true);
+            log_file = new BufferedWriter(fstream);
+
+            // Write user-defined header line
+            for (String header_txt : data_fields) {
+                log_file.write(header_txt + ", ");
+            }
+            // End of line
+            log_file.write("\n");
+
+
+            // Write user-defined units line
+            for (String header_txt : units_fields) {
+                log_file.write(header_txt + ", ");
+            }
+            // End of line
+            log_file.write("\n");
+
+        }
+        // Catch ALL the errors!!!
+        catch (IOException e) {
+            System.out.println("Error initializing log file: " + e.getMessage());
+            return -1;
+        }
+        System.out.println("done!");
+        log_open = true;
+        return 0;
+
+    }
 
     /**
      * Write a list of doubles to the output file, assuming it's open. Creates a new line in the
@@ -135,7 +181,7 @@ public class SimpleCsvLogger {
         String line_to_write = "";
 
         if (log_open == false) {
-            System.out.println("Error - Log is not yet opened, cannot write!");
+//            System.out.println("Error - Log is not yet opened, cannot write!");
             return -1;
         }
 
@@ -155,7 +201,7 @@ public class SimpleCsvLogger {
         }
         // Catch ALL the errors!!!
         catch (IOException e) {
-            System.out.println("Error writing to log file: " + e.getMessage());
+//            System.out.println("Error writing to log file: " + e.getMessage());
             return -1;
         }
 

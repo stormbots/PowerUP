@@ -101,7 +101,7 @@ public class ClimberModeVer4 extends ClimberSequence {
 		Robot.drive.setMode(Mode.ARCADE);
 		Robot.elevator.setMaxHeight(ElevatorPosition.SCALEHIGH);
 		Robot.elevator.setMinHeight(ElevatorPosition.FLOOR);
-		Robot.climber.setMode(Climber.Mode.DISABLED);
+		Robot.climber.setMode(Climber.Mode.MANUAL);
 	}
 
 }

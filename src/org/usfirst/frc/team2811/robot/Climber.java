@@ -68,8 +68,8 @@ public class Climber {
 			break;
 		
 		case DISABLED:
-			mtr1.set(ControlMode.PercentOutput, 0);
-			return;
+			power = 0;
+			break;
 
 		default:
 			break;
