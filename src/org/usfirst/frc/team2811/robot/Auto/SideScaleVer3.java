@@ -38,6 +38,7 @@ public class SideScaleVer3 extends AutoSequence {
 	long raiseScale = 4000; // 3.5 seconds to raise the scale
 	long t1 = 7500; // 7.5 seconds to move to scale
 	long t2 = 1000; // pivot towards scale
+	long spinStart = 800; // get time to shoot
 	long t3 = 750; // pivot towards switch cubes
 	long t4 = 3250; // drive to cube
 	long elevatorDelay = 1500; // 0.75 seconds after drive started
@@ -80,7 +81,7 @@ public class SideScaleVer3 extends AutoSequence {
 		double outside8 = 80;
 		
 		if(isLeft) {
-			left1 = outside1+24;
+			left1 = outside1;
 			right1 = inside1;
 			left2 = outside2;
 			right2 = inside2;
@@ -136,6 +137,9 @@ public class SideScaleVer3 extends AutoSequence {
 		}
 		if(timer.atTime(t1)) {
 			Robot.drive.setProfile(left2, right2, t2);
+		}
+		if(timer.atTime(t1+spinStart)) {
+			Robot.intake.ejectCube();
 		}
 		if(timer.atTime(t2+t1)){
 			Robot.intake.ejectCube();

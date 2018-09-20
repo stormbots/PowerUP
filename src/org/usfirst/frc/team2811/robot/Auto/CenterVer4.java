@@ -154,12 +154,12 @@ public class CenterVer4 extends AutoSequence {
 			right7 = 14;
 			
 			// 8 - back away from cube pile
-			left8 = -42;
-			right8 = -42;
+			left8 = -42-1;
+			right8 = -42-1;
 
 			// 9 - turn to switch
-			left9 = 16;
-			right9 = -16;
+			left9 = 16+3;
+			right9 = -16-3;
 
 			// 10 - drive to the switch
 			left10 = 36;

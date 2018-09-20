@@ -135,6 +135,9 @@ public class Chassis {
 		//braking(false);
 		logfileLeft.close();
 		logfileRight.close();
+		
+		SmartDashboard.putNumber("Chassis Left Mod Enc",  leadL.getSelectedSensorPosition(0)*2);
+		SmartDashboard.putNumber("Chassis Right Enc",  leadR.getSelectedSensorPosition(0));
 	}
 
 	
@@ -232,7 +235,7 @@ public class Chassis {
 	 * @param left
 	 * @param right
 	 */
-	public void tankMode(double left,double right,boolean squaredInputs) {
+	public void tankMode(double left,double right) {
 		leftPower = left;
 		rightPower = right;
 	}
