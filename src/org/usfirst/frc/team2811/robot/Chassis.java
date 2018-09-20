@@ -110,8 +110,11 @@ public class Chassis {
 			scaleFactorR = (54400 / 137) + 1; //is GOLD
 			
 			//Factor =        (ticks/inches) * (expected/actual)
-			scaleFactorL = (30815.0/153.125) * (130/129) * (130/129.5);
-			scaleFactorR = (60935.0/152.125) * (130/128.5);
+			scaleFactorL = (30815.0/153.125) * (130/129) * (130/129.5) * (130/131);
+			scaleFactorR = (60935.0/152.125) * (130/128.5) * (130/129);
+
+			scaleFactorL = (30652/151.0) * (130/128) * (130/126.75);
+			scaleFactorR = (62732.0/154.125) * (130/129);
 
 			scaleFactorL*=2; //account for the stupid encoder
 		}else {
