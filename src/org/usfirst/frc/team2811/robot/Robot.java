@@ -10,11 +10,16 @@ package org.usfirst.frc.team2811.robot;
 import org.usfirst.frc.team2811.robot.Auto.AutoSelector;
 import org.usfirst.frc.team2811.robot.Auto.AutoSequence;
 import org.usfirst.frc.team2811.robot.Auto.Center;
-import org.usfirst.frc.team2811.robot.Auto.CenterNewVer;
+import org.usfirst.frc.team2811.robot.Auto.CenterVer2;
+import org.usfirst.frc.team2811.robot.Auto.CenterVer3;
+import org.usfirst.frc.team2811.robot.Auto.CenterVer4;
 import org.usfirst.frc.team2811.robot.Auto.Example;
 import org.usfirst.frc.team2811.robot.Auto.SideCrossScale;
 import org.usfirst.frc.team2811.robot.Auto.SideEscape;
+import org.usfirst.frc.team2811.robot.Auto.SideEscapeNoEnc;
 import org.usfirst.frc.team2811.robot.Auto.SideScale;
+import org.usfirst.frc.team2811.robot.Auto.SideScaleVer2;
+import org.usfirst.frc.team2811.robot.Auto.SideScaleVer3;
 import org.usfirst.frc.team2811.robot.Auto.SideSwitch;
 import org.usfirst.frc.team2811.robot.Auto.Testing1;
 import org.usfirst.frc.team2811.robot.Elevator.ElevatorPosition;
@@ -54,11 +59,14 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		//Only do this if we need to for things to work consistently, which may be the case
+		//CameraServer.getInstance().startAutomaticCapture();
+
 		drive.resetEnc();
 		elevator.reset();
 		climber.resetEnc();
-		CameraServer.getInstance().startAutomaticCapture();
 		autoSelector.putSmartDashboard();
+		SmartDashboard.putString("Climb Range", "83500 - 87500");
 	}
 
 	/**
@@ -67,7 +75,6 @@ public class Robot extends IterativeRobot {
 	 * chooser code works with the Java SmartDashboard. If you prefer the
 	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
 	 * getString line to get the auto name from the text box below the Gyro
-	 *
 	 * <p>You can add additional auto modes by adding additional comparisons to
 	 * the switch structure below with additional strings. If using the
 	 * SendableChooser make sure to add them to the chooser code above as well.
@@ -76,7 +83,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {		
 		//Figure out the optimal auto sequence to perform
 		autoChoice = autoSelector.getBestAuto();
-//		autoChoice = new CenterNewVer(false);
+		//autoChoice = new SideEscapeNoEnc(); // COMMENT OUT BEFORE GOING TO THE FIELD!!!!!
 		
 		// Do auto mode initialization 
 		drive.shiftLow();
@@ -85,6 +92,9 @@ public class Robot extends IterativeRobot {
 		elevator.resetTo(ElevatorPosition.AUTO_STARTUP);
 		elevator.setPos(ElevatorPosition.SWITCH);
 		intake.squeezeOpen(false);
+		
+		elevator.init();
+		drive.autonomousInit();
 	}
 
 	/**
@@ -99,16 +109,23 @@ public class Robot extends IterativeRobot {
 		drive.newUpdate();
 		elevator.newUpdate();
 		intake.newUpdate();
+		SmartDashboard.putNumber("PDP voltage", drive.pdp.getVoltage());
 	}
 	
 	/** Ensure robot is ready for human operator in matches */
 	public void teleopInit() {
+		oi.climberEngaged = false;
+		oi.climberSequence.cancel();
+		CameraServer.getInstance().startAutomaticCapture();
+		drive.resetEnc();
 		drive.setMode(Chassis.Mode.ARCADE);
 		drive.setMode(Mode.ARCADE);
 		elevator.setMode(Elevator.Mode.MANUALPOSITION);
 		intake.tiltBackward(false);
+		intake.squeezeOpen(false);
 		climber.setMode(Climber.Mode.MANUAL);
 	}
+
 
 	/**
 	 * This function is called periodically during operator control.
@@ -125,6 +142,8 @@ public class Robot extends IterativeRobot {
 		elevator.newUpdate();
 		intake.newUpdate();
 		climber.newUpdate();
+		SmartDashboard.putNumber("PDP voltage", drive.pdp.getVoltage());
+//		SmartDashboard.putNumber("Timer Per Loop",timer1.timer)
 		
 	}
 
@@ -141,13 +160,14 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		// Constantly update and print our auto-selection
 		// to see the auto we'll execute before enabling
+		autoSelector.putSmartDashboard();
 		autoChoice=autoSelector.getBestAuto();
 		
 		drive.disabledPeriodic();
 		elevator.disabledPeriodic();
 		intake.disabledPeriodic();
-//		climber.disabledPeriodic();
-		
+		climber.disabledPeriodic();
+				
 		SmartDashboard.putBoolean("Am I Compbot?", Preferences.getInstance().getBoolean("compbot", Robot.compbot));
 	}
 	

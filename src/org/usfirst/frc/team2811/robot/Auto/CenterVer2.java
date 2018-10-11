@@ -2,6 +2,7 @@ package org.usfirst.frc.team2811.robot.Auto;
 
 import org.usfirst.frc.team2811.robot.Elevator.ElevatorPosition;
 import org.usfirst.frc.team2811.robot.Chassis;
+import org.usfirst.frc.team2811.robot.Elevator;
 import org.usfirst.frc.team2811.robot.Motion345;
 import org.usfirst.frc.team2811.robot.Robot;
 import org.usfirst.frc.team2811.robot.TinyTimer;
@@ -12,7 +13,7 @@ import org.usfirst.frc.team2811.robot.TinyTimer;
  * @author stormbots
  *
  */
-public class CenterNewVer extends AutoSequence {
+public class CenterVer2 extends AutoSequence {
 
 	TinyTimer timer = new TinyTimer();
 	double left1;
@@ -45,7 +46,7 @@ public class CenterNewVer extends AutoSequence {
 	long t7 = 1000;
 	long t8 = 2000;
 	
-	public CenterNewVer(boolean toLeft) {
+	public CenterVer2(boolean toLeft) {
 		if(toLeft) {			
 			left1 = 0;
 			right1 = 14;
@@ -111,7 +112,7 @@ public class CenterNewVer extends AutoSequence {
 			Robot.drive.setProfile(left3, right3, t3);
 		}
 		if(timer.atTime(t3+t2+t1)) {
-			Robot.elevator.setPos(ElevatorPosition.FLOOR);
+			Robot.elevator.setPos(ElevatorPosition.FLOOR); // maybe #1? elevator.setMode(Elevator.Mode.HOMING);
 			Robot.intake.stopMotor();
 			Robot.intake.squeezeOpen(true);
 			Robot.drive.setProfile(left4, right4, t4);
@@ -121,6 +122,7 @@ public class CenterNewVer extends AutoSequence {
 			Robot.drive.setProfile(left5, right5, t5);
 		}
 		if(timer.atTime(t5+t4+t3+t2+t1)) {
+			// maybe #2? elevator.setMode(Elevator.Mode.MANUALPOSITION);
 			Robot.intake.grabCube();
 			Robot.intake.squeezeOpen(false);
 			Robot.drive.setProfile(left6, right6, t6);

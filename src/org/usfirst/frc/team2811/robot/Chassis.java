@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
 
 /* Inputs:
  *   Joystick Y & X axis
@@ -51,21 +52,26 @@ public class Chassis {
 	Motion345 left345 = new Motion345(10000, 3, 0, 200);
 	Motion345 right345 = new Motion345(10000, 3, 0, 200);
 	TinyTimer profileTimer = new TinyTimer();
-	public enum Mode{PROFILE,TANK,ARCADE,DISABLED}
+	public enum Mode{PROFILE,TANK,ARCADE,DISABLED,VELPROFILE}
 	Mode mode = Mode.ARCADE;
 	double leftPower = 0; 
 	double rightPower = 0;
 	
 	//Drive configuration values. Will be overwritten by disabledperiodic
-	double scaleFactorL = 199.8; // compbot default
-	double scaleFactorR = 405.4; // compbot default
-	
+	//also these values are bubkis
+	double scaleFactorL = 100; // OVERWRITTEN DO NOT USE
+	double scaleFactorR = 100; // OVERWRITTEN DO NOT USE 
+
 	double arcadeTurn = 0; 
 	double arcadePower = 0;
 	boolean squaredInputs = true;
 
 	boolean braking = true;
+	private double leftFBGain=0.024; //GOLD on compbot
+	private double rightFBGain=0.024; // GOLD on compbot
 
+	SimpleCsvLogger logfileLeft = new SimpleCsvLogger();
+	SimpleCsvLogger logfileRight = new SimpleCsvLogger();
 	
 	/**
 	 * the constructor: 
@@ -95,14 +101,46 @@ public class Chassis {
 			//compbot
 			
 			//One encoder a 128 instead of a 256
-			scaleFactorL = 199.8; 
-			scaleFactorR = 405.4;
+			//Bad calibration values for use with Centerv3 auto 
+			//when paired with the incorrect calibration values
+			//scaleFactorL = 199.8; 
+			//scaleFactorR = 400.4; 
+
+			scaleFactorL = (27400 / 137) + 2 - 2; //is GOLD
+			scaleFactorR = (54400 / 137) + 1; //is GOLD
+			
+			//Factor =        (ticks/inches) * (expected/actual)
+			scaleFactorL = (30815.0/153.125) * (130/129) * (130/129.5) * (130/131);
+			scaleFactorR = (60935.0/152.125) * (130/128.5) * (130/129);
+
+			scaleFactorL = (30652/151.0) * (130/128) * (130/126.75);
+			scaleFactorR = (62732.0/154.125) * (130/129);
+
+			scaleFactorL*=2; //account for the stupid encoder
 		}else {
 			//practice bot
-			scaleFactorL = 291; 
-			scaleFactorR = 291;
+			//good, but 1/2" short over 130 inches
+//			scaleFactorL = 36986/124.75; 
+//			scaleFactorR = 36419/123.25;
+			
+			//Attempt to adjust for slight shortcoming
+			scaleFactorL = 36986/124.75*(130/129.5); 
+			scaleFactorR = 36419/123.25*(130/129.5);
+			
+			//works well, slight oscilation is possible
+			leftFBGain = 0.024;
+			rightFBGain = 0.024;
+
+			//Debug for feed forward
+			//leftFBGain = 0.0;
+			//rightFBGain = 0.0;
 		}
 		//braking(false);
+		logfileLeft.close();
+		logfileRight.close();
+		
+		SmartDashboard.putNumber("Chassis Left Mod Enc",  leadL.getSelectedSensorPosition(0)*2);
+		SmartDashboard.putNumber("Chassis Right Enc",  leadR.getSelectedSensorPosition(0));
 	}
 
 	
@@ -138,6 +176,13 @@ public class Chassis {
 	void init() {
 		braking(true);
 		shiftLow();
+	}
+	
+	void autonomousInit() {
+		String[] label = {"time","target","position","error","velocity","%output","current lead","current rear","current front","sys voltage"};
+		String[] units = {"sec","ticks","ticks","ticks","ticks/sec","-1..1","amps","amps","amps","Volts"};
+		logfileLeft.init("chassisLeft", units, label);
+		logfileRight.init("chassisRight", units, label);
 	}
 	
 	public void shiftLow() {
@@ -193,11 +238,22 @@ public class Chassis {
 	 * @param left
 	 * @param right
 	 */
-	public void tankMode(double left,double right,boolean squaredInputs) {
+	public void tankMode(double left,double right) {
 		leftPower = left;
 		rightPower = right;
 	}
 	
+	
+	public void setProfileGains(double leftGain,double rightGain) {
+		leftFBGain = leftGain;
+		rightFBGain = rightGain;
+	}
+	
+	public void setProfileCalibration(double leftCal,double rightCal) {
+		scaleFactorL = leftCal;
+		scaleFactorR = rightCal;
+	}
+
 	/** Configure the chassis to perform a motion-profile squence of set distance and duration.
 	 * 
 	 * @param inchesLeft
@@ -211,8 +267,8 @@ public class Chassis {
 		System.out.printf("Creating auto [ %f , %f ] over %f s\n",inchesLeft,inchesRight,time);
 
 		// create our motion profile
-		left345.setMove(10_000, time, inchesLeft*scaleFactorL, 200);
-		right345.setMove(10_000, time, inchesRight*scaleFactorR, 200);
+		left345.setMove(25_200, time, inchesLeft*scaleFactorL, 200);
+		right345.setMove(25_200, time, inchesRight*scaleFactorR, 200);
 		//TODO: Actually find some values for max speed and a good tolerance
 		
 		// Reset our timer to start executing
@@ -223,12 +279,17 @@ public class Chassis {
 		mode = Mode.PROFILE;
 	}
 	
+	double maxleft=0,maxright=0;
+	double lastLeft=0,lastRight=0;
+	double lastTime=0;
+	double maxDeltaLeft=0;
+	double maxDeltaRight=0;
 	/** Update function that handles all busywork the chassis has been 
 	 * set up to perform.
 	 */
 	public void newUpdate(){
 		//Generate a power modifier to ensure we avoid brownouts
-		double mod = Utilities.lerp(pdp.getVoltage(), 8.25, 6.5, 1.0, 0.0);
+		double mod = Utilities.lerp(pdp.getVoltage(), 8, 6.5, 1.0, 0.0);
 		mod = Utilities.clamp(mod, 0, 1);
 
 		SmartDashboard.putString("Chassis Mode", mode.toString());
@@ -237,14 +298,20 @@ public class Chassis {
 		case DISABLED:
 			driver.tankDrive(0,0);	
 			return;
+		case VELPROFILE:
+			//leftPower = left345.getVelPosFbFF(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.023);
+			//rightPower = right345.getVelPosFbFF(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.023);
+			//driver.tankDrive(leftPower, rightPower);
+
+			break;
 		case PROFILE:	
 			profileTimer.update();
 			
 			if(prefs.getBoolean("compbot", Robot.compbot)) {
 				//compbot
-				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.024);
-				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.020);				
-		
+				leftPower = left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0)*2, leftFBGain); // 24 is GOLD
+				rightPower = right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), rightFBGain); // 24 is GOLD
+				System.out.println( right345.getVel(profileTimer.getSeconds()));
 
 				SmartDashboard.putNumber("Chassis Profile Left",         leftPower);
 				SmartDashboard.putNumber("Chassis Profile Right",        rightPower);
@@ -254,12 +321,12 @@ public class Chassis {
 			}
 			else {
 				//practice bot
-				leftPower = -left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), 0.023);
-				rightPower = -right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), 0.023);
+				leftPower = -left345.getVelPosFb(profileTimer.getSeconds(), -leadL.getSelectedSensorPosition(0), leftFBGain);
+				rightPower = -right345.getVelPosFb(profileTimer.getSeconds(), leadR.getSelectedSensorPosition(0), rightFBGain);
 			}
 
-			SmartDashboard.putNumber("Chassis Profile Left",         leftPower);
-			SmartDashboard.putNumber("Chassis Profile Right",        rightPower);
+			SmartDashboard.putNumber("Chassis Left Power",         leftPower);
+			SmartDashboard.putNumber("Chassis Right Power",        rightPower);
 			SmartDashboard.putNumber("Chassis Profile Left Sensor",  leadL.getSelectedSensorPosition(0));
 			SmartDashboard.putNumber("Chassis Profile Sensor",       leadR.getSelectedSensorPosition(0));
 			
@@ -286,9 +353,91 @@ public class Chassis {
 			else {
 				//prac bot
 				driver.arcadeDrive(arcadePower*mod, -arcadeTurn*mod, squaredInputs);
-			}
+			}			
 			break;
 		}
+		
+		double leftv = leadL.getSelectedSensorVelocity(0);
+		if(leftv > maxleft) { maxleft = leftv; }
+		
+		double rightv = leadR.getSelectedSensorVelocity(0);
+		if(rightv > maxright) { maxright = rightv; }
+		
+		SmartDashboard.putNumber("Chassis Left Max Velocity",  maxleft);
+		SmartDashboard.putNumber("Chassis Left Max Velocity*2",  maxleft*2);
+		SmartDashboard.putNumber("Chassis Right Max Velocity",  maxright);
+	
+		
+		double deltaLeft=lastLeft-leadL.getSelectedSensorPosition(0);
+		double deltaRight=lastRight-leadR.getSelectedSensorPosition(0);
+		
+		if(deltaLeft > maxDeltaLeft) {maxDeltaLeft = deltaLeft;}
+		if(deltaRight > maxDeltaRight) {maxDeltaRight = deltaRight;}
+		
+		lastLeft=leadL.getSelectedSensorPosition(0);
+		lastRight=leadR.getSelectedSensorPosition(0);
+		
+		SmartDashboard.putNumber("Chassis Left Max Velocity (per loop)", maxDeltaLeft );
+		SmartDashboard.putNumber("Chassis Left Max Velocity (per loop)*2",  maxDeltaLeft*2);
+		SmartDashboard.putNumber("Chassis Right Max Velocity (per loop)",  maxDeltaRight);
+
+		double deltaTime = Timer.getFPGATimestamp() - lastTime;
+		lastTime = Timer.getFPGATimestamp();
+		
+		if(rightv > maxright) { maxright = rightv; }
+
+		SmartDashboard.putNumber("Chassis Left Max Velocity (per second)", maxDeltaLeft/deltaTime );
+		SmartDashboard.putNumber("Chassis Left Max Velocity (per second)*2",  maxDeltaLeft/deltaTime*2);
+		SmartDashboard.putNumber("Chassis Right Max Velocity (per second)",  maxDeltaRight/deltaTime);
+		
+		
+		SmartDashboard.putNumber("Chassis Left Raw Enc",  leadL.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Chassis Left Mod Enc",  leadL.getSelectedSensorPosition(0)*2);
+		SmartDashboard.putNumber("Chassis Right Enc",  leadR.getSelectedSensorPosition(0));
+		
+		double leftError = left345.getPos(profileTimer.getSeconds()) - -leadL.getSelectedSensorPosition(0);
+		SmartDashboard.putNumber("Chassis Left Error", leftError);
+		
+		double rightError = right345.getPos(profileTimer.getSeconds()) - leadR.getSelectedSensorPosition(0);
+		SmartDashboard.putNumber("Chassis Right Error", rightError);
+		
+		//write any number of things to this
+//		 String[] label = {"time","target","position","error","velocity","current","%output"};
+//		 String[] units = {"sec","ticks","ticks","ticks","ticks/sec","amps","-1..1"};
+
+		logfileLeft.writeData(
+				Timer.getMatchTime(),
+				left345.getPos(profileTimer.getSeconds()),
+				-leadL.getSelectedSensorPosition(0),
+				leftError,
+				deltaLeft, //velocity for now
+				leftPower,
+				leadL.getOutputCurrent(), //current
+				rearL.getOutputCurrent(), //current
+				frontL.getOutputCurrent(), //current
+				pdp.getVoltage()
+				);
+		
+		logfileRight.writeData(
+				Timer.getMatchTime(),
+				right345.getPos(profileTimer.getSeconds()),
+				leadR.getSelectedSensorPosition(0),
+				rightError,
+				deltaRight, //velocity for now
+				rightPower,
+				leadR.getOutputCurrent(), //current
+				rearR.getOutputCurrent(), //current
+				frontR.getOutputCurrent(), //current
+				pdp.getVoltage()
+				);
+		
+		SmartDashboard.putNumber("leadL", pdp.getCurrent(2));
+		SmartDashboard.putNumber("leadR", pdp.getCurrent(15));		
+		SmartDashboard.putNumber("rearL", pdp.getCurrent(1));
+		SmartDashboard.putNumber("rearR", pdp.getCurrent(14));
+		SmartDashboard.putNumber("frontL", pdp.getCurrent(0));
+		SmartDashboard.putNumber("frontR", pdp.getCurrent(13));
+
 	}
 	
 	/** Set the the arcadeDrive functions

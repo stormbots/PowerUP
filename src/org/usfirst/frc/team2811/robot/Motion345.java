@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2811.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * 345 polynomial is a specific curve as a function of time that has very smooth acceleration and velocity
@@ -62,10 +63,15 @@ public class Motion345 {
 		 * @return output power to acheive the desired rate
 		 */
 		public double getVelPosFb(double t, double pactual,double k) {
-			double pideal=getPos(t);			
+			double pideal=getPos(t);
 			return FB(pactual,pideal,k);
 		}
 		
+		public double getVelPosFbFF(double t, double pactual,double k) {
+			double pideal=getPos(t);
+			return FB(pactual,pideal,k) + getVel(t);
+		}
+				
 		/**
 		 * based on the time of the move and the counts of the move return the velocity in counts per second
 		 * assumes max velocity in counts per second is at motor speed =1.0
